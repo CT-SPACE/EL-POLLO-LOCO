@@ -2,7 +2,7 @@ class staticBackground extends StaticObject {
   x = 0;
   y = 0;
     height = 480 ;
-    width = 800 ;
+    width = 850 ;
     img;
     
     constructor(){

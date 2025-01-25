@@ -11,6 +11,7 @@ class MovableObject {
 
   loadImage(path) {
     this.img = new Image();
+    console.log('URL:', path);
     this.img.src = path;
   }
 

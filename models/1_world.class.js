@@ -8,6 +8,19 @@ class World {
         new Clouds(),
         new Clouds()
         ];
+
+        background_moving = [
+            new movingBackground(0),
+            new movingBackground(1),
+            new movingBackground(2),
+            // new movingBackground(3),
+            // new movingBackground(4),
+            // new movingBackground(5),
+            // new movingBackground(6),
+            // new movingBackground(7),
+            // new movingBackground(8)
+        ];
+
     character = new Pepe();
     enemies = [ 
         new Chicken(),
@@ -15,17 +28,7 @@ class World {
         new Chicken() 
     ];  
    
-    background_moving = [
-        new movingBackground(0),
-        new movingBackground(1),
-        new movingBackground(2),
-        new movingBackground(3),
-        new movingBackground(4),
-        new movingBackground(5),
-        new movingBackground(6),
-        new movingBackground(7),
-        new movingBackground(8)
-    ]
+    
     keyboard;
     cameraX = 0;
 
