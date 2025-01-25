@@ -1,0 +1,33 @@
+@font-face {
+    font-family: "Bungee_Outline";
+    /*src: url(../fonts/Bungee_Outline/BungeeOutline-Regular.ttf);*/
+    src: url(../fonts/Matemasie/Matemasie-Regular.ttf);
+
+}
+
+body{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:column;
+    background-color: #a02006   ;
+    color:white;
+    font-family: 'Courier New', Courier, monospace; 
+
+}
+
+h1{
+    font-family:Bungee_Outline;
+    font-size: 4em;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+canvas{
+    background-color: black;
+    border:3px solid white;
+    border-radius: 30px
+}
+
+
