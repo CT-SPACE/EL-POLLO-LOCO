@@ -1,5 +1,6 @@
 class Pepe extends MovableObject {
     x = 50;
+    x2 = 700;
     y = 100;
     height = 340;
     width = 160;
@@ -28,10 +29,12 @@ class Pepe extends MovableObject {
             if (keyboard.RIGHT){
                 this.x += this.speed; 
                 this.otherDirection = false;
+                
             }
             if(keyboard.LEFT){
                         this.otherDirection = true;
                 this.x -= this.speed;
+                
             }
             this.world.cameraX = -this.x;
         }, 5000 / 60);
@@ -47,29 +50,7 @@ class Pepe extends MovableObject {
 
     }
 
-    moveRight() {
-        if(!keyboard.RIGHT){
-            this.speed = 0;
-        
-        setInterval(() => {
-            this.x += this.speed;
-        }, 3000 / 60);
-    }
-        console.log("move right");
-    
-    }
-
-    moveLeft(){
-        if(!keyboard.LEFT){
-            this.speed = 0;
-        
-        setInterval(() => {
-            this.x -= this.speed;
-        }, 3000 / 60);
-    }
-        console.log("move left");
-    }
-
+   
 
     jump() {
         console.log("move right");

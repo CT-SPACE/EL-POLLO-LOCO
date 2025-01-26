@@ -20,23 +20,29 @@ class movingBackground extends MovableObject{
         super().loadImage(this.hgparts[i]);
         switch (i) {
             case 0:
-                this.x = i;
+                this.x = 0;
                 this.y = 60;
                 this.height = 380;
                 this.width = 1600;
                 break;
             case 1:
-                this.x = i;
-                this.y = 220;
-                this.height = 200;
+                this.x = 0;
+                this.y = 190;
+                this.height = 220;
                 this.width = 850;
                 break;
             case 2:
-                this.x = i;
+                this.x = 0;
                 this.y = 0;
                 this.height = 488;
                 this.width = 1600;
                 break;
+            case 4:
+                this.y = 190;
+                this.height = 220;
+                this.width = 850;
+                this.x = 850;
+                    break;
             default:
                 break;
         }

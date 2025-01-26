@@ -12,8 +12,9 @@ class World {
         background_moving = [
             new movingBackground(0),
             new movingBackground(1),
+            new movingBackground(4),
             new movingBackground(2),
-            // new movingBackground(3),
+
             // new movingBackground(4),
             // new movingBackground(5),
             // new movingBackground(6),
