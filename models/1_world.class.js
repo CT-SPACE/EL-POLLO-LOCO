@@ -1,35 +1,16 @@
 class World {
     ctx;
     canvas;
-
-    background_static = new staticBackground();
-    clouds = [
-        new Clouds(),
-        new Clouds(),
-        new Clouds()
-        ];
-
-        background_moving = [
-            new movingBackground(0),
-            new movingBackground(1),
-            new movingBackground(4),
-            new movingBackground(2),
-
-            // new movingBackground(4),
-            // new movingBackground(5),
-            // new movingBackground(6),
-            // new movingBackground(7),
-            // new movingBackground(8)
-        ];
-
+    level = level01;
     character = new Pepe();
-    enemies = [ 
-        new Chicken(),
-        new Chicken(), 
-        new Chicken() 
-    ];  
-   
+    background_static = new staticBackground();
     
+    // clouds = this.level.clouds;
+    // background_moving = this.level.movingBackground;
+
+    
+    // enemies = this.level.enemies;  
+
     keyboard;
     cameraX = 0;
 
@@ -38,13 +19,13 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-        this.setWorld();
+      
         this.draw();
+        this.setWorld();
     }
 
     setWorld(){
         this.character.keyboard = this.keyboard;
-        // this.character.setControls();
         this.character.world = this;
     }   
 
@@ -52,10 +33,10 @@ class World {
     this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
     this.ctx.translate(this.cameraX, 0);
     this.addToMap(this.background_static);
-    this.addObjects(this.clouds);
-    this.addObjects(this.background_moving);
+    this.addObjects(this.level.clouds);
+    this.addObjects(this.level.background_moving);
     this.addToMap(this.character);
-    this.addObjects(this.enemies);
+    this.addObjects(this.level.enemies);
 
     this.ctx.translate(-this.cameraX, 0);
 
