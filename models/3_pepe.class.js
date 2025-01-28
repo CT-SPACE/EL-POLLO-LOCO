@@ -1,5 +1,5 @@
 class Pepe extends MovableObject {
-    x = 100;
+    x = 200;
     y = 100;
     height = 340;
     width = 160;

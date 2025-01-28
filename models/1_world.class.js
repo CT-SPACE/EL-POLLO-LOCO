@@ -4,13 +4,6 @@ class World {
     level = level01;
     character = new Pepe();
     background_static = new staticBackground();
-    
-    // clouds = this.level.clouds;
-    // background_moving = this.level.movingBackground;
-
-    
-    // enemies = this.level.enemies;  
-
     keyboard;
     cameraX = 0;
 

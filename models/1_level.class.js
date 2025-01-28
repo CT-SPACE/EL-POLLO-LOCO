@@ -7,6 +7,6 @@ class Level {
     constructor(en,cl,mB){
         this.enemies = en;
         this.clouds = cl;
-        this.movingBackground = mB;
+        this.background_moving = mB;
     }
 }
