@@ -1,5 +1,5 @@
 class Pepe extends MovableObject {
-    x = 200;
+    x = 0;
     y = 100;
     height = 340;
     width = 160;
@@ -15,8 +15,10 @@ class Pepe extends MovableObject {
     keyboard;
     speed = 20;
 
-    constructor(){
+    constructor(keyboard){
+
        super().loadImage('../img/2_character_pepe/2_walk/W-21.png');
+       this.keyboard = keyboard;
        this.loadImages(this.IMAGES_WALKING);
         this.animateWalk();
 
@@ -35,7 +37,7 @@ class Pepe extends MovableObject {
                 this.x -= this.speed;
                 
             }
-            this.world.cameraX = -this.x + 100;
+            this.world.cameraX = -this.x;
         }, 5000 / 60);
         
         setInterval(() => {

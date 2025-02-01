@@ -3,6 +3,8 @@ class MovableObject {
   y;
   height;
   width;
+  world;
+  keyboard;
   img;
   imgCache = {};
   currentIMG = 0;
@@ -11,7 +13,7 @@ class MovableObject {
 
   loadImage(path) {
     this.img = new Image();
-    console.log('URL:', path);
+    // console.log('X:', x);
     this.img.src = path;
   }
 
@@ -30,7 +32,7 @@ class MovableObject {
     setInterval(() => {
       this.x = this.v1;
     }, 1000 / 60);
-    console.log("move left");
+    console.log("move right");
   }
 
   moveLeft() {

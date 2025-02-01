@@ -14,6 +14,6 @@ class Keyboard {
 
   constructor() {
     this.name = 'Keyboard';
-    console.log('Keyboard', this);
+    // console.log('Keyboard', this);
   }
 }

@@ -21,7 +21,8 @@ class Chicken extends MovableObject{
     
         animateX() {
 this.moveLeft();
-        }
+}
+
     
         animateWalk() {
             setInterval(() => {
