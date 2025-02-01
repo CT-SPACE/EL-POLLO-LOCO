@@ -19,8 +19,10 @@ class Chicken extends MovableObject{
             this.animateWalk();
         }
     
-        animateX() {
+        animateX() {   
+
 this.moveLeft();
+
 }
 
     

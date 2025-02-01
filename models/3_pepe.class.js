@@ -27,17 +27,16 @@ class Pepe extends MovableObject {
     animateWalk(){
 
         setInterval(() => {
-            if (keyboard.RIGHT){
+            if (keyboard.RIGHT && (this.x < this.world.level.level_endX)){
                 this.x += this.speed; 
                 this.otherDirection = false;
                 
             }
-            if(keyboard.LEFT && this.x > 10 && this.x < this.world.level.level_endX){
+            if(keyboard.LEFT && this.x > 10){
+                        this.x -= this.speed;
                         this.otherDirection = true;
-                this.x -= this.speed;
-                
             }
-            this.world.cameraX = -this.x;
+            this.world.cameraX = -this.x ;
         }, 5000 / 60);
         
         setInterval(() => {
