@@ -4,6 +4,7 @@ class World {
     level = level01;
     character = new Pepe();
     background_static = new staticBackground();
+    endboss = new Endboss();
     
     // clouds = this.level.clouds;
     // background_moving = this.level.movingBackground;
@@ -37,6 +38,7 @@ class World {
     this.addObjects(this.level.background_moving);
     this.addToMap(this.character);
     this.addObjects(this.level.enemies);
+    this.addToMap(this.endboss);
 
     this.ctx.translate(-this.cameraX, 0);
 

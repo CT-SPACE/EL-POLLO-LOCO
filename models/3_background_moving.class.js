@@ -24,110 +24,33 @@ class movingBackground extends MovableObject{
         '../img/5_background/layers/2_second_layer/full.png',  // 14
         '../img/5_background/layers/1_first_layer/full.png'  // 15
     ];
- 
-
-    constructor(i) {
-        super().loadImage(this.hgparts[i]);
-        switch (i) {
-            case 0: // 3rd
-                this.x = 0;
-                this.y = 60;
-                this.height = 380;
-                this.width = 1600;
-                break;            
-            case 4:  // 3rd
-                this.x = 1600;
-                this.y = 60;
-                this.height = 380;
-                this.width = 1600;
-                break;
-            case 8:  // 3rd
-                this.x = 3200;
-                this.y = 60;
-                this.height = 380;
-                this.width = 1600;
-                break;
-            case 12:  // 3rd
-                this.x = 4800;
-                this.y = 60;
-                this.height = 380;
-                this.width = 1600;
-                break;
-            
-            case 1: // 2nd
-                this.x = 0;
-                this.y = 190;
-                this.height = 220;
-                this.width = 850;
-                break;
-            case 2: // 2nd
-                this.x = 850;
-                 this.y = 190;
-                 this.height = 220;
-                 this.width = 850;
-                     break;
-            case 5: // 2nd
-                     this.x = 1700;
-                     this.y = 190;
-                     this.height = 220;
-                     this.width = 850;
-                     break;
-            case 6: // 2nd
-                     this.x = 2550;
-                     this.y = 190;
-                     this.height = 220;
-                     this.width = 850;
-                     break;  
-          case 9: // 2nd
-                     this.x = 3400;
-                     this.y = 190;
-                     this.height = 220;
-                     this.width = 850;
-                     break;
-            case 10: // 2nd
-                     this.x = 4250;
-                     this.y = 190;
-                     this.height = 220;
-                     this.width = 850;
-         case 13: // 2nd
-                     this.x = 5100;
-                     this.y = 190;
-                     this.height = 220;
-                     this.width = 850;
-                     break;
-            case 14: // 2nd
-                     this.x = 5950;
-                     this.y = 190;
-                     this.height = 220;
-                     this.width = 870;
-            
-            case 3: // 1st
-                this.x = 0;
-                this.y = -20;
-                this.height = 508;
-                this.width = 1500;
-                break;
-            case 7: // 1st
-                this.x = 1500;
-                this.y = -20;
-                this.height = 508;
-                this.width = 1500;
-                     break;
-            case 11: // 1st
-                     this.x = 3000;
-                     this.y = -20;
-                     this.height = 508;
-                     this.width = 1500;
-                          break;
-           case 15: // 1st
-                          this.x = 4500;
-                          this.y = -20;
-                          this.height = 508;
-                          this.width = 1500;
-                               break;
-
-            default:
-                break;
+    
+        positions = [
+            { x: 0, y: 60, height: 380, width: 1600 },  // 0
+            { x: 0, y: 190, height: 220, width: 850 },  // 1
+            { x: 850, y: 190, height: 220, width: 850 },  // 2
+            { x: 0, y: -20, height: 508, width: 1500 },  // 3
+            { x: 1600, y: 60, height: 380, width: 1600 },  // 4
+            { x: 1700, y: 190, height: 220, width: 850 },  // 5
+            { x: 2550, y: 190, height: 220, width: 850 },  // 6
+            { x: 1500, y: -20, height: 508, width: 1500 },  // 7
+            { x: 3200, y: 60, height: 380, width: 1600 },  // 8
+            { x: 3400, y: 190, height: 220, width: 850 },  // 9
+            { x: 4250, y: 190, height: 220, width: 850 },  // 10
+            { x: 3000, y: -20, height: 508, width: 1500 },  // 11
+            { x: 4800, y: 60, height: 380, width: 1600 },  // 12
+            { x: 0, y: 0, height: 0, width: 0 },  // 13 (default)
+            { x: 0, y: 0, height: 0, width: 0 },  // 14 (default)
+            { x: 4500, y: -20, height: 508, width: 1500 }  // 15
+        ];
+    
+        constructor(i) {
+            super().loadImage(this.hgparts[i]);
+            const pos = this.positions[i] || { x: 0, y: 0, height: 0, width: 0 };
+            this.x = pos.x;
+            this.y = pos.y;
+            this.height = pos.height;
+            this.width = pos.width;
         }
     }
-}    
+    

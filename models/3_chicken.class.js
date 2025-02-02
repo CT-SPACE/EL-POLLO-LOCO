@@ -28,10 +28,9 @@ this.moveLeft();
     
         animateWalk() {
             setInterval(() => {
-                let i = this.currentIMG % this.IMAGES_WALKING.length;
-                let path = this.IMAGES_WALKING[i];
-                this.img = this.imgCache[path];  
-                this.currentIMG++;
+                
+                this.playAnimation(this.IMAGES_WALKING);
+
             }, this.animationSpeed);
         }
 

@@ -12,12 +12,6 @@ function init(){
 
     canvas = document.getElementById('canvas');
        world = new World(canvas);
-
-   console.log("my character:", world.character);
-   console.log("my enemies:", world.enemies);
-    console.log("my clouds:", world.clouds);
-    console.log("my canvas:", canvas);  
-    console.log("my background:", world.background_moving);  
     }
 
    document.addEventListener('keydown', (e) => {
@@ -40,8 +34,6 @@ function init(){
         keyboard.THROW = true;
     }
 
-
-        console.log(e);
     });
 
     document.addEventListener('keyup', (e) => {
@@ -63,7 +55,6 @@ function init(){
         if(e.code == 'KeyS'){
             keyboard.THROW = false;
         }
-    
-            console.log(e);
+
         });
     
