@@ -4,25 +4,25 @@ class movingBackground extends MovableObject{
     height = 488;
     width = 1600;
     hgparts = [
-        '../img/5_background/layers/3_third_layer/full.png',  // 0
-        '../img/5_background/layers/2_second_layer/full.png',  // 1
-        '../img/5_background/layers/2_second_layer/full.png',   // 2
-        '../img/5_background/layers/1_first_layer/full.png',    // 3
+        './img/5_background/layers/3_third_layer/full.png',  // 0
+        './img/5_background/layers/2_second_layer/full.png',  // 1
+        './img/5_background/layers/2_second_layer/full.png',   // 2
+        './img/5_background/layers/1_first_layer/full.png',    // 3
 
-        '../img/5_background/layers/3_third_layer/full.png',   // 4
-        '../img/5_background/layers/2_second_layer/full.png',   // 5
-        '../img/5_background/layers/2_second_layer/full.png',  // 6
-        '../img/5_background/layers/1_first_layer/full.png',  // 7
+        './img/5_background/layers/3_third_layer/full.png',   // 4
+        './img/5_background/layers/2_second_layer/full.png',   // 5
+        './img/5_background/layers/2_second_layer/full.png',  // 6
+        './img/5_background/layers/1_first_layer/full.png',  // 7
 
-        '../img/5_background/layers/3_third_layer/full.png',   // 8
-        '../img/5_background/layers/2_second_layer/full.png',   // 9
-        '../img/5_background/layers/2_second_layer/full.png',  // 10
-        '../img/5_background/layers/1_first_layer/full.png',  // 11
+        './img/5_background/layers/3_third_layer/full.png',   // 8
+        './img/5_background/layers/2_second_layer/full.png',   // 9
+        './img/5_background/layers/2_second_layer/full.png',  // 10
+        './img/5_background/layers/1_first_layer/full.png',  // 11
         
-        '../img/5_background/layers/3_third_layer/full.png',  // 12
-        '../img/5_background/layers/2_second_layer/full.png',  // 13
-        '../img/5_background/layers/2_second_layer/full.png',  // 14
-        '../img/5_background/layers/1_first_layer/full.png'  // 15
+        './img/5_background/layers/3_third_layer/full.png',  // 12
+        './img/5_background/layers/2_second_layer/full.png',  // 13
+        './img/5_background/layers/2_second_layer/full.png',  // 14
+        './img/5_background/layers/1_first_layer/full.png'  // 15
     ];
     
         positions = [

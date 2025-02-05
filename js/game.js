@@ -5,7 +5,7 @@ let keyboard = new Keyboard();
 
 
 function preload(){
-    character.src = '../img/2_character_pepe/2_walk/W-21.png';
+    character.src = './img/2_character_pepe/2_walk/W-21.png';
 }   
 
 function init(){

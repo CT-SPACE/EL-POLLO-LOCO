@@ -6,12 +6,14 @@ class MovableObject {
   world;
   keyboard;
   img;
+  cameraX;
   imgCache = {};
   currentIMG = 0;
-  v1 = 0.15;
-  speedY = 1;
+  speed = 20;
+  speedY = 2;
   acceleration = 4.2;
   otherDirection = false;
+
 
   applyGravity(){
     setInterval(() => {
@@ -42,22 +44,38 @@ class MovableObject {
       let img = new Image();
       img.src = path;
       this.imgCache[path] = img;
-    });
+    });  
 }
-  moveRight() {
-    setInterval(() => {
-      this.x = this.v1;
-    }, 1000 / 60);
 
+drawFrames(ctx){
+  if( this instanceof Pepe || this instanceof Chicken){
+      ctx.beginPath();
+    	ctx.lineWidth = '5';
+    	ctx.strokeStyle = 'yellowgreen';
+    	ctx.rect(this.x, this.y, this.width, this.height);
+    	ctx.stroke();
+  }
+
+}
+
+drawObject(ctx){
+  ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+}
+
+  moveRight() {
+         this.x += this.speed;
+      this.otherDirection = false;
+                       
   }
 
   moveLeft() {
-    setInterval(() => {
-      this.x -= this.v1;
-    }, 1000 / 60);
-
+      this.x -= this.speed;
   }
 
+  jump(){
+    this.speedY = 34;
+  }
+ 
 
 // playAnimation(images){
 //   this.images = images;
@@ -78,4 +96,8 @@ playAnimation(images) {
   img.src = path;
   this.currentIMG++;
 }
+
+
+
+
 }

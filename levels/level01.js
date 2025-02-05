@@ -1,7 +1,7 @@
 const level01 = new Level(
-    [
-        new Clouds(),
-        new Clouds()
+        [
+            new Clouds(),
+            new Clouds()
         ],
         [
             new movingBackground(0),

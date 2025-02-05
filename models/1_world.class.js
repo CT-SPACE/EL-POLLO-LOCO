@@ -5,15 +5,8 @@ class World {
     character = new Pepe();
     background_static = new staticBackground();
     endboss = new Endboss();
-    
-    // clouds = this.level.clouds;
-    // background_moving = this.level.movingBackground;
-
-    
-    // enemies = this.level.enemies;  
-
     keyboard;
-    cameraX = 0;
+    // cameraX = 0;
 
 
     constructor(canvas, keyboard){
@@ -36,10 +29,10 @@ class World {
     this.addToMap(this.background_static);
     this.addObjects(this.level.clouds);
     this.addObjects(this.level.background_moving);
-    this.addToMap(this.character);
+  
     this.addObjects(this.level.enemies);
     this.addToMap(this.endboss);
-
+    this.addToMap(this.character);
     this.ctx.translate(-this.cameraX, 0);
 
    self = this;   // This is a trick to access the "this" object inside the function. Die This-Information wird in self gespeichert, weil this in der Funktion nicht mehr verfügbar ist.
@@ -54,11 +47,16 @@ addObjects(objects)  {
 addToMap(Obj) {
     if(Obj.otherDirection){
         this.flipImage(Obj);
+    } ;
+    
+    if (Obj !== staticBackground){
+        Obj.drawFrames(this.ctx);
     }
-    this.ctx.drawImage(Obj.img, Obj.x, Obj.y, Obj.width, Obj.height);
+    
+    Obj.drawObject(this.ctx);
+
     if(Obj.otherDirection){
-        Obj.x = Obj.x * -1;
-        this.ctx.restore();
+        this.flipImageBack(Obj);
     }
 }
 
@@ -68,4 +66,10 @@ flipImage(Obj){
     this.ctx.scale(-1,1);
     Obj.x = Obj.x * -1;
 }
+flipImageBack(Obj){
+    Obj.x = Obj.x * -1;
+    this.ctx.restore();
+}
+
+
 }

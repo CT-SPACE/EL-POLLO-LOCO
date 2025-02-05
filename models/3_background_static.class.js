@@ -6,7 +6,7 @@ class staticBackground extends StaticObject {
     img;
     
     constructor(){
-        super().loadImage('../img/5_background/layers/air.png');
+        super().loadImage('./img/5_background/layers/air.png');
         this.y = 480 - this.height;
 
     }
