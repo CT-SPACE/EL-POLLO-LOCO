@@ -2,16 +2,20 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-
+let pepe_ambient;
 
 function preload(){
-    character.src = './img/2_character_pepe/2_walk/W-21.png';
+    pepe_ambient = new Audio('./audio/pepe_ambient.mp3');
 }   
 
 function init(){
 
     canvas = document.getElementById('canvas');
        world = new World(canvas);
+       preload();
+       pepe_ambient.play();
+       pepe_ambient.volume = 0.6;
+       
     }
 
    document.addEventListener('keydown', (e) => {

@@ -5,8 +5,9 @@ class World {
     character = new Pepe();
     background_static = new staticBackground();
     endboss = new Endboss();
+    energy;
     keyboard;
-    // cameraX = 0;
+    cameraX = 0;
 
 
     constructor(canvas, keyboard){
@@ -16,6 +17,7 @@ class World {
       
         this.draw();
         this.setWorld();
+        this.checkCollisions();
     }
 
     setWorld(){
@@ -38,6 +40,19 @@ class World {
    self = this;   // This is a trick to access the "this" object inside the function. Die This-Information wird in self gespeichert, weil this in der Funktion nicht mehr verfügbar ist.
     requestAnimationFrame(() => self.draw());
         }
+checkCollisions(){
+    setInterval(() => {
+this.level.enemies.forEach((enemy) => {
+if(this.character.isColliding(enemy) && this.character.energy > 0){
+    this.character.hit();
+    // this.character.energy -= 0.02;
+console.log('Energy after Collision', (this.character.energy).toFixed(2));
+}
+})
+    },200)
+}
+
+
 
 addObjects(objects)  {
    objects.forEach(object => {
