@@ -1,14 +1,8 @@
-class MovableObject {
-  x;
-  y;
-  height;
-  width;
+class MovableObject extends DrawableObject {
+
   world;
   keyboard;
-  img;
   cameraX;
-  imgCache = {};
-  currentIMG = 0;
   speed = 20;
   speedY = 2;
   acceleration = 4.2;
@@ -29,23 +23,6 @@ class MovableObject {
     return this.y < 100;
   }
 
-  loadImage(path) {
-    this.img = new Image();
-    // console.log('X:', x);
-    this.img.src = path;
-  }
-
-  /**
-   *
-   * @param {Array} arr
-   */
-  loadImages(arr) {
-    arr.forEach((path) => {
-      let img = new Image();
-      img.src = path;
-      this.imgCache[path] = img;
-    });
-  }
 
   drawFrames(ctx) {
     if (this instanceof Pepe || this instanceof Chicken) {
@@ -57,9 +34,6 @@ class MovableObject {
     }
   }
 
-  drawObject(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-  }
 
   isColliding(Obj) {
     return (

@@ -1,4 +1,4 @@
-class StaticObject{
+class StaticObject extends DrawableObject {
   x;
   y;
   height;
