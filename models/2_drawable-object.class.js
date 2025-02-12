@@ -4,6 +4,8 @@ class DrawableObject {
     height;
     width;
     cameraX;
+    world;
+    energy;
     img;
     imgCache = {};
     currentIMG = 0;

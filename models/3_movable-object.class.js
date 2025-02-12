@@ -92,11 +92,12 @@ if(this.energy < 0){
     this.images = images;
     let i = this.currentIMG % this.images.length;
     let path = this.images[i];
-    let img = new Image();
-    img.onload = () => {
-      this.img = img;
-    };
-    img.src = path;
+    // let img = new Image();
+    // img.onload = () => {
+    //   this.img = img;
+    // };
+    // img.src = path;
+    this.img = this.imgCache[path];
     this.currentIMG++;
   }
 }

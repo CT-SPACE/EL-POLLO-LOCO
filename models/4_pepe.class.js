@@ -41,6 +41,7 @@ class Pepe extends MovableObject {
     height = 340;
     width = 160;
     world;
+
     keyboard;
     cameraX;
     speed = 20;

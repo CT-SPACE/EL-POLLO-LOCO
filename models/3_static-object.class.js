@@ -4,7 +4,11 @@ class StaticObject extends DrawableObject {
   height;
   width;
   img;
+  energy;
 
+  world;
+  keyboard;
+  cameraX;
 
 
   loadImage(path) {
