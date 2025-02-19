@@ -1,0 +1,13 @@
+node_modules/
+bower_components/
+dist/
+.cache/
+.envcd 
+js/_bootstrap.bundle.min.js.map
+firebase.js
+tests/
+.vscode/launch.json
+
+
+Archiv/
+_modul12_el-pollo-loco.code-workspace
