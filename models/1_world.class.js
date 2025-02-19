@@ -8,7 +8,10 @@ class World {
     energy;
     keyboard;
     cameraX = 0;
-    statusBar = new StatusBar();
+    statusBarPepe = new StatusBarPepe();
+    statusBarCoin = new StatusBarCoin();
+    statusBarChilli = new StatusBarChilli();
+    statusBarEndboss = new StatusBarEndboss();
 
 
     constructor(canvas, keyboard){
@@ -24,7 +27,7 @@ class World {
     setWorld(){
         this.character.keyboard = this.keyboard;
         this.character.world = this;
-        this.statusBar.world = this.statusBar;
+        this.statusBarPepe.world = this.statusBar;
 
     }   
 
@@ -37,9 +40,17 @@ class World {
   
     this.addObjects(this.level.enemies);
     this.addToMap(this.endboss);
+    
     this.addToMap(this.character);
     this.ctx.translate(-this.cameraX, 0);
-    this.addToMap(this.statusBar);
+    this.addToMap(this.statusBarPepe);
+    this.addToMap(this.statusBarCoin);
+    this.addToMap(this.statusBarChilli);
+    if (this.character.x > 3200){
+    this.addToMap(this.statusBarEndboss);
+  }
+   
+    
 
    self = this;   // This is a trick to access the "this" object inside the function. Die This-Information wird in self gespeichert, weil this in der Funktion nicht mehr verfügbar ist.
     requestAnimationFrame(() => self.draw());
@@ -49,8 +60,8 @@ checkCollisions(){
 this.level.enemies.forEach((enemy) => {
 if(this.character.isColliding(enemy) && this.character.energy > 0){
     this.character.hit();
-  
-    // this.character.energy -= 0.02;
+    this.statusBarPepe.setPercentage(this.character.energy);
+    
 console.log('Energy after Collision', (this.character.energy).toFixed(2));
 }
 })

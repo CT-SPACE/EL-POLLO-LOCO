@@ -3,9 +3,7 @@ class DrawableObject {
     y;
     height;
     width;
-    cameraX;
-    world;
-    energy;
+    otherDirection = false;
     img;
     imgCache = {};
     currentIMG = 0;
@@ -30,5 +28,16 @@ class DrawableObject {
   drawObject(ctx) {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
+
+  drawFrames(ctx) {
+    if (this instanceof Pepe || this instanceof Chicken) {
+      ctx.beginPath();
+      ctx.lineWidth = "5";
+      ctx.strokeStyle = "yellowgreen";
+      ctx.rect(this.x, this.y, this.width, this.height);
+      ctx.stroke();
+    }
+  }
+
 
 }

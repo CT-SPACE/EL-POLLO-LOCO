@@ -7,7 +7,7 @@ class MovableObject extends DrawableObject {
   speedY = 2;
   acceleration = 4.2;
   energy = 1;
-  otherDirection = false;
+
   lastHit = 0;
 
   applyGravity() {
@@ -23,19 +23,7 @@ class MovableObject extends DrawableObject {
     return this.y < 100;
   }
 
-
-  drawFrames(ctx) {
-    if (this instanceof Pepe || this instanceof Chicken) {
-      ctx.beginPath();
-      ctx.lineWidth = "5";
-      ctx.strokeStyle = "yellowgreen";
-      ctx.rect(this.x, this.y, this.width, this.height);
-      ctx.stroke();
-    }
-  }
-
-
-  isColliding(Obj) {
+ isColliding(Obj) {
     return (
       this.x + this.width > Obj.x &&
       this.y + this.height > Obj.y &&
