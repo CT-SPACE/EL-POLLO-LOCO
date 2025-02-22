@@ -34,7 +34,7 @@ function init(){
     if(e.code == 'ArrowDown'){
         keyboard.DOWN = true;
     }
-    if(e.code === 'KeyD'){
+    if(e.code == 'KeyD'){
         keyboard.THROW = true;
     }
 

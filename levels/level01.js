@@ -32,5 +32,12 @@ const level01 = new Level(
             new Chicken(), 
             new Endboss()
         ]
+        // [
+        //     new ThrowableObject(math.Random * 800),
+        //         new ThrowableObject(math.Random * 800),
+     
+
+
+        // ]
 
 )
