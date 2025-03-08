@@ -12,7 +12,11 @@ class World {
     statusBarCoin = new StatusBarCoin();
     statusBarChilli = new StatusBarChilli();
     statusBarEndboss = new StatusBarEndboss();
-    throwableObjects = new ThrowableObject();
+    throwableObjects = [new ThrowableObject()];
+    coin = new CollectableObject();
+    coinColleting = new Audio('./audio/coin_success.mp3');
+    bottle;
+
 
 
     constructor(canvas, keyboard){
@@ -29,26 +33,28 @@ class World {
         this.character.keyboard = this.keyboard;
         this.character.world = this;
         this.statusBarPepe.world = this.statusBar;
+        this.coin.world = this;
 
     }   
 
   draw(){
     this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
     this.ctx.translate(this.cameraX, 0);
+
     this.addToMap(this.background_static);
-   
     this.addObjects(this.level.clouds);
     this.addObjects(this.level.background_moving);
-   this.addToMap(this.throwableObjects);
+   this.addObjects(this.throwableObjects);
     this.addObjects(this.level.enemies);
     this.addToMap(this.endboss);
-    
     this.addToMap(this.character);
+
     this.ctx.translate(-this.cameraX, 0);
+
     this.addToMap(this.statusBarPepe);
     this.addToMap(this.statusBarCoin);
     this.addToMap(this.statusBarChilli);
-    if (this.character.x > 3200){
+    if (this.character.x > 3100){
     this.addToMap(this.statusBarEndboss);
   }
    
@@ -66,6 +72,7 @@ run(){
 
 checkThrowObjects(){
     if(keyboard.THROW){
+        console.log('keyboard D = ', keyboard.THROW);
         let bottle = new ThrowableObject(this.character.x + this.character.width, this.character.y + this.character.height / 2);
         this.throwableObjects.push(bottle);
     }
@@ -84,7 +91,13 @@ if(this.character.isColliding(enemy) && this.character.energy > 0){
     },200)
 }
 
-
+// startLoop(){
+    
+//     setInterval(() => {
+//         this.addObjects(this.level.clouds);
+//     }, Math.random * 2000);
+    
+// }
 
 addObjects(objects)  {
    objects.forEach(object => {

@@ -1,5 +1,8 @@
 const level01 = new Level(
         [
+            
+            new Clouds(),
+            new Clouds(),
             new Clouds(),
             new Clouds()
         ],
@@ -30,14 +33,14 @@ const level01 = new Level(
             new Chicken(),
             new Chicken(), 
             new Chicken(), 
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+  
             new Endboss()
         ]
-        // [
-        //     new ThrowableObject(math.Random * 800),
-        //         new ThrowableObject(math.Random * 800),
-     
+   
 
-
-        // ]
 
 )

@@ -83,14 +83,15 @@ if(this.energy < 0){
 
   playAnimation(images) {
     this.images = images;
-    let i = this.currentIMG % this.images.length;
-    let path = this.images[i];
-    // let img = new Image();
-    // img.onload = () => {
-    //   this.img = img;
-    // };
-    // img.src = path;
-    this.img = this.imgCache[path];
-    this.currentIMG++;
-  }
+   let i = this.currentIMG % this.images.length;
+   let path = this.images[i];
+
+    if (this.images === this.IMAGES_DYING && i === this.images.length - 1) {
+      this.img = this.imgCache[this.images[i]];
+    } else {
+      this.img = this.imgCache[path];
+        this.currentIMG++;
+    }
 }
+
+  }

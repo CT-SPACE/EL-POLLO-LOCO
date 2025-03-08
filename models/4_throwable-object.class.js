@@ -29,7 +29,7 @@ class ThrowableObject extends MovableObject {
         this.width = 70;
         this.x = 200;
         this.y = 380;
-        this
+   
         this.throw(40, 320);
     }
 

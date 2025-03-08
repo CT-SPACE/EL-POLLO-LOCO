@@ -1,5 +1,5 @@
 class Chicken extends MovableObject{
-    x = -80 + Math.random() * 800;
+    x = 400;
     y = 350;
     speed = 0.15;
     height = 80;
@@ -14,8 +14,9 @@ class Chicken extends MovableObject{
         constructor() {
             super().loadImage('./img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
             this.loadImages(this.IMAGES_WALKING);
-            this.speed = 0.15 + Math.random() * 0.5; // Zufällige Geschwindigkeit zwischen 0.1 und 0.6
-            this.animationSpeed = Math.random() * 200 + 100; // Zufällige Animationsgeschwindigkeit zwischen 100 und 300 ms
+            this.x +=  300 + Math.random() * 1600;
+            this.speed = 0.5 + Math.random() * 0.5; // Zufällige Geschwindigkeit zwischen 0.1 und 0.6
+            this.animationSpeed = Math.random() * 20 + 100; // Zufällige Animationsgeschwindigkeit zwischen 100 und 300 ms
             this.animateX();
             this.animateWalk();
         }
@@ -27,6 +28,7 @@ animateX() {
             }
 
 animateWalk() {
+    this.x += 1200;
             setInterval(() => { 
                 this.playAnimation(this.IMAGES_WALKING);
       }, this.animationSpeed);
