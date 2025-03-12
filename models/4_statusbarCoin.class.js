@@ -31,8 +31,8 @@ class StatusBarCoin extends StaticObject {
 
     setPercentage(coincount){
         this.percentage = coincount;
-        console.log("Health % =", coincount);
-        let path = this.IMAGES_SALUD_PEPE[this.resolveImageCoin(coincount)];
+        console.log("Coins =", coincount);
+        let path = this.IMAGES_COIN[this.resolveImageCoin(coincount)];
         this.img = this.imgCache[path];
 
         console.log("Coin Count =", this.resolveImageCoin(coincount));

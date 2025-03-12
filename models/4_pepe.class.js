@@ -34,7 +34,10 @@ class Pepe extends MovableObject {
         './img/2_character_pepe/4_hurt/H-42.png',
         './img/2_character_pepe/4_hurt/H-43.png'
     ];
-    // pepe_sound = new Audio('./audio/pepe_ambient.mp3');
+    pepe_pollo = new Audio('./audio/pepe_pollo_funny.mp3');
+    
+    pepe_caramba = new Audio('./audio/pepe_caramba_funny.mp3');
+    pepe_hurt = new Audio('./audio/pepe_grunts.mp3');
 
     x = 0;
     y = 40;
@@ -63,32 +66,41 @@ class Pepe extends MovableObject {
     }
 
     animateWalk(){
-        this.x = 100;
+        this.x = 100; 
+         this.pepe_pollo.pause();
         setInterval(() => {
-            // this.walking_sound.pause();
+          
+            //this.walking_sound.pause();
             // if(this.energy > 0){
     if (keyboard.RIGHT && (this.x < this.world.level.level_endX)){
                 this.moveRight();
+                this.pepe_pollo.play();
+                this.pepe_pollo.volume = 0.8;
                 //this.walking_sound.play();
             }
-            if(keyboard.LEFT && this.x > 100){
+        
+    if(keyboard.LEFT && this.x > 100){
                       this.moveLeft();
                       this.otherDirection = true;
                     //this.walking_sound.play();
             }
-            if((keyboard.UP || keyboard.SPACE) && this.y >= 100 && (this.x < (this.world.level.level_endX + 20))){
+     if((keyboard.UP || keyboard.SPACE) && this.y >= 100 && (this.x < (this.world.level.level_endX + 20))){
                 this.jump();
             };      
 
             this.world.cameraX = -this.x + 100;
         
         }, 3000 / 60);
+          setInterval(() => {  
         
-        setInterval(() => {
             if(this.isDead(this)){
-                this.playAnimation(this.IMAGES_DYING);
+                this.animateDeath();
+
             } else if (this.isHurt()){
                 this.playAnimation(this.IMAGES_HURT);
+                this.pepe_hurt.play();
+                 this.pepe_pollo.pause();
+                
             }
             else if(this.isAboveGround()){
                 this.playAnimation(this.IMAGES_JUMPING);
@@ -97,14 +109,14 @@ class Pepe extends MovableObject {
               this.playAnimation(this.IMAGES_WALKING)  
                 ;
             }
+        
             }
         }, 10000 / 60);
 }
- 
+
+
     animateDeath(){
-        setInterval(() => {
                 this.playAnimation(this.IMAGES_DYING);
-        }, 1000 / 60);
     }
     animateHurt(){
         setInterval(() => {

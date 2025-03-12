@@ -1,4 +1,6 @@
 const level01 = new Level(
+
+
         [
             
             new Clouds(),
@@ -39,8 +41,9 @@ const level01 = new Level(
             new Chicken(),
   
             new Endboss()
-        ]
-   
+        ],
 
+     
+    CollectableObject.createCoins(50, 80, 0.2)
 
 )

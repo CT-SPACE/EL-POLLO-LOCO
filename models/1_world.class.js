@@ -46,6 +46,7 @@ class World {
     this.addObjects(this.level.background_moving);
    this.addObjects(this.throwableObjects);
     this.addObjects(this.level.enemies);
+    this.addObjects(this.level.coins);
     this.addToMap(this.endboss);
     this.addToMap(this.character);
 
@@ -91,16 +92,11 @@ if(this.character.isColliding(enemy) && this.character.energy > 0){
     },200)
 }
 
-// startLoop(){
-    
-//     setInterval(() => {
-//         this.addObjects(this.level.clouds);
-//     }, Math.random * 2000);
-    
-// }
 
 addObjects(objects)  {
+   // console.log('objects = ', objects);
    objects.forEach(object => {
+  
        this.addToMap(object);
    });      
 }    
