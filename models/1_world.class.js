@@ -85,8 +85,17 @@ this.level.enemies.forEach((enemy) => {
 if(this.character.isColliding(enemy) && this.character.energy > 0){
     this.character.hit();
     this.statusBarPepe.setPercentage(this.character.energy);
-    
+ 
+    this.level.checkForCoinCollisions(this.character, this.level.coins)
 //console.log('Energy after Collision', (this.character.energy).toFixed(2));
+// 
+// this.level.coins.forEach((coin) => {
+//     if(this.character.isColliding(coin)){
+//         this.level.coins = this.level.coins.filter(object => object !== coin);
+//         this.statusBarCoin.setPercentage(this.level.coins.length);
+//         this.coinColleting.play();
+//     }   
+
 }
 })
     },200)

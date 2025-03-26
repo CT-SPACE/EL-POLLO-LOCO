@@ -25,6 +25,7 @@ class CollectableObject extends DrawableObject {
     this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
     this.y = y;
     this.animateRotation();
+    // this.checkForCoinCollisions(character, coins);
   }
 
   static createCoins(count, distanceX, Row2Probability) {
@@ -55,19 +56,21 @@ class CollectableObject extends DrawableObject {
     return coins;
   }
 
-  // Hilfsmethode zur Überprüfung von Überlappungen
-  static isOverlapping(existingCoins, x, y, minDistance) {
-    for (let coin of existingCoins) {
-      // Überprüfung der Koordinaten des bestehenden Coins
-      let dx = coin.x - x;
-      let dy = coin.y - y;
-      let distance = Math.sqrt(dx * dx + dy * dy); // Abstand zwischen zwei Coins
-      if (distance < minDistance) {
-        return true; // Coins überlappen sich
-      }
-    }
-    return false; // Kein Coin in der Nähe
-  }
+  checkForCoinCollisions(character, coins) {
+    this.world.character = character;
+    console.log("character", this.world.character, character);
+    coins.forEach((coin, index) => {
+        if (this.world.character.isColliding(coin)) {
+            // Sound abspielen
+            let coinSound = new Audio('coin-sound.mp3');
+            coinSound.play();
+
+            // Coin entfernen
+            coins.splice(index, 1);
+        }
+    });
+}
+
 
   animateRotation() {
     setInterval(() => {
