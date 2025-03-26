@@ -13,8 +13,8 @@ class World {
     statusBarChilli = new StatusBarChilli();
     statusBarEndboss = new StatusBarEndboss();
     throwableObjects = [new ThrowableObject()];
-    coin = new CollectableObject();
-    coinColleting = new Audio('./audio/coin_success.mp3');
+    //coin = new CollectableObject();
+   offset;
     bottle;
 
 
@@ -33,7 +33,7 @@ class World {
         this.character.keyboard = this.keyboard;
         this.character.world = this;
         this.statusBarPepe.world = this.statusBar;
-        this.coin.world = this;
+        //this.coin.world = this;
 
     }   
 
@@ -86,7 +86,8 @@ if(this.character.isColliding(enemy) && this.character.energy > 0){
     this.character.hit();
     this.statusBarPepe.setPercentage(this.character.energy);
  
-    this.level.checkForCoinCollisions(this.character, this.level.coins)
+    this.level.coins.checkForCoinCollisions(this.character, this.level.coins);
+//console.log("checkCollision Coins",this.character, this.level.coins);
 //console.log('Energy after Collision', (this.character.energy).toFixed(2));
 // 
 // this.level.coins.forEach((coin) => {

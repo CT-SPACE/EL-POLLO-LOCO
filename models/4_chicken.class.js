@@ -34,6 +34,13 @@ class Chicken extends MovableObject{
     
 //     }, 1000 / 60);
 //             }
+offset = {
+    left: 10,
+    right: 10,
+    top: 10,
+    bottom: 10
+}
+
 
 animateX() {  
     const canvasWidth = 800; // Beispiel für die Canvas-Breite

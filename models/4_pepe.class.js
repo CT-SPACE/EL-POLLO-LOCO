@@ -51,6 +51,13 @@ class Pepe extends MovableObject {
     speedY = 0;
     frameIndex = 0;
 
+    offset = {
+        left: 30,
+        right: 40,
+        top: 130,
+        bottom: 40
+    }
+    
 
     constructor(keyboard){
 

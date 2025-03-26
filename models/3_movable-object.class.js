@@ -7,6 +7,7 @@ class MovableObject extends DrawableObject {
   speedY = 2;
   acceleration = 4.2;
   energy = 1;
+  offset;
 
   lastHit = 0;
 
@@ -28,12 +29,22 @@ class MovableObject extends DrawableObject {
     
   }
 
- isColliding(Obj) {
+ isColliding(Obj, offset) {
+    if(offset === undefined){
+      offset = {
+        left: 12,
+        right: 12,
+        top: 12,
+        bottom: 12
+      };
+    } 
+    console.log("offset = ", offset);
+    this.offset = offset;
     return (
-      this.x + this.width > Obj.x &&
-      this.y + this.height > Obj.y &&
-      this.x < Obj.x &&
-      this.y < Obj.y + Obj.height
+      this.x + this.width - this.offset.right > Obj.x + Obj.offset.left &&
+      this.y + this.height - this.offset.bottom > Obj.y  + Obj.offset.top &&
+      this.x + this.offset.left < Obj.x - Obj.offset.right &&
+      this.y + this.offset.top < Obj.y + Obj.height - Obj.offset.bottom
     );
   }
 

@@ -14,6 +14,7 @@ class CollectableObject extends DrawableObject {
   distanceY = 10;
   minX = 280;
   maxX = 3600;
+  coinColleting = new Audio('./audio/coin_success.mp3');
 
   COINS_ROTATING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
   static allCoins = [];
@@ -27,6 +28,13 @@ class CollectableObject extends DrawableObject {
     this.animateRotation();
     // this.checkForCoinCollisions(character, coins);
   }
+
+  offset = {
+    left: 30,
+    right: 30,
+    top: 30,
+    bottom: 30
+}
 
   static createCoins(count, distanceX, Row2Probability) {
     let coins = [];
@@ -60,10 +68,10 @@ class CollectableObject extends DrawableObject {
     this.world.character = character;
     console.log("character", this.world.character, character);
     coins.forEach((coin, index) => {
-        if (this.world.character.isColliding(coin)) {
+        if (this.world.character.isColliding(coin, offset)) {
             // Sound abspielen
-            let coinSound = new Audio('coin-sound.mp3');
-            coinSound.play();
+            coinCollecting.play();
+            coinCollecting.Volume = 0.5;
 
             // Coin entfernen
             coins.splice(index, 1);
