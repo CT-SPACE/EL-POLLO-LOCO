@@ -2,12 +2,14 @@ class MovableObject extends DrawableObject {
 
   world;
   keyboard;
+  keyboardEnabled = true;
   cameraX;
   speed = 20;
   speedY = 2;
   acceleration = 4.2;
   energy = 1;
   offset;
+  
 
   lastHit = 0;
 
@@ -38,6 +40,7 @@ class MovableObject extends DrawableObject {
         bottom: 12
       };
     } 
+    console.log("Obj = ", Obj);
     console.log("offset = ", offset);
     this.offset = offset;
     return (
@@ -99,10 +102,17 @@ if(this.energy < 0){
 
     if (this.images === this.IMAGES_DYING && i === this.images.length - 1) {
       this.img = this.imgCache[this.images[i]];
+      this.disableKeyboard();
+      
+      
     } else {
       this.img = this.imgCache[path];
         this.currentIMG++;
     }
 }
 
+disableKeyboard() {
+  keyboardEnabled = false; // Steuerung deaktivieren
+  console.log("Bewegungstasten sind deaktiviert.");
+}
   }

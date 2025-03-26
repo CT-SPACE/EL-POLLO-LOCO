@@ -3,6 +3,8 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let pepe_ambient;
+let chicken_run;
+let keyboardEnabled = true;
 
 // function preload(){
 //     pepe_ambient = new Audio('./audio/pepe_ambient.mp3');
@@ -47,27 +49,51 @@ function init() {
 }
 
 
-   document.addEventListener('keydown', (e) => {
-    if(e.code == 'Space'){
+//    document.addEventListener('keydown', (e) => {
+//     if(e.code == 'Space'){
+//         keyboard.SPACE = true;
+//     }
+//     if(e.code == 'ArrowRight'){    
+//         keyboard.RIGHT = true;
+//     }
+//     if(e.code == 'ArrowLeft'){
+//         keyboard.LEFT = true;
+//     }
+//     if(e.code == 'ArrowUp'){
+//         keyboard.UP = true;
+//     }
+//     if(e.code == 'ArrowDown'){
+//         keyboard.DOWN = true;
+//     }
+//     if(e.code == 'KeyD'){
+//         keyboard.THROW = true;
+//     }
+
+//     });
+
+
+document.addEventListener('keydown', (e) => {
+    if (!keyboardEnabled) return; // Ignorieren, wenn die Steuerung deaktiviert ist
+
+    if (e.code == 'Space') {
         keyboard.SPACE = true;
     }
-    if(e.code == 'ArrowRight'){    
+    if (e.code == 'ArrowRight') {
         keyboard.RIGHT = true;
     }
-    if(e.code == 'ArrowLeft'){
+    if (e.code == 'ArrowLeft') {
         keyboard.LEFT = true;
     }
-    if(e.code == 'ArrowUp'){
+    if (e.code == 'ArrowUp') {
         keyboard.UP = true;
     }
-    if(e.code == 'ArrowDown'){
+    if (e.code == 'ArrowDown') {
         keyboard.DOWN = true;
     }
-    if(e.code == 'KeyD'){
+    if (e.code == 'KeyD') {
         keyboard.THROW = true;
     }
-
-    });
+});
 
     document.addEventListener('keyup', (e) => {
         if(e.code == 'Space'){

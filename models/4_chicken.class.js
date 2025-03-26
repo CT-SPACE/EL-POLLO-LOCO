@@ -11,6 +11,13 @@ class Chicken extends MovableObject{
         './img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
         './img/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
     ];
+    offset = {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10
+    }
+    
 
 
         constructor() {
@@ -34,12 +41,6 @@ class Chicken extends MovableObject{
     
 //     }, 1000 / 60);
 //             }
-offset = {
-    left: 10,
-    right: 10,
-    top: 10,
-    bottom: 10
-}
 
 
 animateX() {  

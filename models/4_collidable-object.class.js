@@ -1,7 +1,7 @@
 class CollidableObject extends MovableObject {
     collidable = true;
 
-    damage = 0;
+    //damage = 0;
 
     offset = {
         left: 0,
