@@ -3,7 +3,7 @@ class CollectableObject extends DrawableObject {
   y = 300;
   width = 100;
   height = 100;
-  CountableItem = 0;
+  //CountableItem = 0;
   images = [];
   currentIMG = 0;
   world;
@@ -14,7 +14,7 @@ class CollectableObject extends DrawableObject {
   distanceY = 10;
   minX = 280;
   maxX = 3600;
-  //coinCollecting = new Audio('./audio/coin_success.mp3');
+  coinCollecting = new Audio('./audio/coin_success.mp3');
 
   COINS_ROTATING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
   static allCoins = [];
@@ -89,8 +89,8 @@ checkForCoinCollisions(character, coins) {
   coins.forEach((coin, index) => {
       if (this.character.isColliding(coin)) {
           // Sound abspielen
-          coinCollecting.play();
-          coinCollecting.Volume = 0.1;
+          // coinCollecting.play();
+          // coinCollecting.Volume = 0.1;
 
           coins.splice(index, 1);
       }

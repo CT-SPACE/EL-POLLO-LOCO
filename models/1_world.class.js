@@ -13,7 +13,7 @@ class World {
     statusBarChilli = new StatusBarChilli();
     statusBarEndboss = new StatusBarEndboss();
     throwableObjects = [new ThrowableObject()];
-    //coin = new CollectableObject();
+    coinCollecting = new Audio('./audio/coin_success.mp3');
    offset;
     bottle;
 
@@ -85,7 +85,7 @@ this.level.enemies.forEach((enemy) => {
 if(this.character.isColliding(enemy) && this.character.energy > 0){
     this.character.hit();
     this.statusBarPepe.setPercentage(this.character.energy);
- 
+
 //console.log("checkCollision Coins",this.character, this.level.coins);
 //console.log('Energy after Collision', (this.character.energy).toFixed(2));
 
@@ -103,10 +103,19 @@ setInterval(() => {
             this.statusBarCoin.setPercentage((totalCoins - this.level.coins.length));
             // Kollision prüfen
             coin.checkForCoinCollisions(this.character, this.level.coins);
-        }
-    });
+
+            // Sound abspielen      
+            this.coinCollecting.play();
+            this.coinCollecting.volume = 0.2; 
+            this.coinCollecting.loop = false;
+            this.coinCollecting.currentTime = 0; // Zurücksetzen des Audio-Elements
+
+    }});
   }, 200);
-}); })
+
+}); 
+
+})
 }
 
 addObjects(objects)  {
@@ -143,6 +152,8 @@ flipImageBack(Obj){
     Obj.x = Obj.x * -1;
     this.ctx.restore();
 }
+
+
 
 
 }
