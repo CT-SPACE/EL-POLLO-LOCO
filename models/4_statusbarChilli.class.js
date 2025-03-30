@@ -30,11 +30,11 @@ class StatusBarChilli extends StaticObject {
 
     setPercentage(chillicount){
         this.chillicount = chillicount;
-        console.log("How Many Chilli-Fläschen =", chillicount);
+        //console.log("How Many Chilli-Fläschen =", chillicount);
         let path = this.IMAGES_CHILLI[this.resolveImageChilli(chillicount)];
         this.img = this.imgCache[path];
 
-        console.log("chilli Index =", this.resolveImageChilli(chillicount));
+        //console.log("chilli Index =", this.resolveImageChilli(chillicount));
  
     }
 

@@ -14,7 +14,7 @@ class CollectableObject extends DrawableObject {
   distanceY = 10;
   minX = 280;
   maxX = 3600;
-  coinColleting = new Audio('./audio/coin_success.mp3');
+  //coinCollecting = new Audio('./audio/coin_success.mp3');
 
   COINS_ROTATING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
   static allCoins = [];
@@ -40,7 +40,7 @@ class CollectableObject extends DrawableObject {
     let coins = [];
     const yRow1 = 280; // Y-Koordinate für Ebene 1
     const yRow2 = 150; // Ebene 2 liegt höher
-    console.log("yRow2", yRow2, yRow1);
+    //console.log("yRow2", yRow2, yRow1);
     let coinsPerRow = Math.ceil(count); // Coins auf Reihen verteilen
 
     for (let row = 0; row < 2; row++) {
@@ -51,8 +51,8 @@ class CollectableObject extends DrawableObject {
         let x = i * distanceX + 110; // Berechnung der X-Koordinate
         let y = Math.random() < Row2Probability ? yRow2 : yRow1; // Y-Koordinate
 
-        console.log(`Position: x=${x}, y=${y}`);
-        console.log("coins =", coins);
+        //console.log(`Position: x=${x}, y=${y}`);
+        //console.log("coins =", coins);
 
         // Coin hinzufügen
         coins.push(
@@ -63,20 +63,39 @@ class CollectableObject extends DrawableObject {
 
     return coins;
   }
+// checkForCoinCollisions(character, coins){
+//     this.character = character;
+//     //console.log("character", this.character, character);
+//     coins.forEach((coin, index) => {
+//         if (this.character.isColliding(coin)) {
+//             // Sound abspielen
+//             this.coinCollecting.play();
+//             this.coinCollecting.Volume = 0.5;
+//             // Punkte erhöhen
+//             this.statusBarCoins.coincount += (coins.length / 5);  
+//             // Coin entfernen
+//             coins.splice(index, 1);
+//         }
+//     });
+// }
 
-  checkForCoinCollisions(character, coins) {
-    this.world.character = character;
-    console.log("character", this.world.character, character);
-    coins.forEach((coin, index) => {
-        if (this.world.character.isColliding(coin, offset)) {
-            // Sound abspielen
-            coinCollecting.play();
-            coinCollecting.Volume = 0.5;
 
-            // Coin entfernen
-            coins.splice(index, 1);
-        }
-    });
+
+checkForCoinCollisions(character, coins) {
+  let coinCollecting = new Audio('../audio/coin_success.mp3');
+  coinCollecting.loop = false;
+  this.character = character;
+  setInterval(() => {
+  coins.forEach((coin, index) => {
+      if (this.character.isColliding(coin)) {
+          // Sound abspielen
+          coinCollecting.play();
+          coinCollecting.Volume = 0.1;
+
+          coins.splice(index, 1);
+      }
+  });}, 500); // Überprüfen alle 200 ms
+ 
 }
 
 

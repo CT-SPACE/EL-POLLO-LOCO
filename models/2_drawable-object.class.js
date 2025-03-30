@@ -31,14 +31,26 @@ class DrawableObject {
   }
 
   drawFrames(ctx) {
-    if (this instanceof Pepe || this instanceof Chicken) {
+    if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject) {
       ctx.beginPath();
       ctx.lineWidth = "5";
       ctx.strokeStyle = "yellowgreen";
       ctx.rect(this.x, this.y, this.width, this.height);
+      //ctx.rect(this.offset.x, this.offset.y, this.width - this.offset.x, this.height - this.offset.y);
       ctx.stroke();
     }
   }
+
+  drawOffset(ctx) {
+    if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject) {
+      ctx.beginPath();
+      ctx.lineWidth = "5";
+      ctx.strokeStyle = "orangered";
+      ctx.rect(this.offset.x, this.offset.y, this.width - this.offset.x, this.height - this.offset.y);
+      ctx.stroke();
+    }
+  }
+
 
 
 

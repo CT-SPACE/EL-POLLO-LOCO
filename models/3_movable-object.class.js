@@ -32,21 +32,25 @@ class MovableObject extends DrawableObject {
   }
 
  isColliding(Obj, offset) {
-    if(offset === undefined){
-      offset = {
+    if(Obj.offset === undefined){
+      Obj.offset = {
         left: 12,
         right: 12,
         top: 12,
         bottom: 12
       };
     } 
-    console.log("Obj = ", Obj);
-    console.log("offset = ", offset);
-    this.offset = offset;
+
+   // this.offset = offset;
+//     console.log("Obj:", Obj);
+// console.log("Obj.offset:", Obj ? Obj.offset : "undefined");
+
+    // console.log("offset.right", Obj.offset.right);
+    // console.log("offset.left", Obj.offset.left);
     return (
       this.x + this.width - this.offset.right > Obj.x + Obj.offset.left &&
       this.y + this.height - this.offset.bottom > Obj.y  + Obj.offset.top &&
-      this.x + this.offset.left < Obj.x - Obj.offset.right &&
+      this.x + this.offset.left < Obj.x + Obj.width - Obj.offset.right &&
       this.y + this.offset.top < Obj.y + Obj.height - Obj.offset.bottom
     );
   }
@@ -75,6 +79,7 @@ class MovableObject extends DrawableObject {
 
   jump() {
     this.speedY = 34;
+  
   }
 
   hit(){
@@ -113,6 +118,5 @@ if(this.energy < 0){
 
 disableKeyboard() {
   keyboardEnabled = false; // Steuerung deaktivieren
-  console.log("Bewegungstasten sind deaktiviert.");
 }
   }

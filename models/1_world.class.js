@@ -86,22 +86,28 @@ if(this.character.isColliding(enemy) && this.character.energy > 0){
     this.character.hit();
     this.statusBarPepe.setPercentage(this.character.energy);
  
-    this.level.coins.checkForCoinCollisions(this.character, this.level.coins);
 //console.log("checkCollision Coins",this.character, this.level.coins);
 //console.log('Energy after Collision', (this.character.energy).toFixed(2));
-// 
-// this.level.coins.forEach((coin) => {
-//     if(this.character.isColliding(coin)){
-//         this.level.coins = this.level.coins.filter(object => object !== coin);
-//         this.statusBarCoin.setPercentage(this.level.coins.length);
-//         this.coinColleting.play();
-//     }   
 
 }
-})
-    },200)
-}
 
+
+setInterval(() => {
+    const totalCoins = 50; // Ursprüngliche Anzahl der Coins
+    this.level.coins.forEach((coin) => {
+        if (this.character.isColliding(coin)) {
+            // Coin entfernen
+            this.level.coins = this.level.coins.filter(object => object !== coin);
+            // Statusbar aktualisieren
+            console.log("Number of collected Coins = ", this.level.coins.length);
+            this.statusBarCoin.setPercentage((totalCoins - this.level.coins.length));
+            // Kollision prüfen
+            coin.checkForCoinCollisions(this.character, this.level.coins);
+        }
+    });
+  }, 200);
+}); })
+}
 
 addObjects(objects)  {
    // console.log('objects = ', objects);
@@ -117,6 +123,7 @@ addToMap(Obj) {
     
     if (Obj !== staticBackground){
         Obj.drawFrames(this.ctx);
+        Obj.drawOffset(this.ctx);
     }
     
     Obj.drawObject(this.ctx);

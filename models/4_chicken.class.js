@@ -46,7 +46,7 @@ class Chicken extends MovableObject{
 animateX() {  
     const canvasWidth = 800; // Beispiel für die Canvas-Breite
     const pepeX = 200; // Pepe's Position vom linken Canvas-Rand
-    console.log("chicken =", this.x);
+    //console.log("chicken =", this.x);
     // Funktion zur Überprüfung, ob mindestens ein Huhn im sichtbaren Bereich ist
     const isChickenVisible = () => {
         if((this.x - pepeX) > canvasWidth && (Chicken.x) < 0){
@@ -80,6 +80,19 @@ animateWalk() {
                 this.playAnimation(this.IMAGES_WALKING);
       }, this.animationSpeed);
    }
+animateDeath() {
+    this.playAnimation(this.IMAGES_DYING);
+    this.chicken_death.pause();
+    setTimeout(() => {
+        this.chicken_run.pause();
+        this.chicken_run.currentTime = 0; // Zurücksetzen des Audio-Elements
+        this.chicken_run.volume = 0.05;
+    }, 2000);
+    setTimeout(() => {
+        this.chicken_run.play();
+        this.chicken_run.volume = 0.05;
+    }, 3000);
+}
 
    startingChickenSound(pepeX){
     // Beispielcharakter Pepe

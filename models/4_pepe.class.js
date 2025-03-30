@@ -35,7 +35,7 @@ class Pepe extends MovableObject {
         './img/2_character_pepe/4_hurt/H-43.png'
     ];
     pepe_pollo = new Audio('./audio/pepe_pollo_funny.mp3');
-    
+    chicken_splat = new Audio('./audio/chicken_splat.mp3');
     pepe_caramba = new Audio('./audio/pepe_caramba_funny.mp3');
     pepe_hurt = new Audio('./audio/pepe_grunts.mp3');
 
@@ -81,9 +81,12 @@ class Pepe extends MovableObject {
             // if(this.energy > 0){
     if (keyboard.RIGHT && (this.x < this.world.level.level_endX)){
                 this.moveRight();
+        
                 this.pepe_pollo.play();
-                this.pepe_pollo.volume = 0.8;
-                //this.walking_sound.play();
+                this.pepe_pollo.volume = 0.4;
+                this.pepe_pollo.loop = false;
+              
+                this.otherDirection = false;
             }
         
     if(keyboard.LEFT && this.x > 100){
@@ -93,11 +96,15 @@ class Pepe extends MovableObject {
             }
      if((keyboard.UP || keyboard.SPACE) && this.y >= 100 && (this.x < (this.world.level.level_endX + 20))){
                 this.jump();
-            };      
+
+                }
+                  
 
             this.world.cameraX = -this.x + 100;
         
         }, 3000 / 60);
+    
+
           setInterval(() => {  
         
             if(this.isDead(this)){

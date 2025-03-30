@@ -39,7 +39,7 @@ class StatusBarPepe extends StaticObject {
         let path = this.IMAGES_SALUD_PEPE[this.resolveImagePercent(percentage)];
         this.img = this.imgCache[path];
 
-        console.log("Health score =", this.resolveImagePercent(percentage));
+        //console.log("Health score =", this.resolveImagePercent(percentage));
  
     }
 

@@ -30,28 +30,29 @@ class StatusBarCoin extends StaticObject {
     }
 
     setPercentage(coincount){
-        this.percentage = coincount;
-        console.log("Coins =", coincount);
-        let path = this.IMAGES_COIN[this.resolveImageCoin(coincount)];
+        this.coincount = coincount;
+        console.log("Coins =", this.coincount);
+
+        let path = this.IMAGES_COIN[this.resolveImageCoin(this.coincount)];
         this.img = this.imgCache[path];
 
-        console.log("Coin Count =", this.resolveImageCoin(coincount));
+        console.log("Coin Count =", this.resolveImageCoin(this.coincount));
  
     }
 
     
         resolveImageCoin(coincount){
-    
-            if(coincount == 1){
-                return 5;
-            } else if(coincount == 2){
-                return 4;
-            } else if(coincount == 3){
-                return 3;
-            } else if(coincount == 4){
+    console.log("resolveImageCoin", coincount);
+            if(coincount < 15 ){
+                return 1;
+            } else if(coincount < 25){
                 return 2;
-            } else if(coincount == 5){
-               return 1;
+            } else if(coincount < 35){
+                return 3;
+            } else if(coincount < 50){
+                return 4;
+            } else if(coincount >= 50){
+               return 5;
             } else {
                return 0;
             }
