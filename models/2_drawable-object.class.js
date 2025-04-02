@@ -6,6 +6,7 @@ class DrawableObject {
     otherDirection = false;
     img;
     imgCache = {};
+    audioCache = {};
     currentIMG = 0;
     itemCounter = 0;
     
@@ -23,6 +24,14 @@ class DrawableObject {
       let img = new Image();
       img.src = path;
       this.imgCache[path] = img;
+    });
+  }
+
+  loadAudio(arr) {
+    arr.forEach((path) => {
+      let audio = new Audio(path);
+      //audio.src = path;
+      this.audioCache[path] = audio;
     });
   }
 

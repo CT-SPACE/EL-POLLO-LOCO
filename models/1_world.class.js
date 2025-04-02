@@ -85,6 +85,7 @@ this.level.enemies.forEach((enemy) => {
 if(this.character.isColliding(enemy) && this.character.energy > 0){
     this.character.hit();
     this.statusBarPepe.setPercentage(this.character.energy);
+    
 
 //console.log("checkCollision Coins",this.character, this.level.coins);
 //console.log('Energy after Collision', (this.character.energy).toFixed(2));
@@ -99,7 +100,7 @@ setInterval(() => {
             // Coin entfernen
             this.level.coins = this.level.coins.filter(object => object !== coin);
             // Statusbar aktualisieren
-            console.log("Number of collected Coins = ", this.level.coins.length);
+           // console.log("Rest of collectable Coins = ", this.level.coins.length);
             this.statusBarCoin.setPercentage((totalCoins - this.level.coins.length));
             // Kollision prüfen
             coin.checkForCoinCollisions(this.character, this.level.coins);

@@ -63,7 +63,7 @@ class MovableObject extends DrawableObject {
   let timepassed = new Date().getTime() - this.lastHit; // Differenz in ms
 
   timepassed = timepassed / 1000; // Differenz in s
-  this.pepe_pollo.pause();
+  // this.pepe_pollo.pause();
   // this.pepe_pollo.currentTime = 0; 
   return timepassed < 0.5;
  }
@@ -80,7 +80,7 @@ class MovableObject extends DrawableObject {
 
   jump() {
     this.speedY = 34;
-    this.pepe_pollo.pause();
+    // this.pepe_pollo.pause();
   
   }
 
