@@ -123,7 +123,7 @@ class Pepe extends MovableObject {
         }
         this.world.cameraX = -this.x + 100;
       }
-    }, 50);
+    }, 3000 / 25);
 
   }
 
@@ -199,33 +199,28 @@ animateWalking() {
     this.playAnimation(this.IMAGES_JUMPING);
   }
 
-  animateHurt() {
-    setInterval(() => {
-      this.playAnimation(this.IMAGES_HURT);
-      this.pepe_hurt.play();
-      this.isPlayingHurtAudio = false;
-      this.pepe_hurt.loop = false;
-      if (!this.isPlayingHurtAudio) {
-        this.pepe_hurt.currentTime = 0; // Zurücksetzen des Audio-Elements
-        
-        this.isPlayingHurtAudio = true;
-      }
-      this.pepe_hurt.volume = 0.5;
-    }, 2000);
-    this.pepe_hurt.pause();
+  animateChickenSplat() {
+    this.chicken_splat.currentTime = 0; // Zurücksetzen des Audio-Elements
+    this.chicken_splat.play();
+    this.chicken_splat.loop = false;
+    this.chicken_splat.volume = 0.5; 
   }
 
-  // animateHurt(){
-  //   //  this.pepe_hurt.pause();
-  //   this.playAnimation(this.IMAGES_HURT);
+
+  animateHurt(){
+    this.isPlayingHurtAudio = false;
+    this.playAnimation(this.IMAGES_HURT);
   
-  //   if (!this.isPlayingHurtAudio) {
-  //     this.pepe_hurt.currentTime = 0; // Zurücksetzen des Audio-Elements
-  //     this.pepe_hurt.play();
-  //     this.isPlayingHurtAudio = true;
-  //   }
-  //   this.pepe_hurt.volume = 0.5;  
-  // }
+    if (!this.isPlayingHurtAudio) {
+     
+      //this.pepe_hurt.currentTime = 0; // Zurücksetzen des Audio-Elements
+      this.pepe_hurt.play();
+      this.pepe_hurt.loop = false;
+      this.isPlayingHurtAudio = true;
+      this.pepe_hurt.volume = 0.5; 
+    }
+     
+  }
 
 
 
