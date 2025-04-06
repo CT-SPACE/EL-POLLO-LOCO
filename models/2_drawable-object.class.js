@@ -41,6 +41,7 @@ class DrawableObject {
 
   drawFrames(ctx) {
     if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject) {
+
       ctx.beginPath();
       ctx.lineWidth = "5";
       ctx.strokeStyle = "yellowgreen";

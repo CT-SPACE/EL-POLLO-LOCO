@@ -72,15 +72,14 @@ class Pepe extends MovableObject {
   height = 340;
   width = 160;
   world;
-  lastKeyPressTime = Date.now();
+  lastKeyPressTime;
   isSleepingState = false;
-  timeToSleep = 30000;
+  timeToSleep = 3000;
   keyboard;
   cameraX;
   speed = 20;
   speedY = 0;
   frameIndex = 0;
-
   offset = {
     left: 30,
     right: 40,
@@ -130,9 +129,11 @@ class Pepe extends MovableObject {
   listenForKeyPress() {
     document.addEventListener("keydown", () => {
       this.lastKeyPressTime = Date.now();
+    
       if (this.isSleepingState) {
         this.stopSleepAnimation();
       }
+
     });
   }
 
@@ -149,7 +150,10 @@ class Pepe extends MovableObject {
         this.animateHurt();
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
-      } else if (Date.now() - this.lastKeyPressTime >= this.timeToSleep && !this.isSleepingState) {
+        if (this.isColliding(this.world.level.enemies)) {
+          this.animateChickenSplat();
+        };
+      } else if ((Date.now() - this.lastKeyPressTime) >= this.timeToSleep && !this.isSleepingState) {
         this.animateSleep();
       } else {
         this.animateWalking();
@@ -199,12 +203,6 @@ animateWalking() {
     this.playAnimation(this.IMAGES_JUMPING);
   }
 
-  animateChickenSplat() {
-    this.chicken_splat.currentTime = 0; // Zurücksetzen des Audio-Elements
-    this.chicken_splat.play();
-    this.chicken_splat.loop = false;
-    this.chicken_splat.volume = 0.5; 
-  }
 
 
   animateHurt(){

@@ -8,20 +8,35 @@ class CollectableObject extends DrawableObject {
   currentIMG = 0;
   world;
   level;
-  count = 30;
+  count = 50;
+  bottlesCount = 15;
   rows = 2;
   distanceX = 10;
   distanceY = 10;
   minX = 280;
   maxX = 3600;
+  bottleCollecting = new Audio('./audio/bottle_collect.mp3')
   coinCollecting = new Audio('./audio/coin_success.mp3');
 
+  BOTTLE_GROUND = ["./img/6_salsa_bottle/1_salsa_bottle_on_ground.png", "./img/6_salsa_bottle/2_salsa_bottle_on_ground.png"];
+  BOTTLE_SPLASH = ["./img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png"];
+  BOTTLE_THROW = [ "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png"];
   COINS_ROTATING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
+    offset = { 
+      left: 30,
+      right: 30,      
+      top: 30,
+      bottom: 30
+    };
   static allCoins = [];
 
   constructor(count, x, y, distanceX, Row2Probability) {
     super().loadImage("./img/8_coin/coin_1.png");
+    this.loadImage("./img/6_salsa_bottle/salsa_bottle.png");
     this.loadImages(this.COINS_ROTATING);
+    this.loadImages(this.BOTTLE_GROUND);
+    this.loadImages(this.BOTTLE_SPLASH);  
+    this.loadImages(this.BOTTLE_THROW);
 
     this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
     this.y = y;
@@ -29,12 +44,7 @@ class CollectableObject extends DrawableObject {
     // this.checkForCoinCollisions(character, coins);
   }
 
-  offset = {
-    left: 30,
-    right: 30,
-    top: 30,
-    bottom: 30
-}
+
 
   static createCoins(count, distanceX, Row2Probability) {
     let coins = [];
@@ -51,10 +61,6 @@ class CollectableObject extends DrawableObject {
         let x = i * distanceX + 110; // Berechnung der X-Koordinate
         let y = Math.random() < Row2Probability ? yRow2 : yRow1; // Y-Koordinate
 
-        //console.log(`Position: x=${x}, y=${y}`);
-        //console.log("coins =", coins);
-
-        // Coin hinzufügen
         coins.push(
           new CollectableObject(count, x, y, distanceX, Row2Probability)
         );
@@ -63,38 +69,60 @@ class CollectableObject extends DrawableObject {
 
     return coins;
   }
-// checkForCoinCollisions(character, coins){
-//     this.character = character;
-//     //console.log("character", this.character, character);
-//     coins.forEach((coin, index) => {
-//         if (this.character.isColliding(coin)) {
-//             // Sound abspielen
-//             this.coinCollecting.play();
-//             this.coinCollecting.Volume = 0.5;
-//             // Punkte erhöhen
-//             this.statusBarCoins.coincount += (coins.length / 5);  
-//             // Coin entfernen
-//             coins.splice(index, 1);
-//         }
-//     });
-// }
+
+  static createBottles(bottlesCount, distanceX) {
+    let bottles = [];
+    this.height = 200;
+    this.width = 200;
+    let y = 340; // Y-Koordinate
+
+      for (let i = 0; i < bottlesCount; i++) {
+        
+        if (i >= bottlesCount) break;
+
+        let x =  Math.random() * (3400 - 100) + 100; ; // Berechnung der X-Koordinate
+   
+         bottles.push( new CollectableObject(bottlesCount,x,y, distanceX));
+            }
+  
+    return bottles;
+  }
 
 
+  checkForBottleCollisions(character, bottles) {
+    this.offset = { 
+      left: 44,
+      right: 18,      
+      top: 19,
+      bottom: 11
+    };
+    //console.log("bottles", bottles);
+    let bottleCollecting = new Audio('./audio/bottle_collect.mp3');
+    bottleCollecting.loop = false;
+    this.character = character;
+    setInterval(() => {
+      bottles.forEach((bottle, index) => {
+
+        if (this.character.isColliding(bottle)) {
+          this.bottleCollecting.play();
+          bottles.splice(index, 1);
+        }
+      });
+    }, 500);
+  }
 
 checkForCoinCollisions(character, coins) {
+
   let coinCollecting = new Audio('../audio/coin_success.mp3');
   coinCollecting.loop = false;
   this.character = character;
   setInterval(() => {
   coins.forEach((coin, index) => {
-      if (this.character.isColliding(coin)) {
-          // Sound abspielen
-          // coinCollecting.play();
-          // coinCollecting.Volume = 0.1;
 
+      if (this.character.isColliding(coin)) {
           coins.splice(index, 1);
       }
-  });}, 500); // Überprüfen alle 200 ms
+  });}, 500);
  
 }
 

@@ -44,6 +44,7 @@ const level01 = new Level(
         ],
 
      
-    CollectableObject.createCoins(50, 80, 0.2)
+    CollectableObject.createCoins(50, 80, 0.2),
+    CollectableObject.createBottles(15, 80)
 
 )

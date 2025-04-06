@@ -6,23 +6,6 @@ let pepe_ambient;
 let chicken_run;
 let keyboardEnabled = true;
 
-// function preload(){
-//     pepe_ambient = new Audio('./audio/pepe_ambient.mp3');
-//     pepe_ambient.loop = false;
-//       setInterval(() => {
-//     pepe_ambient.loop = true; 
-// }, 5000);
-// }   
-
-// function init(){
-
-//     canvas = document.getElementById('canvas');
-//        world = new World(canvas);
-//        preload();
-//        pepe_ambient.play();
-//        pepe_ambient.volume = 0.6;
-       
-//     }
 
 function preload() {
     pepe_ambient = new Audio('./audio/pepe_ambient.mp3');
@@ -34,11 +17,11 @@ function playWithPause() {
     pepe_ambient.volume = 0.1;
     chicken_run.pause();
 // WIEDER EINSCHALTEN WENN TESTPHASE VORBEI
-    // pepe_ambient.addEventListener('ended', () => {
-    //     setTimeout(() => {
-    //         pepe_ambient.play();
-    //     }, 5000);
-    // });
+//   pepe_ambient.addEventListener('ended', () => {
+//         setTimeout(() => {
+//            pepe_ambient.play();
+//        }, 15000);
+//    });
 }
 
 function init() {
