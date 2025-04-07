@@ -84,7 +84,7 @@ class Pepe extends MovableObject {
     left: 30,
     right: 40,
     top: 130,
-    bottom: 40,
+    bottom: 10,
   };
 
   constructor(keyboard, timeToSleep) {
