@@ -29,6 +29,7 @@ class World {
         this.draw();
         this.setWorld();
         this.run();
+        this.checkThrowObjects()
     }
 
     setWorld(){
@@ -75,10 +76,11 @@ run(){
 }
 
 checkThrowObjects(){
-    if(keyboard.THROW){
+    if(keyboard.THROW && this.throwableObjects.length > 0){
         console.log('keyboard D = ', keyboard.THROW);
         let bottle = new ThrowableObject(this.character.x + this.character.width, this.character.y + this.character.height / 2);
         this.throwableObjects.push(bottle);
+    
     }
 }
 

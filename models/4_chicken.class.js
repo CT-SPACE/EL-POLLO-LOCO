@@ -130,7 +130,9 @@ animateDeath() {
     clearInterval(this.animateWalkInterval);
 
         this.chicken_death.play();
+
     this.loadImage(this.img_death);
+    this.y = 362;
     setTimeout(() => {
     world.level.enemies.splice(world.level.enemies.indexOf(this), 1);
     }

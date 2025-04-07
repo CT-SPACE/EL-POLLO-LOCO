@@ -6,29 +6,33 @@ class CollectableObject extends DrawableObject {
   //CountableItem = 0;
   images = [];
   currentIMG = 0;
-  world;
+   world;
   level;
   count = 50;
   bottlesCount = 15;
   rows = 2;
-  distanceX = 10;
+  distanceX = 100;
   distanceY = 10;
   minX = 280;
   maxX = 3600;
-  offset;
-  bottleCollecting = new Audio('./audio/bottle_collect.mp3')
+  bottleCollecting = new Audio('./audio/bottle_collect.mp3');
   coinCollecting = new Audio('./audio/coin_success.mp3');
 
   BOTTLE_GROUND = ["./img/6_salsa_bottle/1_salsa_bottle_on_ground.png", "./img/6_salsa_bottle/2_salsa_bottle_on_ground_.png"];
   BOTTLE_SPLASH = ["./img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png"];
   BOTTLE_THROW = [ "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png"];
   COINS_ROTATING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
+    offset = { 
+      left: 30,
+      right: 30,      
+      top: 30,
+      bottom: 30
+    };
 
-  static allCoins = [];
-
-  constructor(kindof, count, x, y, distanceX, Row2Probability) {
-    super().loadImage("./img/8_coin/coin_1.png");
-    this.loadImage("./img/6_salsa_bottle/salsa_bottle.png");
+  constructor(kindof, count, x, y, height, width, distanceX, Row2Probability) {
+    super();
+    //.loadImage("./img/8_coin/coin_1.png");
+   // this.loadImage("./img/6_salsa_bottle/salsa_bottle.png");
     this.loadImages(this.COINS_ROTATING);
     this.loadImages(this.BOTTLE_GROUND);
     this.loadImages(this.BOTTLE_SPLASH);  
@@ -44,6 +48,8 @@ class CollectableObject extends DrawableObject {
 
     this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
     this.y = y;
+    this.height = height;
+    this.width = width;
     this.animateBasedOnKind(); // Animation starten
 
     // this.animateRotation();
@@ -52,8 +58,10 @@ class CollectableObject extends DrawableObject {
 
 
 
-  static createCoins(count, distanceX, Row2Probability) {
+static createCoins(count, distanceX, Row2Probability) {
     let coins = [];
+    this.height = 100;
+    this.width = 100;
     const yRow1 = 280; // Y-Koordinate für Ebene 1
     const yRow2 = 150; // Ebene 2 liegt höher
     //console.log("yRow2", yRow2, yRow1);
@@ -67,7 +75,7 @@ class CollectableObject extends DrawableObject {
         let x = i * distanceX + 110; // Berechnung der X-Koordinate
         let y = Math.random() < Row2Probability ? yRow2 : yRow1; // Y-Koordinate
 
-        coins.push(new CollectableObject('coin', count, x, y, distanceX, Row2Probability))
+        coins.push(new CollectableObject('coin', count, x, y,this.height,this.width, distanceX, Row2Probability))
       }
     }
 
@@ -76,8 +84,8 @@ class CollectableObject extends DrawableObject {
 
   static createBottles(bottlesCount, distanceX) {
     let bottles = [];
-    this.height = 80;
-    this.width = 80;
+    this.height = 70;
+    this.width = 70;
     let y = 380; // Y-Koordinate
 
       for (let i = 0; i < bottlesCount; i++) {
@@ -86,7 +94,7 @@ class CollectableObject extends DrawableObject {
 
         let x =  Math.random() * (3400 - 100) + 100; ; // Berechnung der X-Koordinate
    
-        bottles.push(new CollectableObject('bottle', bottlesCount, x, y, distanceX));
+        bottles.push(new CollectableObject('bottle', bottlesCount, x, y, this.height,this.width, distanceX));
             }
   
     return bottles;
@@ -94,10 +102,11 @@ class CollectableObject extends DrawableObject {
 
 
   checkForBottleCollisions(character, bottles) {
-    this.offset = { 
-      left: 20,
-      right: 10,      
-      top: 10,
+
+    bottles.offset = { 
+      left: 5,
+      right: 0,      
+      top: 0,
       bottom: 0
     };
     //console.log("bottles", bottles);
@@ -116,12 +125,7 @@ class CollectableObject extends DrawableObject {
   }
 
 checkForCoinCollisions(character, coins) {
-  this.offset = { 
-    left: 30,
-    right: 30,      
-    top: 30,
-    bottom: 30
-  };
+
   let coinCollecting = new Audio('../audio/coin_success.mp3');
   coinCollecting.loop = false;
   this.character = character;
@@ -151,8 +155,6 @@ checkForCoinCollisions(character, coins) {
         this.currentIMG++;
     }
 }
-
-
 
 animateBasedOnKind() {
   if (this.kindof === 'coin') {

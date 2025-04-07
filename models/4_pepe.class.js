@@ -110,10 +110,14 @@ class Pepe extends MovableObject {
     setInterval(() => {
       if (this.energy > 0) {
         if (keyboard.RIGHT && this.x < this.world.level.level_endX) {
-          
+          this.stopSleepAnimation();
+          this.playAnimation(this.IMAGES_WALKING);
           this.moveRight();
+          this.pepe_pollo.play()
         }
         if (keyboard.LEFT && this.x > 100) {
+          this.stopSleepAnimation();
+          this.playAnimation(this.IMAGES_WALKING);
           this.moveLeft();
           this.otherDirection = true;
         }
@@ -156,7 +160,6 @@ class Pepe extends MovableObject {
       } else if ((Date.now() - this.lastKeyPressTime) >= this.timeToSleep && !this.isSleepingState) {
         this.animateSleep();
       } else {
-        this.animateWalking();
         this.stopSleepAnimation()
       }
     }, 200);
@@ -183,18 +186,6 @@ animateSleep() {
 }
 
 
-
-
-animateWalking() {
-  if (this.isSleepingState) {
-    this.stopSleepAnimation();
-  }
-  if (keyboard.RIGHT || keyboard.LEFT || keyboard.SPACE || keyboard.THROW) {
-    this.playAnimation(this.IMAGES_WALKING);
-  }
-}
-
-
   animateDeath() {
     this.playAnimation(this.IMAGES_DYING);
   }
@@ -202,7 +193,6 @@ animateWalking() {
   animateJump() {
     this.playAnimation(this.IMAGES_JUMPING);
   }
-
 
 
   animateHurt(){
