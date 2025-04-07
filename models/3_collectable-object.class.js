@@ -15,22 +15,18 @@ class CollectableObject extends DrawableObject {
   distanceY = 10;
   minX = 280;
   maxX = 3600;
+  offset;
   bottleCollecting = new Audio('./audio/bottle_collect.mp3')
   coinCollecting = new Audio('./audio/coin_success.mp3');
 
-  BOTTLE_GROUND = ["./img/6_salsa_bottle/1_salsa_bottle_on_ground.png", "./img/6_salsa_bottle/2_salsa_bottle_on_ground.png"];
+  BOTTLE_GROUND = ["./img/6_salsa_bottle/1_salsa_bottle_on_ground.png", "./img/6_salsa_bottle/2_salsa_bottle_on_ground_.png"];
   BOTTLE_SPLASH = ["./img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png"];
   BOTTLE_THROW = [ "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png"];
   COINS_ROTATING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
-    offset = { 
-      left: 30,
-      right: 30,      
-      top: 30,
-      bottom: 30
-    };
+
   static allCoins = [];
 
-  constructor(count, x, y, distanceX, Row2Probability) {
+  constructor(kindof, count, x, y, distanceX, Row2Probability) {
     super().loadImage("./img/8_coin/coin_1.png");
     this.loadImage("./img/6_salsa_bottle/salsa_bottle.png");
     this.loadImages(this.COINS_ROTATING);
@@ -38,9 +34,19 @@ class CollectableObject extends DrawableObject {
     this.loadImages(this.BOTTLE_SPLASH);  
     this.loadImages(this.BOTTLE_THROW);
 
+    this.kindof = kindof; // Art des Objekts (bottle oder coin)
+    
+    if (kindof === 'coin') {
+        this.loadImages(this.COINS_ROTATING);
+    } else if (kindof === 'bottle') {
+        this.loadImages(this.BOTTLE_GROUND);
+    }
+
     this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
     this.y = y;
-    this.animateRotation();
+    this.animateBasedOnKind(); // Animation starten
+
+    // this.animateRotation();
     // this.checkForCoinCollisions(character, coins);
   }
 
@@ -61,9 +67,7 @@ class CollectableObject extends DrawableObject {
         let x = i * distanceX + 110; // Berechnung der X-Koordinate
         let y = Math.random() < Row2Probability ? yRow2 : yRow1; // Y-Koordinate
 
-        coins.push(
-          new CollectableObject(count, x, y, distanceX, Row2Probability)
-        );
+        coins.push(new CollectableObject('coin', count, x, y, distanceX, Row2Probability))
       }
     }
 
@@ -72,9 +76,9 @@ class CollectableObject extends DrawableObject {
 
   static createBottles(bottlesCount, distanceX) {
     let bottles = [];
-    this.height = 200;
-    this.width = 200;
-    let y = 340; // Y-Koordinate
+    this.height = 80;
+    this.width = 80;
+    let y = 380; // Y-Koordinate
 
       for (let i = 0; i < bottlesCount; i++) {
         
@@ -82,7 +86,7 @@ class CollectableObject extends DrawableObject {
 
         let x =  Math.random() * (3400 - 100) + 100; ; // Berechnung der X-Koordinate
    
-         bottles.push( new CollectableObject(bottlesCount,x,y, distanceX));
+        bottles.push(new CollectableObject('bottle', bottlesCount, x, y, distanceX));
             }
   
     return bottles;
@@ -91,10 +95,10 @@ class CollectableObject extends DrawableObject {
 
   checkForBottleCollisions(character, bottles) {
     this.offset = { 
-      left: 44,
-      right: 18,      
-      top: 19,
-      bottom: 11
+      left: 20,
+      right: 10,      
+      top: 10,
+      bottom: 0
     };
     //console.log("bottles", bottles);
     let bottleCollecting = new Audio('./audio/bottle_collect.mp3');
@@ -112,7 +116,12 @@ class CollectableObject extends DrawableObject {
   }
 
 checkForCoinCollisions(character, coins) {
-
+  this.offset = { 
+    left: 30,
+    right: 30,      
+    top: 30,
+    bottom: 30
+  };
   let coinCollecting = new Audio('../audio/coin_success.mp3');
   coinCollecting.loop = false;
   this.character = character;
@@ -134,10 +143,27 @@ checkForCoinCollisions(character, coins) {
   }
 
   animateThings(images) {
-    this.images = images;
-    let i = this.currentIMG % this.COINS_ROTATING.length;
-    let path = this.images[i];
-    this.img = this.imgCache[path];
-    this.currentIMG++;
+    if (this.kindof === 'bottle' || this.kindof === 'coin') {
+        this.images = images;
+        let i = this.currentIMG % this.images.length;
+        let path = this.images[i];
+        this.img = this.imgCache[path];
+        this.currentIMG++;
+    }
+}
+
+
+
+animateBasedOnKind() {
+  if (this.kindof === 'coin') {
+      setInterval(() => {
+          this.animateThings(this.COINS_ROTATING);
+      }, 300);
+  } else if (this.kindof === 'bottle') {
+      setInterval(() => {
+          this.animateThings(this.BOTTLE_GROUND); // Verwende statische Bilder für Bottles
+      }, 500); // Langsamere Animation für Flaschen
   }
+}
+
 }
