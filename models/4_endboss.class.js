@@ -3,7 +3,7 @@ class Endboss extends MovableObject {
     width = 320;
 
     y = 12;
-    animationSpeed = 10000 / 25;
+    animationSpeed = 5000 / 25;
 
     offset = {
         left: 40,
@@ -12,7 +12,7 @@ class Endboss extends MovableObject {
         bottom: 10
     }
 
-    IMAGES_WALKING = [
+    IMAGES_ALERT = [
 './img/4_enemie_boss_chicken/2_alert/G5.png',
 './img/4_enemie_boss_chicken/2_alert/G6.png',
 './img/4_enemie_boss_chicken/2_alert/G7.png',
@@ -21,12 +21,12 @@ class Endboss extends MovableObject {
 './img/4_enemie_boss_chicken/2_alert/G10.png',
 './img/4_enemie_boss_chicken/2_alert/G11.png',
 './img/4_enemie_boss_chicken/2_alert/G12.png'
-        
     ];
 
     constructor(){
-        super().loadImage(this.IMAGES_WALKING[0]);
-        this.loadImages(this.IMAGES_WALKING);
+        super().loadImage(this.IMAGES_ALERT[0]);
+        this.loadImages(this.IMAGES_ALERT);
+
         this.x = 3800;
         this.animate();
     }
@@ -34,7 +34,7 @@ class Endboss extends MovableObject {
     animate() {
         setInterval(() => {
             
-            this.playAnimation(this.IMAGES_WALKING);
+            this.playAnimation(this.IMAGES_ALERT);
 
         }, this.animationSpeed);
     }

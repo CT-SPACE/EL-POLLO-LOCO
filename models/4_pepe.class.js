@@ -49,22 +49,7 @@ class Pepe extends MovableObject {
   pepe_caramba = new Audio("./audio/pepe_caramba_funny.mp3");
   pepe_snore = new Audio("./audio/pepe_snore.mp3");
   pepe_hurt = new Audio("./audio/pepe_grunts_2.mp3");
-  // [
-  //   new Audio("./audio/pepe_grunts_10.mp3"),
-  //   new Audio("./audio/pepe_grunts_1.mp3"),
-  //   new Audio("./audio/pepe_grunts_2.mp3"),
-  //   new Audio("./audio/pepe_grunts_3.mp3"),
-  //   new Audio("./audio/pepe_grunts_4.mp3"),
-  //   new Audio("./audio/pepe_grunts_5.mp3"),
-  //   new Audio("./audio/pepe_grunts_6.mp3"),
-  //   new Audio("./audio/pepe_grunts_7.mp3"),
-  //   new Audio("./audio/pepe_grunts_8.mp3"),
-  //   new Audio("./audio/pepe_grunts_9.mp3"),
-  // ];
 
-
-  // hurtIndex = Math.floor(Math.random() * this.pepe_hurt.length);
-  // currentHurtAudio = this.pepe_hurt[this.hurtIndex];
   isPlayingHurtAudio = false;
 
   x = 0;
@@ -72,9 +57,9 @@ class Pepe extends MovableObject {
   height = 340;
   width = 160;
   world;
-  lastKeyPressTime;
+  lastKeyPressTime = Date.now();
   isSleepingState = false;
-  timeToSleep = 3000;
+  timeToSleep = 10000;
   keyboard;
   cameraX;
   speed = 20;
@@ -87,20 +72,23 @@ class Pepe extends MovableObject {
     bottom: 10,
   };
 
-  constructor(keyboard, timeToSleep) {
+  constructor(keyboard) {
+
     super().loadImage("./img/2_character_pepe/2_walk/W-21.png");
+
     this.keyboard = keyboard;
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
     this.loadImages(this.IMAGES_DYING);
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_SLEEPING);
-    this.timeToSleep = timeToSleep;
+
     this.animateWalk();
-    this.applyGravity();
+    this.applyGravity(); 
+    this.listenForKeyPress(this.lastKeyPressTime);
     this.isPlayingHurtAudio = false;
     this.animateStates();
-    this.listenForKeyPress();
+   
  
   }
 
@@ -130,10 +118,12 @@ class Pepe extends MovableObject {
 
   }
 
-  listenForKeyPress() {
+  listenForKeyPress(lastKeyPressTime) {
+
+    this.lastKeyPressTime = lastKeyPressTime;
     document.addEventListener("keydown", () => {
       this.lastKeyPressTime = Date.now();
-    
+    console.log("Key pressed at:", this.lastKeyPressTime);
       if (this.isSleepingState) {
         this.stopSleepAnimation();
       }
@@ -147,6 +137,7 @@ class Pepe extends MovableObject {
     }
 
   animateStates() {
+    
     setInterval(() => {
       if (this.isDead()) {
         this.animateDeath();
@@ -157,22 +148,17 @@ class Pepe extends MovableObject {
         if (this.isColliding(this.world.level.enemies)) {
           this.animateChickenSplat();
         };
-      } else if ((Date.now() - this.lastKeyPressTime) >= this.timeToSleep && !this.isSleepingState) {
-        this.animateSleep();
+      } else if ((Date.now() - this.lastKeyPressTime) >= this.timeToSleep) {
+      
+          this.isSleepingState = true;
+          this.animateSleep();
+         
       } else {
         this.stopSleepAnimation()
       }
-    }, 200);
+    }, 500);
   }
 
-
-  isSleeping() {
-    setInterval(() => {
-        if (Date.now() - this.lastKeyPressTime >= this.timeToSleep) { // Wenn 30 Sekunden lang keine Taste gedrückt wurde
-            this.animateSleep();
-        }
-    }, 500); // Alle 500ms prüfen
-}
 
 
 animateSleep() {
@@ -200,8 +186,6 @@ animateSleep() {
     this.playAnimation(this.IMAGES_HURT);
   
     if (!this.isPlayingHurtAudio) {
-     
-      //this.pepe_hurt.currentTime = 0; // Zurücksetzen des Audio-Elements
       this.pepe_hurt.play();
       this.pepe_hurt.loop = false;
       this.isPlayingHurtAudio = true;
