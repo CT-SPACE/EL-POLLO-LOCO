@@ -24,8 +24,8 @@ class StaticObject extends DrawableObject {
   //   ctx.stroke();
   // }
   
-  drawObject(ctx){
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-  }
+  // drawObject(ctx){
+  //   ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+  // }
 
 }

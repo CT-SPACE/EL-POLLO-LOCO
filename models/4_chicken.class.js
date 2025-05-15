@@ -5,8 +5,9 @@ class Chicken extends MovableObject{
     height = 80;
     width = 80;
     world;
+    audio;
     // enemies = [];
-    chicken_run = new Audio('./audio/chicken_group.mp3');
+    // chicken_run = new Audio('./audio/chicken_group.mp3');
     IMAGES_WALKING = [
         './img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
         './img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
@@ -14,7 +15,7 @@ class Chicken extends MovableObject{
     ];
 
     img_death = './img/3_enemies_chicken/chicken_normal/2_dead/dead.png';
-    chicken_death = new Audio('./audio/chicken_splat.mp3');
+    // chicken_death = new Audio('./audio/chicken_splat.mp3');
     animateXInterval;
     offset = {
         left: 10,
@@ -25,12 +26,17 @@ class Chicken extends MovableObject{
     
 
 
-        constructor() {
+        constructor(world) {
             super().loadImage('./img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
             this.loadImages(this.IMAGES_WALKING);
+            this.world = world;
+
+            // this.audio = world.getAudio(); // Zugriff auf die Audio-Variable aus World
+            this.audio = audio; // Zugriff auf die Audio-Variable aus World
             this.x +=  300 + Math.random() * 1600;
             this.speed = 0.5 + Math.random() * 0.5; // Zufällige Geschwindigkeit zwischen 0.1 und 0.6
             this.animationSpeed = Math.random() * 20 + 100; // Zufällige Animationsgeschwindigkeit zwischen 100 und 300 ms
+            this.type = 'chicken';
             this.animateX();
             this.animateWalk();
             this.isDead = false;
@@ -79,23 +85,26 @@ class Chicken extends MovableObject{
 // }
 
 animateX() {  
-    const canvasWidth = 800; // Beispiel für die Canvas-Breite
-    const pepeX = 200; // Pepe's Position vom linken Canvas-Rand
+    // const canvasWidth = 800; // Beispiel für die Canvas-Breite
+    // const pepeX = 200; // Pepe's Position vom linken Canvas-Rand
 
-    const isChickenVisible = () => {
-        if ((this.x - pepeX) > canvasWidth && (this.x) < 0) {
-            return false;
-        } else {
-            return true;
-        }        
-    };
+    // const isChickenVisible = () => {
+    //     if ((this.x - pepeX) > canvasWidth && (this.x) < 0) {
+    //         return false;
+    //     } else {
+    //         return true;
+    //     }        
+    // };
 
-    if (isChickenVisible() && this.chicken_run.pause()) {
-        this.startingChickenSound(pepeX);
-    };
+    // // if (isChickenVisible() && this.audio.controlAudio[chicken_run]?.paused) {
+    // //     // Code execution
+    // // }
+    // //  {
+    // //     this.startingChickenSound(pepeX);
+    // // };
 
     this.animateXInterval = setInterval(() => { // Speichere die Intervall-ID
-        this.moveLeft();
+        this.moveLeft(this.speed);
     }, 1000 / 60);
 }
 
@@ -128,18 +137,19 @@ animateDeath() {
 
     clearInterval(this.animateXInterval);
     clearInterval(this.animateWalkInterval);
-
-        this.chicken_death.play();
+    audio.playAudio("chicken_splat", {play:true, loop: false, volume: 0.5});
+        // this.chicken_death.play();
 
     this.loadImage(this.img_death);
     this.y = 362;
     setTimeout(() => {
-    world.level.enemies.splice(world.level.enemies.indexOf(this), 1);
-    }
-    , 1000); // Verzögerung von 1 Sekunde   
-    this.chicken_death.currentTime = 0; // Zurücksetzen des Audio-Elements
-    this.chicken_death.loop = false;
-    this.chicken_death.volume = 0.5; 
+       if (window.world && window.world.level && window.world.level.enemies) {
+                window.world.level.enemies.splice(window.world.level.enemies.indexOf(this), 1);
+            }
+        }, 1000); // Verzögerung von 1 Sekunde   
+    // this.chicken_death.currentTime = 0; // Zurücksetzen des Audio-Elements
+    // this.chicken_death.loop = false;
+    // this.chicken_death.volume = 0.5; 
 
 }
 
@@ -147,11 +157,13 @@ animateDeath() {
     // Beispielcharakter Pepe
    // const pepeX = 200;
 
-    if((this.x - pepeX) > 700 && this.x == 0 && this.chicken_run.play()){
-        this.chicken_run.pause();
+    if((this.x - pepeX) > 700 && this.x == 0 && this.audio[chicken_run].playing){
+        this.audio.controlAudio("chicken_run", {pause:true, currentTime: 0});
+        // this.chicken_run.pause();
     } else {
-        this.chicken_run.play();
-        this.chicken_run.volume = 0.05;
+        this.audio.playAudio("chicken_run", {play:true, loop: true, volume: 0.05});
+        // this.chicken_run.play();
+        // this.chicken_run.volume = 0.05;
     }
 }
 

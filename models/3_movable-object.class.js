@@ -4,34 +4,52 @@ class MovableObject extends DrawableObject {
   keyboard;
   keyboardEnabled = true;
   cameraX;
+  factor = 1
   speed = 20;
   speedY = 2;
   acceleration = 4.2;
   energy = 1;
   offset;
+  gravityInterval;
   
 
   lastHit = 0;
 
+  // applyGravity() {
+  //   setInterval(() => {
+  //     if (this.isAboveGround() || this.speedY > 0) {
+  //       this.y -= this.speedY;
+  //       this.speedY -= this.acceleration;
+  //     }
+  //   }, 1000 / 25);
+  // }
+
   applyGravity() {
-    setInterval(() => {
-      if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
+    if (this.gravityInterval) return;
+
+    this.gravityInterval = setInterval(() => {
+        if (this.isAboveGround() || this.speedY > 0) {
+            this.y -= this.speedY;
+            this.speedY -= this.acceleration;
+        } else {
+            this.speedY = 0;
+            clearInterval(this.gravityInterval); // Intervall stoppen
+            this.gravityInterval = null; // Intervall-Referenz zurücksetzen
+        }
     }, 1000 / 25);
-  }
+}
 
   isAboveGround() {
-    if (this instanceof ThrowableObject){
-     return true;
+    if (this instanceof ThrowableObject) {
+      return true;
+  
     } else {
       return this.y < 100;
     }
     
   }
 
- isColliding(Obj, offset) {
+ isColliding(Obj) {
     if(Obj.offset === undefined){
       Obj.offset = {
         left: 12,
@@ -41,12 +59,6 @@ class MovableObject extends DrawableObject {
       };
     } 
 
-   // this.offset = offset;
-//     console.log("Obj:", Obj);
-// console.log("Obj.offset:", Obj ? Obj.offset : "undefined");
-
-    // console.log("offset.right", Obj.offset.right);
-    // console.log("offset.left", Obj.offset.left);
     return (
       this.x + this.width - this.offset.right > Obj.x + Obj.offset.left &&
       this.y + this.height - this.offset.bottom > Obj.y  + Obj.offset.top &&
@@ -61,38 +73,65 @@ class MovableObject extends DrawableObject {
 
  isHurt(){
   let timepassed = new Date().getTime() - this.lastHit; // Differenz in ms
-
   timepassed = timepassed / 1000; // Differenz in s
-  // this.pepe_pollo.pause();
-  // this.pepe_pollo.currentTime = 0; 
   return timepassed < 0.5;
+ }
+ isAttacking(){
+  
  }
 
 
   moveRight() {
-    this.x += this.speed;
+    this.x += this.speed * this.factor;
     this.otherDirection = false;
   }
 
   moveLeft() {
-    this.x -= this.speed;
+
+    this.x -= this.speed * this.factor;
   }
 
   jump() {
-    this.speedY = 34;
-    // this.pepe_pollo.pause();
+    // this.speedY = 34;
+ 
+      if (!this.isAboveGround()) { // Nur springen, wenn Pepe auf dem Boden ist
+          this.speedY = 34; // Sprunggeschwindigkeit setzen
+          this.applyGravity(); // Gravitation anwenden
+      }
+  }
   
+  
+
+//   hit(){
+   
+//     this.energy -= 0.0001;
+    
+// if(this.energy < 0){
+//   this.energy = 0;
+// } else {
+//   this.lastHit = new Date().getTime(); // Zeit gespeichert in Millisekunden als Zahl
+//   }
+
+//   }
+
+
+hit(attacker) {
+  let damage = 0.0001; // Standard-Schaden
+
+  // Überprüfen, ob der Angreifer der Endboss ist
+  if (attacker instanceof Endboss) {
+      damage *= 2; // Schaden verdoppeln, wenn der Angreifer der Endboss ist
   }
 
-  hit(){
-    
-    this.energy -= 0.001;
-if(this.energy < 0){
-  this.energy = 0;
-} else {
-  this.lastHit = new Date().getTime(); // Zeit gespeichert in Millisekunden als Zahl
+  this.energy -= damage;
+
+  if (this.energy < 0) {
+      this.energy = 0; // Energie kann nicht negativ sein
+  } else {
+      this.lastHit = new Date().getTime(); // Zeit des letzten Treffers speichern
   }
-  }
+}
+
 
   // playAnimation(images){
   //   this.images = images;
@@ -106,6 +145,7 @@ if(this.energy < 0){
     this.images = images;
    let i = this.currentIMG % this.images.length;
    let path = this.images[i];
+   //console.log("playAnimation:",this.images);
 
     if (this.images === this.IMAGES_DYING && i === this.images.length - 1) {
       this.img = this.imgCache[this.images[i]];

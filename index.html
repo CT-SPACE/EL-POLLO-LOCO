@@ -6,12 +6,17 @@
     <title>Jose Luis Ignacio Vincente "Pepe" el Peligroso</title>
     <link rel="icon" href="polloloco.ico" />
     <link rel="stylesheet" href="./style/style.css">
-      <script src="./models/2_drawable-object.class.js"></script>
-<script src="./models/0_level.class.js"></script>
+          <script src="./models/2_drawable-object.class.js"></script>
+       <script src="./levels/level01.js"></script>
+     <script src="./models/0_level.class.js"></script>
+    <script src="./models/1_world.class.js"></script>
+
+    <script src="./models/0_audiomanager.class.js"></script>
     <script src="./models/3_movable-object.class.js"></script>    
     <script src="./models/3_static-object.class.js"></script>
     <script src="./models/3_collectable-object.class.js"></script>
     <script src="./models/3_countable-item.class.js"></script>    
+   
     <script src="./models/4_background_static.class.js"></script>
     <script src="./models/4_background_moving.class.js"></script>
     <script src="./models/4_pepe.class.js"></script>
@@ -25,20 +30,25 @@
     <script src="./models/4_throwable-object.class.js"></script>
     <script src="./models/4_collidable-object.class.js"></script>
     <script src="./models/0_keyboard.class.js"></script>
-    
-    
-   
-    <script src="./levels/level01.js"></script>
-     <script src="./models/1_world.class.js"></script>
+
+
     <script src="./js/game.js"></script>
     
 <body onload="init()">
-    <h1>EL POLLO LOCO</h1>
-    <canvas id="canvas" width="800" height="480"></canvas>
-    <audio loop> 
-        <source id="background-music" src="audio/pepe_ambient.mp3" type="audio/mpeg" loop></source>
-        Your browser does not support the audio element.
-    </audio>
-   
+
+    <section id="contentbox" >
+        <h1 id="stayHeadline" class="headline">EL POLLO LOCO</h1> 
+        <div id="playScreen"><canvas id="canvas" width="800" height="480"></canvas></div>
+        <div id="buttons" class="menu"><div class="storyContent"></div><div id="story" alt="Story of Pepe" class="button">Story</div><div id="impressum" alt="Impressum" class="button">Impressum</div><div id="howto" class="button" alt="How to Play">How to Play</div>
+        <div id="sound"><img src="./img/buttons/sound_ON.svg" class="sound"></div>
+        
+        <!-- <div id="startScreenText" class="start hidden"></div>
+        
+            <h1>EL POLLO LOCO</h1>
+            <img src="./img/buttons/play.svg" alt="PLAY" class="playButton"></img>
+            <p class="center">Press ENTER to start</p>
+        </div> -->
+    </section>
+    
 </body>
 </html>

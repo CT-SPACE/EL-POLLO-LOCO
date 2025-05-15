@@ -1,4 +1,6 @@
-const level01 = new Level(
+let Level01;
+function initLevel(){
+    Level01 = new Level(
 
 
         [
@@ -32,15 +34,15 @@ const level01 = new Level(
             // new movingBackground(8)
         ],
         [ 
-            new Chicken(),
-            new Chicken(), 
-            new Chicken(), 
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
+            new Chicken(world),
+            new Chicken(world), 
+            new Chicken(world), 
+            new Chicken(world),
+            new Chicken(world),
+            new Chicken(world),
+            new Chicken(world),
   
-            new Endboss()
+            new Endboss(world)
         ],
 
      
@@ -48,3 +50,4 @@ const level01 = new Level(
     CollectableObject.createBottles(15, 80)
 
 )
+}

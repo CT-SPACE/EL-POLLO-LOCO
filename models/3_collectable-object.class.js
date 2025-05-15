@@ -4,6 +4,7 @@ class CollectableObject extends DrawableObject {
   width = 100;
   height = 100;
   //CountableItem = 0;
+  audio;
   images = [];
   currentIMG = 0;
    world;
@@ -15,8 +16,8 @@ class CollectableObject extends DrawableObject {
   distanceY = 10;
   minX = 280;
   maxX = 3600;
-  bottleCollecting = new Audio('./audio/bottle_collect.mp3');
-  coinCollecting = new Audio('./audio/coin_success.mp3');
+  // bottleCollecting = new Audio('./audio/bottle_collect.mp3');
+  // coinCollecting = new Audio('./audio/coin_success.mp3');
 
   BOTTLE_GROUND = ["./img/6_salsa_bottle/1_salsa_bottle_on_ground.png", "./img/6_salsa_bottle/2_salsa_bottle_on_ground_.png"];
   BOTTLE_SPLASH = ["./img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png"];
@@ -37,13 +38,26 @@ class CollectableObject extends DrawableObject {
     this.loadImages(this.BOTTLE_GROUND);
     this.loadImages(this.BOTTLE_SPLASH);  
     this.loadImages(this.BOTTLE_THROW);
+    this.audio = new AudioManager();
 
     this.kindof = kindof; // Art des Objekts (bottle oder coin)
     
     if (kindof === 'coin') {
         this.loadImages(this.COINS_ROTATING);
+        this.offset = { 
+          left: 30,
+          right: 30,      
+          top: 30,
+          bottom: 30
+        };
     } else if (kindof === 'bottle') {
         this.loadImages(this.BOTTLE_GROUND);
+        this.offset = { 
+          left: 5,
+          right: 0,      
+          top: 0,
+          bottom: 0
+        };
     }
 
     this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
@@ -87,6 +101,8 @@ static createCoins(count, distanceX, Row2Probability) {
     this.height = 70;
     this.width = 70;
     let y = 380; // Y-Koordinate
+    // console.log("createBottles - bottlesCount:", bottlesCount);
+
 
       for (let i = 0; i < bottlesCount; i++) {
         
@@ -96,29 +112,35 @@ static createCoins(count, distanceX, Row2Probability) {
    
         bottles.push(new CollectableObject('bottle', bottlesCount, x, y, this.height,this.width, distanceX));
             }
-  
+            // console.log("Initialisierte Flaschen:", bottles.length);
     return bottles;
   }
 
 
-  checkForBottleCollisions(character, bottles) {
 
-    bottles.offset = { 
+  checkForBottleCollisions(character, bottles) {
+    // console.log("checkForBottleCollisions - bottles:", bottles);
+   this.bottles = bottles;
+    this.bottles.offset = { 
       left: 5,
       right: 0,      
       top: 0,
       bottom: 0
     };
     //console.log("bottles", bottles);
-    let bottleCollecting = new Audio('./audio/bottle_collect.mp3');
-    bottleCollecting.loop = false;
+    // let audio = new AudioManager();
+    // bottleCollecting.loop = false;
+    // this.audio.loadAudio('bottleCollecting','./audio/bottle_collect.mp3');
+    // this.audio.playAudio('bottleCollecting', {play: true, loop: false , volume: 0.2 });
+
     this.character = character;
     setInterval(() => {
-      bottles.forEach((bottle, index) => {
+      this.bottles.forEach((bottle, index) => {
 
         if (this.character.isColliding(bottle)) {
-          this.bottleCollecting.play();
-          bottles.splice(index, 1);
+          // this.bottleCollecting.play();
+
+          this.bottles.splice(index, 1);
         }
       });
     }, 500);
@@ -126,8 +148,10 @@ static createCoins(count, distanceX, Row2Probability) {
 
 checkForCoinCollisions(character, coins) {
 
-  let coinCollecting = new Audio('../audio/coin_success.mp3');
-  coinCollecting.loop = false;
+  // let coinCollecting = new Audio('../audio/coin_success.mp3');
+  // coinCollecting.loop = false;
+  // this.audio.loadAudio('coinCollecting','./audio/coin_success.mp3');
+  // this.audio.playAudio('coinCollecting', {play:true, loop: false , volume: 0.2 });
   this.character = character;
   setInterval(() => {
   coins.forEach((coin, index) => {

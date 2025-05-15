@@ -3,12 +3,14 @@ class DrawableObject {
     y;
     height;
     width;
+    world;
     otherDirection = false;
     img;
     imgCache = {};
     audioCache = {};
     currentIMG = 0;
     itemCounter = 0;
+    factor = 1;
     
     loadImage(path) {
         this.img = new Image();
@@ -35,9 +37,14 @@ class DrawableObject {
     });
   }
 
-  drawObject(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-  }
+drawObject(ctx) {
+    try { 
+   ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    } catch (error){
+        console.log('Error drawing object:', ctx, this.img, this.x, this.y, this.width, this.height);
+    }
+    }
+    
 
   drawFrames(ctx) {
     if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject) {

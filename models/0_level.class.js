@@ -8,7 +8,7 @@ class Level {
     level_endX = 3800;
 
     constructor(cl,mB,en, co, bo){
-        // this.endboss = eb;
+       //  this.endboss = eb;
         
         this.enemies = en;
         this.clouds = cl;

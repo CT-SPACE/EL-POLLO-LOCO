@@ -1,11 +1,22 @@
 @font-face {
-    font-family: "Bungee_Outline";
-    /*src: url(../fonts/Bungee_Outline/BungeeOutline-Regular.ttf);*/
+    font-family: "Matemasie";
+ 
     src: url(../fonts/Matemasie/Matemasie-Regular.ttf);
 
 }
+@font-face {
+    font-family: "Ranchers";
+    src: url(../fonts/Ranchers/Ranchers-Regular.ttf);
+
+}
+
+@font-face {
+    font-family: "Ojuju";
+    src: url(../fonts/Ojuju/Ojuju-VariableFont_wght.ttf);
+}
 
 body{
+    font-family:Ranchers;
     display:flex;
     margin:0;
     padding-top:100px;
@@ -13,30 +24,175 @@ body{
     justify-content: flex-start;
     align-items: center;
     flex-direction:column;
-    background-image: linear-gradient(180deg, #811800 608px, #ffbf5c 7%);
-    background-color: #a02006   ;
+    background-image: linear-gradient(180deg, #811800 608px, #fdf08f 7%);
+    background-color: #811800;
     color:white;
     height: 100vh;
-    font-family: 'Courier New', Courier, monospace; 
 
+}
+
+
+
+.start{
+    width: 800px;
+    height: 480px;
+    position: absolute;
+    top: 197px;
+
+    background-color: aquamarine;
+    background-image: url(../img/Desierto-portada_con_pepe.jpg);
+    border-radius: 20px;
+    text-align: center;
+    background-size: cover;
+    background-position-x: -28px;
+    z-index:11;
+}
+.hidden{
+    display: none;
+}
+
+.startText{
+
+    font-size: 2em;
+    color: black;
+    text-shadow: 2px 2px 2px white;
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.playButton{
+    width:60px;
+    height:60px;
+}
+.playButton:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: all 0.2s ease-in-out;
+}
+.playButton:active{
+    transform: scale(0.9);
+    transition: all 0.2s ease-in-out;
+}
+section{
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width:100%;
+    height:100vh;
+    position: absolute;
 }
 
 h1{
-    font-family:Bungee_Outline;
-    font-size: 4em;
+    font-family:"Matemasie";
+    color:white;
+
     margin: 0;
+    line-height: 1.2em;
     text-shadow: 2px 2px 2px black;
     padding: 0;
-    position: relative;
+    position: absolute;
     text-align: center;
-    top: 20px;
+    z-index:20;
 }
 
-canvas{
+.headline{
+    font-size: 4em;
+    top: 30px;
+
+}
+
+#playScreen{
     background-color: black;
+    overflow:hidden;
+    width:800px;
+    height:480px;   
+    top:94px;
     border:3px solid white;
+    z-index: 10;
+    position: absolute;
     border-radius: 20px;
     box-shadow: 3px 3px 4px 0px black;
 }
 
+canvas{
+    background-color: black;
+    /* top:94px;
+    border:3px solid white;
+    z-index: 10;
+    position: absolute;
+    border-radius: 20px;
+    box-shadow: 3px 3px 4px 0px black; */
+}
 
+.menu{
+    z-index:9;
+    top:-40px;
+    height:40px;
+    position:relative;
+    /* width:140px; */
+    display:flex;
+    justify-content:center;
+    
+}
+
+.button{
+    padding: 0px 20px 6px 20px;
+    margin: 0 5px;
+    width: 120px;
+    text-align: center;
+    font-family: "Ojuju";
+    font-size: 1.2em;
+    background-color: white;
+    color: rgb(138, 170, 0);
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    height: 22px;
+    border: 1px solid black;
+}
+
+
+.button:hover{
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: all 0.2s ease-in-out;
+}
+.button:active{
+    transform: scale(0.98);
+    transition: all 0.2s ease-in-out;
+}
+.storyContent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    top:-40px;
+    width: 150px;
+    height: 1px;
+    position: absolute;
+    background-color:rgba(128, 4, 4, 0.6);
+    z-index: 11;
+    transition: height 1s ease-in-out;;
+}
+
+#sound{
+    display: flex;
+    position: absolute;
+    padding: 5px 5px 5px 20px;
+    box-sizing: border-box;
+    z-index: 9;
+    width: 60px;
+    top: -150px;
+    right: -196px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: lightgoldenrodyellow;
+    translate: right 200ms ease-in;
+}
+
+#sound:hover{
+    cursor:pointer;
+    right: -206px
+}

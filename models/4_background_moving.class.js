@@ -44,13 +44,14 @@ class movingBackground extends MovableObject{
             { x: 4500, y: -20, height: 508, width: 1500 }  // 15
         ];
     
-        constructor(i) {
+        constructor(i, factor = 1) {
             super().loadImage(this.hgparts[i]);
             const pos = this.positions[i] || { x: 0, y: 0, height: 0, width: 0 };
             this.x = pos.x;
             this.y = pos.y;
             this.height = pos.height;
             this.width = pos.width;
+            this.factor = factor;
         }
     }
-    
+     

@@ -20,7 +20,7 @@ constructor(){
  animateX() {
 
     setInterval(() => {
-        this.moveLeft();
+        this.moveLeft(20);
         }, 60000 / 60);
     }
       
