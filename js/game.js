@@ -47,13 +47,32 @@ audio.loadAudio('pepe_ambient', './audio/pepe_ambient.mp3');
 
 }
 
-function toggleSound() {
-  let soundButton = document.getElementById("sound");
-  let soundIcon = document.getElementById("on-off");
-  soundButton.classList.toggle("soundButton");
-  soundIcon.classList.toggle("soundIcon");
-}
 
+function toggleSound() {
+
+  let soundIcon = document.getElementById("on-off");
+  if (soundIcon.classList.contains("sound")) {
+    // soundButton.style.right = "-214px";
+    soundIcon.classList.remove("sound");
+    soundIcon.classList.add("soundOFF");
+
+      audio.setMuted(true);
+  } else {
+    soundIcon.classList.remove("soundOFF");
+    soundIcon.classList.add("sound");
+    // soundButton.style.right = "";
+    playAmbient();
+    if (audioPlaying["pepe_snore"]) {
+        audio.controlAudio("pepe_snore", { play: true });
+        audioPlaying["pepe_snore"] = false;
+    } 
+    if (audioPlaying["endbossBackground"]) {
+        audio.controlAudio("endbossBackground", { play: true, loop: false });
+        //audioPlaying["endbossBackground"] = false;
+    }
+    audio.setMuted(false);
+  }
+}
 
 document.addEventListener('keydown', (e) => {
     

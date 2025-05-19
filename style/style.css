@@ -19,7 +19,7 @@ body{
     font-family:Ranchers;
     display:flex;
     margin:0;
-    padding-top:100px;
+    /* padding-top:100px; */
     box-sizing:border-box;
     justify-content: flex-start;
     align-items: center;
@@ -97,10 +97,17 @@ h1{
     text-align: center;
     z-index:20;
 }
+h3{
+    margin-bottom:0;
+}
+
+h4{
+    margin-bottom:0;
+}
 
 .headline{
     font-size: 4em;
-    top: 30px;
+    top: 180px;
 
 }
 
@@ -109,7 +116,7 @@ h1{
     overflow:hidden;
     width:800px;
     height:480px;   
-    top:94px;
+    top:246px;
     border:3px solid white;
     z-index: 10;
     position: absolute;
@@ -119,29 +126,27 @@ h1{
 
 canvas{
     background-color: black;
-    /* top:94px;
-    border:3px solid white;
+
     z-index: 10;
     position: absolute;
-    border-radius: 20px;
-    box-shadow: 3px 3px 4px 0px black; */
+   
 }
 
 .menu{
     z-index:9;
-    top:-40px;
+    top:96px;
     height:40px;
     position:relative;
-    /* width:140px; */
     display:flex;
     justify-content:center;
     
 }
 
 .button{
-    padding: 0px 20px 6px 20px;
+    padding: 16px 20px 6px 20px;
+    box-sizing:border-box;
     margin: 0 5px;
-    width: 120px;
+    width: 150px;
     text-align: center;
     font-family: "Ojuju";
     font-size: 1.2em;
@@ -149,43 +154,103 @@ canvas{
     color: rgb(138, 170, 0);
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-    height: 22px;
+    height: 50px;
     border: 1px solid black;
 }
 
 
 .button:hover{
     cursor: pointer;
-    transform: scale(1.05);
-    transition: all 0.2s ease-in-out;
+    margin-top:8px;
+    transition: margin-top 0.2s ease-in-out;
 }
 .button:active{
     transform: scale(0.98);
     transition: all 0.2s ease-in-out;
 }
-.storyContent{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    top:-40px;
-    width: 150px;
-    height: 1px;
-    position: absolute;
-    background-color:rgba(128, 4, 4, 0.6);
-    z-index: 11;
-    transition: height 1s ease-in-out;;
+.Out{
+margin-top:8px;
+font-weight:700;
 }
+
+#closeButton{
+    position:absolute;
+    top: 60px;
+    right: 102px;
+    width: 30px;
+    height: 30px;
+    cursor:pointer;
+    background-image:url("../img/buttons/close_green.svg");
+    background-size:contain;
+    background-repeat:no-repeat;
+    z-index:12;
+}
+#closeButton:hover{
+    background-image:url("../img/buttons/close_grey.svg");
+    transform: scale(0.9);
+    transition: all 0.2s ease-in-out;
+}
+#closeButton:active{
+    transform: scale(0.85);
+    transition: all 0.2s ease-in-out;
+    background-image:url("../img/buttons/close_black.svg");
+}
+
+.content{
+    z-index:12;
+       height: 100%;
+       bottom:-100%;
+    padding: 0px 30px 0px 0px;
+    overflow:hidden;
+    overflow-y:auto;
+    scroll-behavior: smooth;
+    scrollbar-width:5px;
+    scrollbar-color: #fdf08f #b18f15;
+
+}
+
+.contentTransition{
+    bottom:0;
+    transition: bottom 0.5s ease-in-out;
+
+}
+
+p{
+    margin-top:0;
+    font-size: small;
+}
+
+
+#buttonContent{
+
+    z-index:12;
+    background-image:url("../img/paper-bg.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 90px 156px 84px 250px;
+    box-sizing:border-box;
+    height: 100%;
+    width:100%;
+    font-family:"Ojuju";
+    font-size: 1.2em;
+    line-height:1.5em;
+    color: rgb(112, 10, 10);
+    position:absolute;
+    /* background-color:rgba(0,0,0,0.5); */
+   
+}
+
 
 #sound{
     display: flex;
     position: absolute;
-    padding: 5px 5px 5px 20px;
+    padding: 5px 5px 5px 25px;
     box-sizing: border-box;
     z-index: 9;
     width: 60px;
-    top: -150px;
-    right: -196px;
+    top: -250px;
+    right: -204px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     background-color: lightgoldenrodyellow;
@@ -194,5 +259,51 @@ canvas{
 
 #sound:hover{
     cursor:pointer;
-    right: -206px
+    right: -210px
+}
+
+.soundOFF{
+        background-image: url("../img/buttons/sound_OFF.svg");
+         width: 30px;
+    height: 30px;
+        background-size:contain;
+    background-repeat: no-repeat;
+}
+
+.sound{
+    background-image: url("../img/buttons/sound_ON.svg");
+        width: 30px;
+    height: 30px;
+        background-size:contain;
+    background-repeat: no-repeat;
+}
+
+.table {
+    display: table;
+    margin-top: 8%;
+    width: 100%;
+    height: 60%;
+}
+.row {
+  display: table-row;
+  height:40px;
+}
+
+.cell {
+  display: table-cell;
+  padding: 8px;
+}
+
+.row .cell:last-child {
+  vertical-align: middle;
+}
+
+.key{
+    width:30px;
+}
+
+.rightAlign{
+    display:flex;
+    align-items:center;
+    justify-content:right;
 }

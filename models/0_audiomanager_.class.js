@@ -3,8 +3,6 @@ class AudioManager {
     playingSources = {};
     audioContext;
     audioPlaying = {};
-     pausedAt = {}; // <--- NEU: speichert die Pausenposition
-    startedAt = {}; // <--- NEU: merkt sich, wann gestartet wurde
     muted = false;
 
 
@@ -43,38 +41,63 @@ class AudioManager {
     }
 
 
-playAudio(name, options = {}) {
-    if (this.muted) return;
-    if (!this.buffers[name]) return;
+  playAudio(name, options = {}) {
+      if (this.muted) return;
+        if (!this.buffers[name]) {
+            console.error(`PA-buffers - Audio "${name}"/ ${JSON.stringify(options)} wurde nicht geladen.`);
+            return;
+        }
+         if (this.audioPlaying[name]) {   
+            return;
+        }
+    
+        try {
+            let source = this.audioContext.createBufferSource();
+            source.buffer = this.buffers[name];
+            source.loop = options.loop || false;
+    
+            // Lautstärke-Knoten erstellen & setzen
+            const gainNode = this.audioContext.createGain();
+            gainNode.gain.value = options.volume ?? 0.6;
+            source.connect(gainNode);
+            gainNode.connect(this.audioContext.destination);
+    
+            source.start(0);
+            this.playingSources[name] = { source, gainNode };
+            this.audioPlaying[name] = true;
 
-    // Wenn bereits läuft, nicht nochmal starten
-    if (this.audioPlaying[name]) return;
-
-    let offset = this.pausedAt[name] || 0; // <--- Resume-Position oder 0
-    try {
-        let source = this.audioContext.createBufferSource();
-        source.buffer = this.buffers[name];
-        source.loop = options.loop || false;
-
-        const gainNode = this.audioContext.createGain();
-        gainNode.gain.value = options.volume ?? 0.6;
-        source.connect(gainNode);
-        gainNode.connect(this.audioContext.destination);
-
-        source.start(0, offset); // <--- Start an Offset
-        this.playingSources[name] = { source, gainNode };
-        this.audioPlaying[name] = true;
-        this.startedAt[name] = this.audioContext.currentTime - offset; // <--- Startzeit merken
-
-        source.onended = () => {
-            this.audioPlaying[name] = false;
-            this.pausedAt[name] = 0;
-            this.startedAt[name] = 0;
-        };
-    } catch (error) {
-        console.error(`PlayAudio - Fehler beim Abspielen von "${name}":`, error);
+            source.onended = () => {
+                this.audioPlaying[name] = false; // Setzt Status nach Beenden zurück
+            };
+    
+            // console.log(`PA - Audio "${name}"- ${JSON.stringify(options)} wird abgespielt.`);
+        } catch (error) {
+            console.error(`PlayAudio - Fehler beim Abspielen von "${name}":`, error);
+        }
     }
-}
+    // playAudio(name, options = {}) {
+    //     if (!this.buffers[name]) {
+    //         console.error(`PA-buffers - Audio "${name}"/ ${JSON.stringify(options)} wurde nicht geladen.`);
+    //         return;
+    //     }
+    //     try {
+    //     let source = this.audioContext.createBufferSource();
+    //     source.buffer = this.buffers[name];
+    //     source.loop = options.loop || false;
+
+    //     // Lautstärke-Knoten erstellen & setzen
+    //     const gainNode = this.audioContext.createGain();
+    //     gainNode.gain.value = options.volume ?? 0.6; // Standardwert 1
+    //     source.connect(gainNode);
+    //     gainNode.connect(this.audioContext.destination);
+
+    //     source.start(0);
+    //     this.playingSources[name] = { source, gainNode };
+    //     console.log(` PA - Audio "${name}"- ${JSON.stringify(options)} wird abgespielt.`);
+    // } catch (error) {
+    //     console.error(`PlayAudio - Fehler beim Abspielen von "${name}":`, error);
+    // }
+    // }
 
     controlAudio(name, options = {}) {
         let audio = this.playingSources[name];
@@ -84,28 +107,9 @@ playAudio(name, options = {}) {
             audio.gainNode.gain.value = options.volume;
         }
         if (options.pause) {
-            // Pausenposition berechnen
-            if (this.audioPlaying[name]) {
-                let elapsed = this.audioContext.currentTime - (this.startedAt[name] || 0);
-                this.pausedAt[name] = elapsed;
-            }
             audio.source.stop();
             delete this.playingSources[name];
             this.audioPlaying[name] = false;
-        }
-        if (options.resume) {
-            // Resume von Pausenposition
-            if (this.pausedAt[name]) {
-                this.playAudio(name, options);
-            }
-        }
-        if (options.stop) {
-            // Komplett stoppen und zurücksetzen
-            audio.source.stop();
-            delete this.playingSources[name];
-            this.audioPlaying[name] = false;
-            this.pausedAt[name] = 0;
-            this.startedAt[name] = 0;
         }
     }
 
@@ -118,24 +122,7 @@ playAudio(name, options = {}) {
             });
         }
     }
-
-     playEffect(name, options = {}) {
-        if (!this.buffers[name]) return;
-        try {
-            let source = this.audioContext.createBufferSource();
-            source.buffer = this.buffers[name];
-            const gainNode = this.audioContext.createGain();
-            gainNode.gain.value = options.volume ?? 0.6;
-            source.connect(gainNode);
-            gainNode.connect(this.audioContext.destination);
-            source.start(0);
-            // Kein audioPlaying-Status, damit mehrere Effekte gleichzeitig gehen!
-        } catch (error) {
-            console.error(`Fehler beim Effekt-Sound "${name}":`, error);
-        }
-    }
 }
-
 
 
 

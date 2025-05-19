@@ -58,27 +58,25 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.cameraX, 0);
+;
    // console.log("draw - Endboss-Status", this.endboss.status);
     if (this.endboss.status === true) {
-        this.ctx.filter = 'brightness(50%)'; // Hintergrund Helligkeit verringern
-        //this.audio.loadAudio('endbossBackground', './audio/endboss_thunder.mp3');
-        audio.playAudio('endbossBackground', {play: true, loop: false, volume: 0.8, currentTime: 0});
-       
-        // this.endbossBackground.play();
-        // this.endbossBackground.volume = 1;
-        // this.endbossBackground.loop = false;
-        // this.endbossBackground.currentTime = 0;
+        this.ctx.filter = 'brightness(50%)'; //  Hintergrund Helligkeit verringern
+            this.addToMap(this.background_static);
+        if (audio.buffers['endbossBackground'] && !audio.audioPlaying['endbossBackground']) {
+            audio.playAudio('endbossBackground', { play: true, loop: false, volume: 0.8 });
+        }
 
     } else {
-        this.ctx.filter = 'none'; // Filter zurücksetzen
-        audio.controlAudio('endbossBackground', {pause: true, currentTime: 0});
+          this.ctx.filter = 'none'; // Filter zurücksetzen
+         this.addToMap(this.background_static);
+    
+        audio.controlAudio('endbossBackground', {pause: true});
 
         // this.endbossBackground.pause(); // Hintergrundmusik anhalten
         // this.endbossBackground.currentTime = 0; // Zurücksetzen des Audio-Elements
     }
-    this.addToMap(this.background_static);
-
-    this.ctx.filter = 'none';
+  this.ctx.filter = 'none'; 
 
     this.addObjects(this.level.clouds);
     this.addObjects(this.level.background_moving);
@@ -318,7 +316,7 @@ handleEndboss(){
         // Sound abspielen
 
         audio.loadAudio('WorldCoinCollecting', './audio/coin_success.mp3');
-        audio.playAudio('WorldCoinCollecting', { loop: false, volume: 0.2, currentTime: 0});
+        audio.playEffect('WorldCoinCollecting', { loop: false, volume: 0.2, currentTime: 0});
        
         // this.coinCollecting.play();
         // this.coinCollecting.volume = 0.2;

@@ -31,16 +31,20 @@
     <script src="./models/4_collidable-object.class.js"></script>
     <script src="./models/0_keyboard.class.js"></script>
 
-
     <script src="./js/game.js"></script>
+    <script src="./js/templates.js"></script>
     
 <body onload="init()">
 
     <section id="contentbox" >
         <h1 id="stayHeadline" class="headline">EL POLLO LOCO</h1> 
-        <div id="playScreen"><canvas id="canvas" width="800" height="480"></canvas></div>
-        <div id="buttons" class="menu"><div class="storyContent"></div><div id="story" alt="Story of Pepe" class="button">Story</div><div id="impressum" alt="Impressum" class="button">Impressum</div><div id="howto" class="button" alt="How to Play">How to Play</div>
-        <div id="sound"><img src="./img/buttons/sound_ON.svg" class="sound"></div>
+        <div id="playScreen">
+            <canvas id="canvas" width="800" height="480"></canvas>
+            <div id="buttonContent" class="hidden"></div>
+        </div>
+        
+        <div id="buttons" class="menu"><div id="story" alt="Story of Pepe" class="button" onclick="buttonContent('story')">Story</div><div id="impressum" alt="Impressum" class="button" onclick="buttonContent('impressum')"">Impressum</div><div id="howto" class="button" alt="How to Play"  onclick="buttonContent('howto')">How to Play</div>
+        <div id="sound" onclick="toggleSound()"><div id="on-off" class="sound"></div>
         
         <!-- <div id="startScreenText" class="start hidden"></div>
         
