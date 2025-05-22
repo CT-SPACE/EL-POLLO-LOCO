@@ -12,17 +12,7 @@ class MovableObject extends DrawableObject {
   offset;
   gravityInterval;
   
-
   lastHit = 0;
-
-  // applyGravity() {
-  //   setInterval(() => {
-  //     if (this.isAboveGround() || this.speedY > 0) {
-  //       this.y -= this.speedY;
-  //       this.speedY -= this.acceleration;
-  //     }
-  //   }, 1000 / 25);
-  // }
 
   applyGravity() {
     if (this.gravityInterval) return;
@@ -81,6 +71,8 @@ class MovableObject extends DrawableObject {
  }
 
 
+
+
   moveRight() {
     this.x += this.speed * this.factor;
     this.otherDirection = false;
@@ -100,27 +92,13 @@ class MovableObject extends DrawableObject {
       }
   }
   
-  
-
-//   hit(){
-   
-//     this.energy -= 0.0001;
-    
-// if(this.energy < 0){
-//   this.energy = 0;
-// } else {
-//   this.lastHit = new Date().getTime(); // Zeit gespeichert in Millisekunden als Zahl
-//   }
-
-//   }
-
 
 hit(attacker) {
   let damage = 0.0001; // Standard-Schaden
 
   // Überprüfen, ob der Angreifer der Endboss ist
   if (attacker instanceof Endboss) {
-      damage *= 2; // Schaden verdoppeln, wenn der Angreifer der Endboss ist
+      damage *= 100; // Schaden verdoppeln, wenn der Angreifer der Endboss ist
   }
 
   this.energy -= damage;
@@ -131,15 +109,6 @@ hit(attacker) {
       this.lastHit = new Date().getTime(); // Zeit des letzten Treffers speichern
   }
 }
-
-
-  // playAnimation(images){
-  //   this.images = images;
-  //   let i = this.currentIMG % this.IMAGES_WALKING.length;
-  //   let path = this.images[i];
-  //   this.img = this.imgCache[path];
-  //   this.currentIMG++;
-  // }
 
   playAnimation(images) {
     this.images = images;

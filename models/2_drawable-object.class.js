@@ -38,6 +38,7 @@ class DrawableObject {
   }
 
 drawObject(ctx) {
+  if (!this.img) return;
     try { 
    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
     } catch (error){
@@ -48,12 +49,12 @@ drawObject(ctx) {
 
   drawFrames(ctx) {
     if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject) {
-
+      
       ctx.beginPath();
       ctx.lineWidth = "5";
       ctx.strokeStyle = "yellowgreen";
       ctx.rect(this.x, this.y, this.width, this.height);
-      //ctx.rect(this.offset.x, this.offset.y, this.width - this.offset.x, this.height - this.offset.y);
+  
       ctx.stroke();
     }
   }

@@ -37,8 +37,6 @@ class StatusBarEndboss extends StaticObject {
         let path = this.IMAGES_SALUD_ENDBOSS[this.resolveImageEndboss(percentage)];
         this.img = this.imgCache[path];
 
-        //console.log("Endboss Health score =", this.resolveImageEndboss(percentage));
- 
     }
 
 

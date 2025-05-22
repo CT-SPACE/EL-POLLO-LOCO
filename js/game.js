@@ -9,6 +9,15 @@ let chicken_run;
 let keyboardEnabled = true;
 
 
+async function init() {
+    initLevel();
+    canvas = document.getElementById('canvas');
+    window.world = new World(canvas);
+    await preloadAudio();
+    playAmbient();
+}
+
+
 async function preloadAudio() {
     await Promise.all([
     audio.loadAudio('pepe_ambient', './audio/pepe_ambient.mp3'),
@@ -30,14 +39,36 @@ async function preloadAudio() {
     ])
 }
 
-
-async function init() {
-    initLevel();
-    canvas = document.getElementById('canvas');
-    window.world = new World(canvas);
-    await preloadAudio();
-    playAmbient();
+async function preloadSounds(soundPaths) {
+    return Promise.all(
+        soundPaths.map(
+            path =>
+                new Promise((resolve, reject) => {
+                    const audio = new Audio();
+                    audio.src = path;
+                    audio.oncanplaythrough = () => resolve({ path, audio });
+                    audio.onerror = reject;
+                })
+        )
+    );
 }
+
+async function preloadImages(imagePaths) {
+    return Promise.all(
+        imagePaths.map(
+            path =>
+                new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.src = path;
+                    img.onload = () => resolve({ path, img });
+                    img.onerror = reject;
+                })
+        )
+    );
+}
+
+
+
 
 
 function playAmbient() {

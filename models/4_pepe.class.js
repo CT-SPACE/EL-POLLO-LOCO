@@ -44,11 +44,7 @@ class Pepe extends MovableObject {
     "./img/2_character_pepe/1_idle/long_idle/I-19.png",
     "./img/2_character_pepe/1_idle/long_idle/I-20.png",
   ];
-  // pepe_pollo = new Audio("./audio/pepe_pollo_funny.mp3");
-  // chicken_splat = new Audio("./audio/chicken_splat.mp3");
-  // pepe_caramba = new Audio("./audio/pepe_caramba_funny.mp3");
-  // pepe_snore = new Audio("./audio/pepe_snore.mp3");
-  // pepe_hurt = new Audio("./audio/pepe_grunts_2.mp3");
+
 
   isPlayingHurtAudio = false;
 
@@ -62,7 +58,6 @@ class Pepe extends MovableObject {
   isSleepingState = false;
   timeToSleep = 60000;
   keyboard;
-  //audioPlaying = {};
   cameraX;
   speed = 20;
   speedY = 0;
@@ -71,7 +66,7 @@ class Pepe extends MovableObject {
     left: 30,
     right: 40,
     top: 130,
-    bottom: 10,
+    bottom: 20,
   };
 
   constructor(keyboard) {
@@ -90,18 +85,7 @@ class Pepe extends MovableObject {
     this.isPlayingHurtAudio = false;
     this.animateStates();
   }
-  //   document.addEventListener("keydown", (event) => {
-  //     if (event.key === "ArrowRight" && !audioPlaying["pepe_pollo"]) {
-  //         playAudio("pepe_pollo", { loop: false, volume: 0.6 });
-  //         audioPlaying["pepe_pollo"] = true;
-  //     }
-  // });
-
-  // document.addEventListener("keyup", (event) => {
-  //     if (event.key === "ArrowRight") {
-  //         audioPlaying["pepe_pollo"] = false;
-  //     }
-  // });
+  
 
   animateWalk() {
     this.x = 100;
@@ -142,14 +126,7 @@ class Pepe extends MovableObject {
           if (!this.audio.audioPlaying["pepe_pollo"]) {
             // this.audio.audioPlaying["pepe_pollo"] = true;
              this.audio.playAudio("pepe_pollo", { loop: false, volume: 0.4 });
-            //     if (audioElement) {
-            // audioElement.onended = () => {
-            //     audioPlaying["pepe_pollo"] = false;
-            // };
-            //     } else {
-            //       console.error("Audio konnte nicht abgespielt werden.");
-            //        audioPlaying["pepe_pollo"] = false;
-            //         };
+           
         }
   }
 
@@ -162,14 +139,13 @@ class Pepe extends MovableObject {
 
   stopSleepAnimation() {
     this.isSleepingState = false;
-    //this.playAudio["pepe_snore"] = false;
 
     audio.controlAudio("pepe_snore", {
       play: false,
       pause: true,
       currentTime: 0,
     });
-    // this.pepe_snore.pause();
+
   }
 
   animateStates() {
@@ -182,9 +158,7 @@ class Pepe extends MovableObject {
         this.animateHurt();
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
-        // if (this.isColliding(this.world.level.enemies)) {
-        //   this.animateChickenSplat();
-        // };
+
       } else if (Date.now() - this.lastKeyPressTime >= this.timeToSleep) {
         this.isSleepingState = true;
         this.animateSleep();
@@ -204,16 +178,12 @@ class Pepe extends MovableObject {
     }
     audio.controlAudio("pepe_pollo", { play:false, pause: true, currentTime: 0 });
 
-    // this.pepe_pollo.pause();
-    // this.pepe_snore.play();
-    // this.pepe_snore.volume = 0.3;
-    // this.pepe_snore.loop = true;
   }
 
   animateDeath() {
     this.playAnimation(this.IMAGES_DYING);
     audio.controlAudio("pepe_snore", { pause: true, currentTime: 0 });
-    // this.pepe_snore.pause();
+
   }
 
   animateJump() {
@@ -225,10 +195,7 @@ class Pepe extends MovableObject {
 
     if (!this.isPlayingHurtAudio) {
       audio.playAudio("pepe_hurt", { play: true, volume: 0.5, loop: false });
-      // this.pepe_hurt.play();
-      // this.pepe_hurt.loop = false;
-      // this.isPlayingHurtAudio = true;
-      // this.pepe_hurt.volume = 0.5;
+
     }
   }
 }

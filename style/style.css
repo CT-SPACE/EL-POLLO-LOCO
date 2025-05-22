@@ -14,6 +14,9 @@
     font-family: "Ojuju";
     src: url(../fonts/Ojuju/Ojuju-VariableFont_wght.ttf);
 }
+:root{
+    --golden-ratio: 1.618;
+}
 
 body{
     font-family:Ranchers;
@@ -306,4 +309,16 @@ p{
     display:flex;
     align-items:center;
     justify-content:right;
+}
+
+.stimmungsbild{
+    width:100%;
+    position:fixed;
+    top: 550px;
+    left:10px;
+
+}
+
+.skelett{
+    height:100px;
 }

@@ -142,36 +142,3 @@ playAudio(name, options = {}) {
 
 
 
-
-//     constructor() {
-//         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-//         this.buffers = {}; // Speicher für geladene Audio-Dateien
-//     }
-
-//     async loadAudio(name, url) {
-//         const response = await fetch(url);
-//         const arrayBuffer = await response.arrayBuffer();
-//         this.buffers[name] = await this.audioContext.decodeAudioData(arrayBuffer);
-//     }
-
-//     playAudio(name) {
-//         if (!this.buffers[name]) {
-//             console.error(`Audio "${name}" wurde nicht geladen.`);
-//             return;
-//         }
-
-//         const source = this.audioContext.createBufferSource();
-//         source.buffer = this.buffers[name];
-//         source.connect(this.audioContext.destination);
-//         source.start(0);
-//     }
-// }
-
-// // Nutzung
-// const audioManager = new AudioManager();
-// audioManager.loadAudio('jump', 'jump.mp3');
-// audioManager.loadAudio('hit', 'hit.mp3');
-
-// // Später in verschiedenen Klassen:
-// audioManager.playAudio('jump');
-// audioManager.playAudio('hit');

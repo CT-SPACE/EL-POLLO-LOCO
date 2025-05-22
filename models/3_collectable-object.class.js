@@ -16,48 +16,27 @@ class CollectableObject extends DrawableObject {
   distanceY = 10;
   minX = 280;
   maxX = 3600;
-  // bottleCollecting = new Audio('./audio/bottle_collect.mp3');
-  // coinCollecting = new Audio('./audio/coin_success.mp3');
+
 
   BOTTLE_GROUND = ["./img/6_salsa_bottle/1_salsa_bottle_on_ground.png", "./img/6_salsa_bottle/2_salsa_bottle_on_ground_.png"];
-  BOTTLE_SPLASH = ["./img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png", "./img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png"];
-  BOTTLE_THROW = [ "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png", "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png"];
-  COINS_ROTATING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
-    offset = { 
-      left: 30,
-      right: 30,      
-      top: 30,
-      bottom: 30
-    };
+ COINS_BLINKING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
+    offset;
 
   constructor(kindof, count, x, y, height, width, distanceX, Row2Probability) {
     super();
-    //.loadImage("./img/8_coin/coin_1.png");
-   // this.loadImage("./img/6_salsa_bottle/salsa_bottle.png");
-    this.loadImages(this.COINS_ROTATING);
-    this.loadImages(this.BOTTLE_GROUND);
-    this.loadImages(this.BOTTLE_SPLASH);  
-    this.loadImages(this.BOTTLE_THROW);
+
     this.audio = new AudioManager();
 
     this.kindof = kindof; // Art des Objekts (bottle oder coin)
     
     if (kindof === 'coin') {
-        this.loadImages(this.COINS_ROTATING);
-        this.offset = { 
-          left: 30,
-          right: 30,      
-          top: 30,
-          bottom: 30
-        };
+        this.loadImages(this.COINS_BLINKING);
+        this.img = this.imgCache[this.COINS_BLINKING[0]];
+        this.offset = { left: 30, right: 30, top: 30, bottom: 30 };
     } else if (kindof === 'bottle') {
         this.loadImages(this.BOTTLE_GROUND);
-        this.offset = { 
-          left: 5,
-          right: 0,      
-          top: 0,
-          bottom: 0
-        };
+        this.img = this.imgCache[this.BOTTLE_GROUND[0]];
+        this.offset = {       left: 60, right: 5, top: 5, bottom: 5 };
     }
 
     this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
@@ -66,8 +45,6 @@ class CollectableObject extends DrawableObject {
     this.width = width;
     this.animateBasedOnKind(); // Animation starten
 
-    // this.animateRotation();
-    // this.checkForCoinCollisions(character, coins);
   }
 
 
@@ -121,17 +98,12 @@ static createCoins(count, distanceX, Row2Probability) {
   checkForBottleCollisions(character, bottles) {
     // console.log("checkForBottleCollisions - bottles:", bottles);
    this.bottles = bottles;
-    this.bottles.offset = { 
-      left: 5,
-      right: 0,      
-      top: 0,
-      bottom: 0
-    };
-    //console.log("bottles", bottles);
-    // let audio = new AudioManager();
-    // bottleCollecting.loop = false;
-    // this.audio.loadAudio('bottleCollecting','./audio/bottle_collect.mp3');
-    // this.audio.playAudio('bottleCollecting', {play: true, loop: false , volume: 0.2 });
+    // this.bottles.offset = { 
+    //   left: 60,
+    //   right: 5,      
+    //   top: 5,
+    //   bottom: 5
+    // };
 
     this.character = character;
     setInterval(() => {
@@ -148,10 +120,6 @@ static createCoins(count, distanceX, Row2Probability) {
 
 checkForCoinCollisions(character, coins) {
 
-  // let coinCollecting = new Audio('../audio/coin_success.mp3');
-  // coinCollecting.loop = false;
-  // this.audio.loadAudio('coinCollecting','./audio/coin_success.mp3');
-  // this.audio.playAudio('coinCollecting', {play:true, loop: false , volume: 0.2 });
   this.character = character;
   setInterval(() => {
   coins.forEach((coin, index) => {
@@ -164,18 +132,20 @@ checkForCoinCollisions(character, coins) {
 }
 
 
-  animateRotation() {
-    setInterval(() => {
-      this.animateThings(this.COINS_ROTATING);
-    }, 300);
-  }
+  // animateRotation() {
+  //   setInterval(() => {
+  //     this.animateThings(this.COINS_BLINKING);
+  //   }, 300);
+  // }
 
   animateThings(images) {
     if (this.kindof === 'bottle' || this.kindof === 'coin') {
         this.images = images;
         let i = this.currentIMG % this.images.length;
         let path = this.images[i];
-        this.img = this.imgCache[path];
+       if (this.imgCache[path]) { // Nur setzen, wenn Bild geladen
+            this.img = this.imgCache[path];
+        }
         this.currentIMG++;
     }
 }
@@ -183,12 +153,12 @@ checkForCoinCollisions(character, coins) {
 animateBasedOnKind() {
   if (this.kindof === 'coin') {
       setInterval(() => {
-          this.animateThings(this.COINS_ROTATING);
+          this.animateThings(this.COINS_BLINKING);
       }, 300);
   } else if (this.kindof === 'bottle') {
       setInterval(() => {
           this.animateThings(this.BOTTLE_GROUND); // Verwende statische Bilder für Bottles
-      }, 500); // Langsamere Animation für Flaschen
+      }, 800); 
   }
 }
 

@@ -27,9 +27,6 @@ class StatusBarPepe extends StaticObject {
         this.y = 20;
         this.width = 128;
         this.height = 34;
-        //console.log('this.percentage =', character.energy);
-        //this.setPercentage(this.percentage);
-       
 
     }
 
