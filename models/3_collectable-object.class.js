@@ -96,7 +96,7 @@ static createCoins(count, distanceX, Row2Probability) {
 
 
   checkForBottleCollisions(character, bottles) {
-    // console.log("checkForBottleCollisions - bottles:", bottles);
+    console.log("checkForBottleCollisions - bottles:", bottles);
    this.bottles = bottles;
     // this.bottles.offset = { 
     //   left: 60,
@@ -110,9 +110,8 @@ static createCoins(count, distanceX, Row2Probability) {
       this.bottles.forEach((bottle, index) => {
 
         if (this.character.isColliding(bottle)) {
-          // this.bottleCollecting.play();
-
           this.bottles.splice(index, 1);
+          console.log("CheckforBottleCollisions",this.bottles);
         }
       });
     }, 500);

@@ -1,33 +1,108 @@
 // 
 
+// function buttonContent(content) {
+//     removeOverlay();
+//     let contentType = document.getElementById(content);
+//     let contentScreen = document.getElementById("buttonContent");
+//     contentScreen.classList.add("buttonContent");
+//     contentScreen.classList.remove("hidden");
+    
+//     // resetOutClasses();
+
+//     switch (content) {
+//         case "story":
+//             ToggleClasses(contentType, contentScreen);
+//             contentScreen.innerHTML = getStoryHtml();
+//             break;
+//         case "impressum":
+//             ToggleClasses(contentType, contentScreen);
+//             contentScreen.innerHTML = getImpressumHtml();
+//             break;
+//         case "howto":
+//             ToggleClasses(contentType, contentScreen);
+//             contentScreen.innerHTML = getHowToHtml();
+//             break;
+//     };
+//     createOverlayDiv();
+//     includeCloseButton(contentScreen);
+//     closeOnDarkLayer();
+       
+// }
+
 function buttonContent(content) {
-    removeOverlay();
     let contentType = document.getElementById(content);
     let contentScreen = document.getElementById("buttonContent");
-    contentScreen.classList.add("buttonContent");
-    contentScreen.classList.remove("hidden");
-    
-    resetOutClasses();
 
-    switch (content) {
-        case "story":
-            contentType.classList.add("Out");
-            contentType.classList.add("contentTransition")
-            contentScreen.innerHTML = getStoryHtml();
-            break;
-        case "impressum":
-            contentType.classList.add("Out");
-            contentScreen.innerHTML = getImpressumHtml();
-            break;
-        case "howto":
-            contentType.classList.add("Out");
-            contentScreen.innerHTML = getHowToHtml();
-            break;
-    };
-    createOverlayDiv();
-    includeCloseButton(contentScreen);
-    closeOnDarkLayer();
-       
+    // Wenn derselbe Content offen ist, schließe ihn
+    if (contentScreen.classList.contains('open') && contentScreen.dataset.active === content) {
+        closeContent(contentScreen);
+        return;
+    }
+
+    // Wenn ein anderer Content offen ist, schließe erst, dann öffne neuen Content
+    if (contentScreen.classList.contains('open')) {
+        closeContent(contentScreen, () => openContent(content, contentType, contentScreen));
+    } else {
+        openContent(content, contentType, contentScreen);
+    }
+}
+
+function openContent(content, contentType, contentScreen) {
+    gamePaused = true;
+    togglePlay("content", true);
+    // pauseGameSounds();
+    resetOutClasses();
+    contentType.classList.add("Out");
+    contentScreen.classList.remove('hidden', 'close');
+    // Content erst NACH Start der Animation einfügen
+    setTimeout(() => {
+        contentScreen.classList.add('open');
+        contentScreen.dataset.active = content;
+        switch (content) {
+            case "story":
+                contentScreen.innerHTML = getStoryHtml();
+                break;
+            case "impressum":
+                contentScreen.innerHTML = getImpressumHtml();
+                break;
+            case "howto":
+                contentScreen.innerHTML = getHowToHtml();
+                break;
+        }
+        createOverlayDiv();
+        includeCloseButton(contentScreen);
+        closeOnDarkLayer();
+    }, 10); // kleiner Timeout, damit die Transition greift
+}
+
+function closeContent(contentScreen, callback) {
+    gamePaused = false;
+    resumeGameSounds();
+     resetOutClasses()
+    togglePlay();
+    contentScreen.classList.remove('open');
+    contentScreen.classList.add('close');
+    contentScreen.addEventListener('transitionend', function handler() {
+        contentScreen.classList.add('hidden');
+        contentScreen.classList.remove('close');
+        contentScreen.innerHTML = '';
+        contentScreen.dataset.active = '';
+        gamePaused = false;
+        removeOverlay();
+        contentScreen.removeEventListener('transitionend', handler);
+        if (callback) callback();
+    });
+}
+
+function ToggleClasses(contentType, contentScreen) {
+    resetOutClasses();
+     contentType.classList.add("Out");
+     contentScreen.classList.toggle('open');
+     contentScreen.classList.toggle('close');
+     if(contentScreen.classList.contains('close')){
+        let darkLayer = document.getElementById("overlayDiv"); 
+     closeContent(contentScreen, darkLayer);
+    }
 }
 
 function removeOverlay() {
@@ -106,7 +181,7 @@ function closeOnDarkLayer() {
     let darkLayer = document.getElementById("overlayDiv"); 
     let contentScreen = document.getElementById("buttonContent");
     darkLayer.addEventListener("click", function () {
-         toClose(contentScreen, darkLayer)
+         closeContent(contentScreen)
     });
 }
 
@@ -116,19 +191,27 @@ function includeCloseButton(contentScreen) {
     closeButton.id = 'closeButton';
     contentScreen.appendChild(closeButton);
         darkLayer.addEventListener("click", function () {
-        toClose(contentScreen, darkLayer);
+        closeContent(contentScreen);
         });
         closeButton.addEventListener("click", function () {
-        toClose(contentScreen, darkLayer)
+       closeContent(contentScreen);
         });
 
 
 }
 
-function toClose(contentScreen, darkLayer) {
-            contentScreen.classList.remove("buttonContent");
-        contentScreen.classList.add("hidden");
-         resetOutClasses();
-        darkLayer.remove();
+// function toClose(contentScreen) {
+//     closeContent(contentScreen);
+// }
 
-}
+// function setFondoTop(){
+//     let fondoIMG = document.getElementById('fondo'); // z.B. <img id="deinBild" ...>
+
+//     let fondoIMGHeight = fondoIMG.offsetHeight;
+//     fondoIMG.style.top = (710 - fondoIMGHeight) + 'px';
+
+// if (fondoIMG) {
+//     fondoIMG.addEventListener('load', setFondoTop);
+//     }
+// }
+// window.addEventListener('resize', setFondoTop);

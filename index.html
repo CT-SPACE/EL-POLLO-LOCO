@@ -35,17 +35,19 @@
     <script src="./js/templates.js"></script>
     
 <body onload="init()">
-
+<div id="fondo" class="fondo"></div>
     <section id="contentbox" >
         <h1 id="stayHeadline" class="headline">EL POLLO LOCO</h1> 
         <div id="playScreen">
             <canvas id="canvas" width="800" height="480"></canvas>
-            <div id="buttonContent" class="hidden"></div>
+            <div id="buttonContent" class="hidden close"></div>
         </div>
         
         <div id="buttons" class="menu"><div id="story" alt="Story of Pepe" class="button" onclick="buttonContent('story')">Story</div><div id="impressum" alt="Impressum" class="button" onclick="buttonContent('impressum')"">Impressum</div><div id="howto" class="button" alt="How to Play"  onclick="buttonContent('howto')">How to Play</div>
-        <div id="sound" onclick="toggleSound()"><div id="on-off" class="sound"></div>
-        
+        <div class="control">
+        <div id="sound" onclick="toggleSound()" title="Sound On/Off"><div id="on-off" class="controlButton soundON"></div></div>
+        <div id="play" onclick="togglePlay()" title="Play/Pause"><div id="switch" class="controlButton play"></div></div>
+        </div>
         <!-- <div id="startScreenText" class="start hidden"></div>
         
             <h1>EL POLLO LOCO</h1>

@@ -23,8 +23,6 @@ class AudioManager {
         }
         let arrayBuffer = await response.arrayBuffer();
         this.buffers[name] = await this.audioContext.decodeAudioData(arrayBuffer);
-        // console.log(`Audio "${name}" erfolgreich geladen.`);
-        // console.log(`Audio "${name}"- ${JSON.stringify(this.buffers)} erfolgreich geladen.`);
         } catch (error) {
             console.log(`LA - Fehler beim Laden oder Dekodieren von "${name}":`, error);
         }
@@ -120,6 +118,7 @@ playAudio(name, options = {}) {
     }
 
      playEffect(name, options = {}) {
+         if (this.muted) return;
         if (!this.buffers[name]) return;
         try {
             let source = this.audioContext.createBufferSource();

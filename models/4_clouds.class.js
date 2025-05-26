@@ -1,6 +1,13 @@
 class Clouds extends MovableObject{
     y = 50;
     x = 0;
+    speed = 0.2 + Math.random() * 0.5; // Zufällige Geschwindigkeit zwischen 0.15 und 0.65
+    offset = {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0
+    }
     width = 700;
     height = 300;
     IMAGES_MOVING = [
@@ -20,8 +27,8 @@ constructor(){
  animateX() {
 
     setInterval(() => {
-        this.moveLeft(20);
-        }, 60000 / 60);
+        this.moveLeft(this.speed);
+        },1000 / 25);
     }
       
        

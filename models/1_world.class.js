@@ -15,7 +15,7 @@ class World {
   EndBossVisible;
 
   throwableObjects = [new ThrowableObject()];
-  
+
   bottles;
   collectedBottles = 0;
   countBottles = 15;
@@ -73,7 +73,7 @@ class World {
 
     this.addObjects(this.level.clouds);
     this.addObjects(this.level.background_moving);
-    // this.throwableObjects.forEach(bottle => bottle.flyingBottle());
+    this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.toBeRemoved);
     this.addObjects(this.throwableObjects);
     this.addObjects(this.level.enemies);
 
@@ -86,6 +86,11 @@ class World {
     this.addToMap(this.statusBarPepe);
     this.addToMap(this.statusBarCoin);
     this.addToMap(this.statusBarChilli);
+console.log(
+  "Fliegende Flaschen:", this.throwableObjects.length,
+  "Sammelbare Flaschen:", this.level.bottles.length,
+  "Gesammelte Flaschen:", this.collectedBottles
+);
 
     this.handleEndboss();
     
@@ -142,10 +147,17 @@ checkThrowObjects(){
         }
 
         if (keyboard.THROW && this.collectedBottles > 0 && delta > 1000 && this.canThrow) {
+
+              let duration = Math.min(throwDuration || 0, 1000);
+             (console.log("duration", duration));
+            let speed = 10 + (duration / 1000) * 20;
+
             let bottle = new ThrowableObject(
                 this.character.x + 50,
                 this.character.y + 150
             );
+            bottle.speedX = speed;
+            bottle.speedY = speed;
             this.throwableObjects.push(bottle);
             keyboard.THROW = false;
             startThrow = new Date().getTime();
@@ -158,6 +170,7 @@ checkThrowObjects(){
             }, 300);
         }
     }, 50);
+    throwDuration = 0;
 }
   
 
@@ -190,11 +203,10 @@ checkThrowObjects(){
           this.character.speedY = 20;
           this.character.speed = 20;
         }
- 
+      });
         this.checkCollisionsCoins(this.character);
         this.checkCollisionsBottles();
-      });
-    }, 800);
+    }, 300);
 
   }
 
@@ -207,7 +219,7 @@ checkCollisionBottleWithEndboss() {
 
             if (bottle.y + bottle.height < hitZone) {
                 bottle.hit(endboss);
-                bottle.playAnimation(bottle.IMAGES_BOTTLE_SPLASH);
+                this.MovableObjects.playAnimation(bottle.IMAGES_BOTTLE_SPLASH);
             } else {
                 if (typeof endboss.playAttack === "function") {
                     endboss.playAttack();
@@ -258,45 +270,83 @@ checkCollisionPepeWithEndboss() {
     return distance;
   }
 
-  checkCollisionsCoins(character) {
-    this.character = character;
+  // checkCollisionsCoins(character) {
+  //   this.character = character;
+  //   const totalCoins = 50; // Ursprüngliche Anzahl der Coins
+  //   this.level.coins.forEach((coin) => {
+  //     if (this.character.isColliding(coin)) {
+  //       // Coin entfernen
+  //       this.level.coins = this.level.coins.filter((object) => object !== coin);
+
+  //       this.statusBarCoin.setPercentage(totalCoins - this.level.coins.length);
+
+  //       coin.checkForCoinCollisions(this.character, this.level.coins);
+
+  //       audio.loadAudio('WorldCoinCollecting', './audio/coin_success.mp3');
+  //       audio.playEffect('WorldCoinCollecting', { loop: false, volume: 0.2, currentTime: 0});
+
+  //     }
+  //   });
+  // }
+
+
+checkCollisionsCoins() {
+    let collected = 0;
     const totalCoins = 50; // Ursprüngliche Anzahl der Coins
-    this.level.coins.forEach((coin) => {
-      if (this.character.isColliding(coin)) {
-        // Coin entfernen
-        this.level.coins = this.level.coins.filter((object) => object !== coin);
 
+    this.level.coins = this.level.coins.filter((coin) => {
+        if (this.character.isColliding(coin)) {
+            collected++;
+            audio.loadAudio('WorldCoinCollecting', './audio/coin_success.mp3');
+            audio.playEffect('WorldCoinCollecting', { loop: false, volume: 0.2, currentTime: 0});
+            // Optional: coin.checkForCoinCollisions(this.character, this.level.coins);
+            return false; // Coin wird entfernt
+        }
+        return true; // Coin bleibt
+    });
+
+    if (collected > 0) {
         this.statusBarCoin.setPercentage(totalCoins - this.level.coins.length);
+    }
+}
 
-        coin.checkForCoinCollisions(this.character, this.level.coins);
+//   checkCollisionsBottles() {
 
-        audio.loadAudio('WorldCoinCollecting', './audio/coin_success.mp3');
-        audio.playEffect('WorldCoinCollecting', { loop: false, volume: 0.2, currentTime: 0});
+//     this.level.bottles.forEach((bottle, index) => {
+//       if (this.character.isColliding(bottle)) {
+//             this.collectedBottles++ ;
+//             console.log("collectedBottles = ", this.collectedBottles);
+//          this.level.bottles.splice(index,1);
+//          console.log("Rest of collectable Bottles = ", this.level.bottles.length);
+//         this.statusBarChilli.setPercentage(this.collectedBottles);
+//         // Kollision prüfen
+//         // bottle.checkForBottleCollisions(this.character, this.level.bottles);
 
-      }
+//         // Sound abspielen
+//         audio.loadAudio('WorldBottleCollecting', './audio/bottle_collect.mp3');
+//         audio.playAudio('WorldBottleCollecting', { loop: false, volume: 0.2, currentTime: 0});
+
+//       }});
+//   }
+
+checkCollisionsBottles() {
+    let collected = 0;
+
+    this.level.bottles = this.level.bottles.filter((bottle) => {
+        if (this.character.isColliding(bottle)) {
+          
+            collected++;
+            audio.loadAudio('WorldBottleCollecting', './audio/bottle_collect.mp3');
+            audio.playEffect('WorldBottleCollecting', { loop: false, volume: 0.2, currentTime: 0});
+            return false; // Flasche wird entfernt
+        }
+        return true; // Flasche bleibt
     });
-  }
-
-  checkCollisionsBottles() {
-
-    this.level.bottles.forEach((bottle, index) => {
-      if (this.character.isColliding(bottle)) {
-            this.collectedBottles++ ;
-         this.level.bottles.splice(index,1);
-
-        // console.log("Rest of collectable Bottles = ", this.level.Bottles.length);
+    if (collected > 0) {
+        this.collectedBottles += collected;
         this.statusBarChilli.setPercentage(this.collectedBottles);
-        // Kollision prüfen
-        bottle.checkForBottleCollisions(this.character, this.level.bottles);
-
-        // Sound abspielen
-        audio.loadAudio('WorldBottleCollecting', './audio/bottle_collect.mp3');
-        audio.playAudio('WorldBottleCollecting', { loop: false, volume: 0.2, currentTime: 0});
-
-      }
-    });
-  }
-
+    }
+}
   
   addObjects(objects) {
     //    console.log('objects = ', objects);

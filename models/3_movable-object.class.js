@@ -6,7 +6,7 @@ class MovableObject extends DrawableObject {
   cameraX;
   factor = 1
   speed = 20;
-  speedY = 2;
+  speedY;
   acceleration = 4.2;
   energy = 1;
   offset;
@@ -78,9 +78,9 @@ class MovableObject extends DrawableObject {
     this.otherDirection = false;
   }
 
-  moveLeft() {
-
-    this.x -= this.speed * this.factor;
+  moveLeft(speed) {
+    if (gamePaused) return;
+    this.x -= speed;
   }
 
   jump() {

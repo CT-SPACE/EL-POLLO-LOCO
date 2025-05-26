@@ -16,6 +16,7 @@
 }
 :root{
     --golden-ratio: 1.618;
+    --fondo-ratio: 6.845
 }
 
 body{
@@ -27,7 +28,7 @@ body{
     justify-content: flex-start;
     align-items: center;
     flex-direction:column;
-    background-image: linear-gradient(180deg, #811800 608px, #fdf08f 7%);
+    background-image: linear-gradient(180deg, #811800 680px, #fdf08f 7%);
     background-color: #811800;
     color:white;
     height: 100vh;
@@ -202,19 +203,13 @@ font-weight:700;
 .content{
     z-index:12;
        height: 100%;
-       bottom:-100%;
+
     padding: 0px 30px 0px 0px;
     overflow:hidden;
     overflow-y:auto;
     scroll-behavior: smooth;
     scrollbar-width:5px;
     scrollbar-color: #fdf08f #b18f15;
-
-}
-
-.contentTransition{
-    bottom:0;
-    transition: bottom 0.5s ease-in-out;
 
 }
 
@@ -239,46 +234,103 @@ p{
     font-size: 1.2em;
     line-height:1.5em;
     color: rgb(112, 10, 10);
+    bottom: -100%;
     position:absolute;
-    /* background-color:rgba(0,0,0,0.5); */
+    transition: bottom 0.5s cubic-bezier(.77,0,.18,1);
+
+ 
    
+}
+#buttonContent.open{
+    bottom:0;
+   
+
+}
+#buttonContent.close{
+    bottom: -100%;
+    
+}
+
+/* .buttonContent{
+    position:absolute;
+    bottom: -100%;
+} */
+ 
+.control{
+    display: flex;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position:absolute;
+       top:-380px;
+    right:-204px;
 }
 
 
-#sound{
+#sound,#play{
     display: flex;
-    position: absolute;
     padding: 5px 5px 5px 25px;
     box-sizing: border-box;
     z-index: 9;
     width: 60px;
-    top: -250px;
-    right: -204px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     background-color: lightgoldenrodyellow;
-    translate: right 200ms ease-in;
+    margin-bottom: 10px
 }
 
-#sound:hover{
-    cursor:pointer;
-    right: -210px
+#sound:hover,#play:hover{
+    
+    margin-right:-8px;
+    transition: margin-left 0.2s ease-in-out;
+
 }
+
+.controlButton{
+    width: 30px;
+    height: 28px;
+    border:0;
+    background-color:transparent;
+    cursor:pointer;
+    background-size:contain;
+    background-repeat: no-repeat;
+
+}
+
+/* button:disabled{
+    cursor: not-allowed;
+    opacity: 0.5;
+} */
+
+#play.disabled{
+    background-color: lightgrey;
+    cursor: unset;
+    opacity: 0.5;
+    pointer-events: none;
+    margin-right: 0;
+}
+
+#play.disabled:hover {
+    margin-right: 0;
+    transition: none;
+}
+
 
 .soundOFF{
         background-image: url("../img/buttons/sound_OFF.svg");
-         width: 30px;
-    height: 30px;
-        background-size:contain;
-    background-repeat: no-repeat;
 }
 
-.sound{
+.soundON{
     background-image: url("../img/buttons/sound_ON.svg");
-        width: 30px;
-    height: 30px;
-        background-size:contain;
-    background-repeat: no-repeat;
+}
+
+.play{
+        background-image: url("../img/buttons/pause.svg");
+}
+
+.pause{
+    background-image: url("../img/buttons/play.svg");
 }
 
 .table {
@@ -314,11 +366,23 @@ p{
 .stimmungsbild{
     width:100%;
     position:fixed;
-    top: 550px;
+    top:580px;
     left:10px;
 
 }
 
 .skelett{
     height:100px;
+}
+
+.fondo{
+    height: 680px;
+    z-index: 0;
+    width:100vw;
+    position:absolute;
+    background-image:url("../img/fondo_cactus.png");
+    background-size:1000px;
+    background-position-y:bottom;
+    background-repeat:repeat-x;
+
 }

@@ -135,11 +135,11 @@ class Endboss extends MovableObject {
         clearInterval(this.animateAlertIntervall);
 
        this.animateWalkIntervall =  setInterval(() => { 
-                    this.speed = 1;
+                    this.speed = 0.8;
                     this.playAnimation(this.IMAGES_WALK);
                     this.moveLeft(this.speed);
 
-     },3000 /25);
+     },6000 /25);
     }
     
     animateAlert(){

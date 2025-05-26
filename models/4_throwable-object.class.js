@@ -21,6 +21,10 @@ class ThrowableObject extends MovableObject {
     ];
     world;
     offset;
+    speedX;
+    speedY;
+    splashed = false;
+    toBeRemoved = false;
 
     constructor(x,y,world){
         super().loadImage('./img/6_salsa_bottle/1_salsa_bottle_on_ground.png');
@@ -39,54 +43,37 @@ class ThrowableObject extends MovableObject {
 
     throw() {
        
-            this.speedY = 30;
-            this.speedX = 20;
-            this.applyGravity();
+           // this.applyGravity();
              
             this.throwInterval = setInterval(() => {
                 this.x += this.speedX;
-                 this.rotatingBottle();
-                // this.y -= this.speedY;
-                // this.speedY -= this.acceleration;
-                // if (this.y >= 450) {
-                //     this.y = 450;
-                //     this.speedY = 0;
-                //     this.speedX = 0;
-                //     clearInterval(this.throwInterval);
-                //     this.stopBottleAnimation();
-                //     this.bottleSplash();
-                // }
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+                this.rotatingBottle();
+                if (this.y >= 450 && !this.splashed) {
+                    this.y = 450;
+                    this.speedY = 0;
+                    this.speedX = 0;
+                    this.toBeRemoved = true;
+                    this.stopBottleAnimation();
+                    
+                }
 
-            },25);
+            },1000 / 25);
     }
 
-//     flyingBottle() {
-//     this.speedY = 10;
-
-//     // Stopp wenn Boden erreicht
-//     if (this.y >= 450) {
-//         this.y = 450;
-//         this.speedY = 0;
-//         this.speed = 0;
-
-//         // Objekt vollständig aus der Liste entfernen
-//         setTimeout(() => {
-//             this.world.throwableObjects = this.world.throwableObjects.filter(obj => obj !== this);
-//         }, 400);
-
-//         return; // Damit moveBottle() nicht weiter ausgeführt wird
-//     } else{
-//             console.log("moveBottle", this.x, this.y);
-//     this.x += this.speed ?? 0;
-//     this.y -= this.speedY ?? 0;
-//     this.speedY -= this.acceleration ?? 1.2; // Schwerkraft
-//     }
-
-//     // Bewegung berechnen
-
-// }
-
-
+    bottleSplash() {
+         this.splashed = true;
+        this.bottleSplashIndex = 0;
+        this.splashInterval = setInterval(() => {
+            this.bottleSplashIndex = (this.bottleSplashIndex + 1) % this.IMAGES_BOTTLE_SPLASH.length;
+            let path = this.IMAGES_BOTTLE_SPLASH[this.bottleSplashIndex];
+            this.img = this.imgCache[path];
+            if (this.bottleSplashIndex === 5) {
+                this.stopBottleAnimation();
+            }
+        }, 100); 
+    }
     
     
     rotatingBottle() {
@@ -102,6 +89,7 @@ class ThrowableObject extends MovableObject {
     stopBottleAnimation() {
         if (this.rotationInterval) clearInterval(this.rotationInterval);
         if (this.throwInterval) clearInterval(this.throwInterval);
+        if (this.splashInterval)clearInterval(this.splashInterval);
     }
 
 
