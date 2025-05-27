@@ -3,8 +3,8 @@ class AudioManager {
     playingSources = {};
     audioContext;
     audioPlaying = {};
-     pausedAt = {}; // <--- NEU: speichert die Pausenposition
-    startedAt = {}; // <--- NEU: merkt sich, wann gestartet wurde
+     pausedAt = {}; 
+    startedAt = {};
     muted = false;
 
 
@@ -32,7 +32,6 @@ class AudioManager {
 
     setMuted(mute) {
         this.muted = mute;
-        // Stoppe alle laufenden Sounds, wenn gemutet wird
         if (mute) {
             Object.keys(this.playingSources).forEach(name => {
                 this.controlAudio(name, { pause: true });
@@ -45,7 +44,6 @@ playAudio(name, options = {}) {
     if (this.muted) return;
     if (!this.buffers[name]) return;
 
-    // Wenn bereits läuft, nicht nochmal starten
     if (this.audioPlaying[name]) return;
 
     let offset = this.pausedAt[name] || 0; // <--- Resume-Position oder 0
@@ -82,7 +80,7 @@ playAudio(name, options = {}) {
             audio.gainNode.gain.value = options.volume;
         }
         if (options.pause) {
-            // Pausenposition berechnen
+
             if (this.audioPlaying[name]) {
                 let elapsed = this.audioContext.currentTime - (this.startedAt[name] || 0);
                 this.pausedAt[name] = elapsed;
@@ -92,13 +90,13 @@ playAudio(name, options = {}) {
             this.audioPlaying[name] = false;
         }
         if (options.resume) {
-            // Resume von Pausenposition
+
             if (this.pausedAt[name]) {
                 this.playAudio(name, options);
             }
         }
         if (options.stop) {
-            // Komplett stoppen und zurücksetzen
+
             audio.source.stop();
             delete this.playingSources[name];
             this.audioPlaying[name] = false;
@@ -128,7 +126,7 @@ playAudio(name, options = {}) {
             source.connect(gainNode);
             gainNode.connect(this.audioContext.destination);
             source.start(0);
-            // Kein audioPlaying-Status, damit mehrere Effekte gleichzeitig gehen!
+
         } catch (error) {
             console.error(`Fehler beim Effekt-Sound "${name}":`, error);
         }

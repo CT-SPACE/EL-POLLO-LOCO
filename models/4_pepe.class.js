@@ -124,7 +124,6 @@ class Pepe extends MovableObject {
           this.playAnimation(this.IMAGES_WALKING);
           this.moveRight();
           if (!this.audio.audioPlaying["pepe_pollo"]) {
-            // this.audio.audioPlaying["pepe_pollo"] = true;
              this.audio.playAudio("pepe_pollo", { loop: false, volume: 0.4 });
            
         }

@@ -30,8 +30,6 @@ function initLevel(){
             new movingBackground(11),
             new movingBackground(15),
 
-   
-            // new movingBackground(8)
         ],
         [ 
             new Chicken(world),

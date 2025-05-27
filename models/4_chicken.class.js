@@ -30,8 +30,7 @@ class Chicken extends MovableObject{
             this.loadImages(this.IMAGES_WALKING);
             this.world = world;
 
-            // this.audio = world.getAudio(); // Zugriff auf die Audio-Variable aus World
-            this.audio = audio; // Zugriff auf die Audio-Variable aus World
+            this.audio = audio; 
             this.x +=  300 + Math.random() * 1600;
             this.speed = 0.1 + Math.random() * 0.5; // Zufällige Geschwindigkeit zwischen 0.1 und 0.6
             this.animationSpeed = Math.random() * 20 + 100; // Zufällige Animationsgeschwindigkeit zwischen 100 und 300 ms

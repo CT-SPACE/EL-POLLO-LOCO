@@ -32,7 +32,6 @@ class DrawableObject {
   loadAudio(arr) {
     arr.forEach((path) => {
       let audio = new Audio(path);
-      //audio.src = path;
       this.audioCache[path] = audio;
     });
   }
@@ -59,15 +58,25 @@ drawObject(ctx) {
     }
   }
 
-  drawOffset(ctx) {
-    if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject) {
-      ctx.beginPath();
-      ctx.lineWidth = "5";
-      ctx.strokeStyle = "orangered";
-      ctx.rect(this.offset.x, this.offset.y, this.width - this.offset.x, this.height - this.offset.y);
-      ctx.stroke();
+drawOffset(ctx) {
+    if (
+        this instanceof Pepe ||
+        this instanceof Chicken ||
+        this instanceof CollectableObject ||
+        this instanceof Endboss
+    ) {
+        ctx.beginPath();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = "orangered";
+        ctx.rect(
+            this.x + (this.offset?.left || 0),
+            this.y + (this.offset?.top || 0),
+            this.width - ((this.offset?.left || 0) + (this.offset?.right || 0)),
+            this.height - ((this.offset?.top || 0) + (this.offset?.bottom || 0))
+        );
+        ctx.stroke();
     }
-  }
+}
 
 
 

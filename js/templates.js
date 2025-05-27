@@ -1,45 +1,14 @@
-// 
 
-// function buttonContent(content) {
-//     removeOverlay();
-//     let contentType = document.getElementById(content);
-//     let contentScreen = document.getElementById("buttonContent");
-//     contentScreen.classList.add("buttonContent");
-//     contentScreen.classList.remove("hidden");
-    
-//     // resetOutClasses();
-
-//     switch (content) {
-//         case "story":
-//             ToggleClasses(contentType, contentScreen);
-//             contentScreen.innerHTML = getStoryHtml();
-//             break;
-//         case "impressum":
-//             ToggleClasses(contentType, contentScreen);
-//             contentScreen.innerHTML = getImpressumHtml();
-//             break;
-//         case "howto":
-//             ToggleClasses(contentType, contentScreen);
-//             contentScreen.innerHTML = getHowToHtml();
-//             break;
-//     };
-//     createOverlayDiv();
-//     includeCloseButton(contentScreen);
-//     closeOnDarkLayer();
-       
-// }
 
 function buttonContent(content) {
     let contentType = document.getElementById(content);
     let contentScreen = document.getElementById("buttonContent");
 
-    // Wenn derselbe Content offen ist, schließe ihn
     if (contentScreen.classList.contains('open') && contentScreen.dataset.active === content) {
         closeContent(contentScreen);
         return;
     }
 
-    // Wenn ein anderer Content offen ist, schließe erst, dann öffne neuen Content
     if (contentScreen.classList.contains('open')) {
         closeContent(contentScreen, () => openContent(content, contentType, contentScreen));
     } else {
@@ -50,11 +19,11 @@ function buttonContent(content) {
 function openContent(content, contentType, contentScreen) {
     gamePaused = true;
     togglePlay("content", true);
-    // pauseGameSounds();
+
     resetOutClasses();
     contentType.classList.add("Out");
     contentScreen.classList.remove('hidden', 'close');
-    // Content erst NACH Start der Animation einfügen
+
     setTimeout(() => {
         contentScreen.classList.add('open');
         contentScreen.dataset.active = content;
@@ -199,19 +168,3 @@ function includeCloseButton(contentScreen) {
 
 
 }
-
-// function toClose(contentScreen) {
-//     closeContent(contentScreen);
-// }
-
-// function setFondoTop(){
-//     let fondoIMG = document.getElementById('fondo'); // z.B. <img id="deinBild" ...>
-
-//     let fondoIMGHeight = fondoIMG.offsetHeight;
-//     fondoIMG.style.top = (710 - fondoIMGHeight) + 'px';
-
-// if (fondoIMG) {
-//     fondoIMG.addEventListener('load', setFondoTop);
-//     }
-// }
-// window.addEventListener('resize', setFondoTop);
