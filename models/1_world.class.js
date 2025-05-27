@@ -279,36 +279,53 @@ checkCollisionsCoins() {
       }});
   }
 
-checkCollisionBottleWithEndboss() {
+// checkCollisionBottleWithEndboss() {
   
+//     let endboss = this.level.enemies.find((enemy) => enemy.type === "endboss");
+//     console.log('Kollisionsprüfung läuft',endboss);
+//     if (!endboss) return;
+//     this.throwableObjects.forEach((bottle) => {
+//         if (bottle.isColliding(endboss)) {
+//            console.log('Kollision erkannt! Bottle', bottle);
+//            console.log('Kollision erkannt! Endboss', endboss);
+//             // Definiere den oberen Bereich des Endboss (z.B. oberes 40%)
+//             // let hitZone = endboss.y + (endboss.height * 0.4);
+
+//             // if (bottle.y + bottle.height < hitZone) {
+//                 // Treffer im oberen Bereich: Endboss-Health reduzieren
+//                 endboss.energy = Math.max(0, endboss.energy - 20); // z.B. 20 abziehen
+//                if (typeof endboss.statusBar === "object" && typeof endboss.statusBar.setPercentage === "function") {
+//     endboss.statusBar.setPercentage(endboss.energy);
+//     console.log("Endboss Energie nach Treffer:", endboss.energy);
+// }
+//             // }
+// if (typeof bottle.bottleSplash === "function") {
+//     bottle.bottleSplash();
+// }
+//             bottle.splashed = true;
+
+//             setTimeout(() => {
+//                 this.throwableObjects = this.throwableObjects.filter(obj => obj !== bottle);
+//                 bottle.speed = 0;
+//                 bottle.speedY = 0;
+//             }, 600);
+//         }
+//     });
+// }
+
+checkCollisionBottleWithEndboss() {
     let endboss = this.level.enemies.find((enemy) => enemy.type === "endboss");
-    console.log('Kollisionsprüfung läuft',endboss);
     if (!endboss) return;
     this.throwableObjects.forEach((bottle) => {
-        if (bottle.isColliding(endboss)) {
-           console.log('Kollision erkannt! Bottle', bottle);
-           console.log('Kollision erkannt! Endboss', endboss);
-            // Definiere den oberen Bereich des Endboss (z.B. oberes 40%)
-            // let hitZone = endboss.y + (endboss.height * 0.4);
-
-            // if (bottle.y + bottle.height < hitZone) {
-                // Treffer im oberen Bereich: Endboss-Health reduzieren
-                endboss.energy = Math.max(0, endboss.energy - 20); // z.B. 20 abziehen
-               if (typeof endboss.statusBar === "object" && typeof endboss.statusBar.setPercentage === "function") {
-    endboss.statusBar.setPercentage(endboss.energy);
-    console.log("Endboss Energie nach Treffer:", endboss.energy);
-}
-            // }
-if (typeof bottle.bottleSplash === "function") {
-    bottle.bottleSplash();
-}
-            bottle.splashed = true;
-
-            setTimeout(() => {
-                this.throwableObjects = this.throwableObjects.filter(obj => obj !== bottle);
-                bottle.speed = 0;
-                bottle.speedY = 0;
-            }, 600);
+        if (bottle.isColliding(endboss) && !bottle.splashed) {
+            endboss.energy = Math.max(0, endboss.energy - 20);
+            if (typeof endboss.statusBar === "object" && typeof endboss.statusBar.setPercentage === "function") {
+                endboss.statusBar.setPercentage(endboss.energy);
+            }
+            if (typeof bottle.bottleSplash === "function") {
+                bottle.bottleSplash();
+            }
+            // bottle.splashed wird in bottleSplash gesetzt!
         }
     });
 }
