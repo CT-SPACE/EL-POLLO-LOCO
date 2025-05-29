@@ -56,6 +56,7 @@ class Pepe extends MovableObject {
   audio;
   lastKeyPressTime = Date.now();
   isSleepingState = false;
+  animateWalkInterval;
   timeToSleep = 60000;
   keyboard;
   cameraX;
@@ -90,7 +91,7 @@ class Pepe extends MovableObject {
   animateWalk() {
     this.x = 100;
 
-    setInterval(() => {
+     this.animateWalkInterval = setInterval(() => {
          if (this.energy <= 0) return;
 
         if (keyboard.RIGHT && this.x < this.world.level.level_endX) {
@@ -151,7 +152,7 @@ class Pepe extends MovableObject {
     this.isPlayingHurtAudio = false;
 
     setInterval(() => {
-      if (this.isDead()) {
+      if (this.isZeroHealthscore()) {
         this.animateDeath();
       } else if (this.isHurt()) {
         this.animateHurt();

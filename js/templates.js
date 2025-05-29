@@ -19,6 +19,12 @@ function buttonContent(content) {
 function openContent(content, contentType, contentScreen) {
     gamePaused = true;
     togglePlay("content", true);
+    if (getSoundStatus()) {
+        audio.setMuted(false);
+        allAmbientSounds();
+    } else {
+        audio.setMuted(true);
+    }
 
     resetOutClasses();
     contentType.classList.add("Out");
@@ -46,7 +52,13 @@ function openContent(content, contentType, contentScreen) {
 
 function closeContent(contentScreen, callback) {
     gamePaused = false;
-    resumeGameSounds();
+    // resumeGameSounds();
+        if (getSoundStatus()) {
+        audio.setMuted(false);
+        allAmbientSounds();
+    } else {
+        audio.setMuted(true);
+    }
      resetOutClasses()
     togglePlay();
     contentScreen.classList.remove('open');

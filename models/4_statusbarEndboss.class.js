@@ -33,7 +33,7 @@ class StatusBarEndboss extends StaticObject {
 
     setPercentage(percentage){
         this.percentage = percentage;
-        //console.log("Health % =", percentage);
+        console.log("Health % =", percentage);
         let path = this.IMAGES_SALUD_ENDBOSS[this.resolveImageEndboss(percentage)];
         this.img = this.imgCache[path];
 
@@ -42,15 +42,15 @@ class StatusBarEndboss extends StaticObject {
 
     resolveImageEndboss(percentage){
     
-        if(percentage > 0.10 && percentage < 0.30){
+        if(percentage > 10 && percentage < 30){
             return 1;
-        } else if(percentage >= 0.30 && percentage < 0.50){
+        } else if(percentage >= 30 && percentage < 50){
             return 2;
-        } else if(percentage >= 0.50 && percentage < 0.70){
+        } else if(percentage >= 50 && percentage < 70){
             return 3;
-        } else if(percentage >= 0.70 && percentage < 0.95){
+        } else if(percentage >= 70 && percentage < 95){
             return 4;
-        } else if(percentage >= 0.95){
+        } else if(percentage >= 95){
            return 5;
         } else {
            return 0;

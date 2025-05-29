@@ -57,22 +57,20 @@ class MovableObject extends DrawableObject {
     );
   }
 
-  isDead(Obj){
-    return this.energy == 0;
- }
+//   isDead(Obj){
+//     return this.energy == 0;
+//  }
+
+isZeroHealthscore(){
+          return this.energy <= 0 || this.isDead;
+}
 
  isHurt(){
   let timepassed = new Date().getTime() - this.lastHit; // Differenz in ms
   timepassed = timepassed / 1000; // Differenz in s
   return timepassed < 0.5;
  }
- isAttacking(){
-  
- }
-
-
-
-
+ 
   moveRight() {
     this.x += this.speed * this.factor;
     this.otherDirection = false;

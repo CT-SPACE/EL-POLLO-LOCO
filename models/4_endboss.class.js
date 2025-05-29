@@ -9,10 +9,10 @@ class Endboss extends MovableObject {
   EndBossClose = false;
   energy = 100;
   status = false;
+  isDead = false;
 
   y = 12;
   animationSpeed = 1000;
-  animateXInterval;
   animateWalkInterval;
   animateAttackInterval;
   animateAlertInterval;
@@ -71,6 +71,7 @@ class Endboss extends MovableObject {
     this.type = "endboss";
     this.world = world;
     this.EndBossClose = false;
+    this.isDead = false;
     this.status = false;
 
     this.animateWalk();
@@ -78,52 +79,12 @@ class Endboss extends MovableObject {
     this.x = 3800;
   }
 
-  animateStates(world) {
-    this.world = world;
-    setInterval(() => {
-      //console.log("animateStates - Endboss-Status", this.status);
-
-      if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
-      } else if (this.isHurt()) {
-        this.playAnimation(this.IMAGES_HURT);
-        audio.controlAudio("endboss_attack", { pause: true, currentTime: 0 });
-      } else {
-        if (this.EndBossClose === true) {
-          this.status = true;
-          world.EndBossVisible = true; 
-          this.isAttacking(this.status);
-          this.animateAttack();
-          audio.playAudio("endboss_attack", {
-            play: true,
-            loop: false,
-            volume: 0.6,
-            currentTime: 0,
-          });
-        }
-
-        if (world.EndBossVisible === true && this.EndBossClose === false) {
-          this.animateAlert();
-          this.status = false;
-          this.isAttacking(this.status);
-        } else {
-          this.status = false;
-          this.isAttacking(this.status);
-          audio.controlAudio("endboss_attack", {
-            play: false,
-            pause: true,
-            currentTime: 0,
-          });
-        }
-      }
-    }, this.animationSpeed);
-  }
 
   animateWalk() {
-    clearInterval(this.animateAttackIntervall);
-    clearInterval(this.animateAlertIntervall);
+    clearInterval(this.animateAttackInterval);
+    clearInterval(this.animateAlertInterval);
 
-    this.animateWalkIntervall = setInterval(() => {
+    this.animateWalkInterval = setInterval(() => {
       this.speed = 0.8;
       this.playAnimation(this.IMAGES_WALK);
       this.moveLeft(this.speed);
@@ -131,42 +92,58 @@ class Endboss extends MovableObject {
   }
 
   animateAlert() {
-    clearInterval(this.animateAttackIntervall);
-    clearInterval(this.animateWalkIntervall);
-    this.animateAlertIntervall = setInterval(() => {
+    clearInterval(this.animateAttackInterval);
+    clearInterval(this.animateWalkInterval);
+    this.animateAlertInterval = setInterval(() => {
       this.speed = 0;
       this.moveLeft(this.speed);
       this.playAnimation(this.IMAGES_ALERT);
     }, 2000 / 25);
   }
 
-  animateAttack() {
-    clearInterval(this.animateWalkIntervall);
-    clearInterval(this.animateAlertIntervall);
-    this.animateAttackIntervall = setInterval(() => {
-      this.playAnimation(this.IMAGES_ATTACK);
-      this.speed = 0.5;
-      this.moveLeft(this.speed);
+animateAttack() {
+    clearInterval(this.animateWalkInterval);
+    clearInterval(this.animateAlertInterval);
+    if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
+
+    let jumpDistance = 40;
+    this.animateAttackInterval = setInterval(() => {
+        if (gamePaused) return;
+        this.playAnimation(this.IMAGES_ATTACK);
+        if (this.currentIMG % this.IMAGES_ATTACK.length === 5) {
+            this.x -= jumpDistance;
+        }
     }, 3000 / 25);
-  }
+}
 
-  animateDeath() {
-    if (!this.isDead) return;
-    this.isDead = true; 
-    clearInterval(this.animateWalkIntervall); 
-    clearInterval(this.animateAttackIntervall);
-    clearInterval(this.animateAlertIntervall);
+animateDeath() {
+    if (this.isDead) return;
+    this.isDead = true;
+     this.status = false;
+    clearInterval(this.animateWalkInterval);
+    clearInterval(this.animateAttackInterval);
+    clearInterval(this.animateAlertInterval);
 
-    this.playAnimation(this.IMAGES_DEAD);
+    let deathFrame = 0;
+    this.deathInterval = setInterval(() => {
+        if (deathFrame < this.IMAGES_DEAD.length) {
+            this.img = this.imgCache[this.IMAGES_DEAD[deathFrame]];
+            deathFrame++;
+        } else {
+            clearInterval(this.deathInterval);
+            this.status = false;
+             audio.playAudio("endbossBackground", { play: false, pause: true});
+        }
+    }, 500); 
+   
     this.speed = 0;
-    audio.controlAudio("endboss_attack", {
-      play: false,
-      pause: true,
-      currentTime: 0,
-    });
-  }
+    // audio.controlAudio("endboss_attack", {play: false, pause: true, currentTime: 0});
+    audio.playAudio("endbossBackground", {play: false, pause: true});
+}
+
   isAttacking(status) {
     if (status === true) {
+       audio.playAudio("endboss_attack", {play: true});
       return true;
     } else {
       audio.controlAudio("endboss_attack", {
@@ -174,10 +151,16 @@ class Endboss extends MovableObject {
         pause: true,
         currentTime: 0,
       });
-
       return false;
     }
   }
+
+startAttackMode() {
+    this.status = true;
+    this.isAttacking(this.status);
+    if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
+    this.animateAttack();
+}
 
   isAlert() {
     return (
@@ -185,13 +168,28 @@ class Endboss extends MovableObject {
     );
   }
 
-  isDead() {
-    if (this.energy <= 0) {
-      this.energy = 0;
+animateHurt() {
+    clearInterval(this.animateAttackInterval);
+    clearInterval(this.animateWalkInterval);
+    clearInterval(this.animateAlertInterval);
 
-      return true;
-    } else {
-      return false;
-    }
-  }
+    if (this.animateHurtInterval) clearInterval(this.animateHurtInterval);
+
+    let hurtFrame = 0;
+    this.animateHurtInterval = setInterval(() => {
+        if (this.isDead) {
+
+            clearInterval(this.animateHurtInterval);
+            return;
+        }
+        this.img = this.imgCache[this.IMAGES_HURT[hurtFrame]];
+        hurtFrame = (hurtFrame + 1) % this.IMAGES_HURT.length; // Endlos-Schleife
+
+    }, 500);
+}
+
+
+  
+
+
 }
