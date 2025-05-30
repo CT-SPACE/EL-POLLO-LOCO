@@ -35,22 +35,74 @@ body{
 
 }
 
-
-
-.start{
+.allScreens{
+    position: relative;
+    overflow: visible;
+    display: flex;
+    border: 0;
     width: 800px;
     height: 480px;
-    position: absolute;
-    top: 197px;
+    top: 20px;
+    border-radius: 20px;
+}
 
-    background-color: aquamarine;
+.start{
+width: 800px;
+    height: 480px;
+    position: absolute;
+    top: 257px;
+    left: 5px;
+    display: flex;
+    justify-self: anchor-center;
     background-image: url(../img/Desierto-portada_con_pepe.jpg);
     border-radius: 20px;
     text-align: center;
     background-size: cover;
     background-position-x: -28px;
-    z-index:11;
+    z-index: 15;
 }
+
+#loader{
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: -300px;
+    z-index: 16;
+}
+
+#startGame{
+    padding:1rem 2rem;
+    display:none;
+}
+
+.spinner{
+    margin-top: 1rem;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+
+.startGame{
+    border: unset;
+    animation: unset;
+    width: 50px;
+    height: 50px;
+    background-image: url(../img/buttons/play.svg);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
 .hidden{
     display: none;
 }
@@ -66,9 +118,18 @@ body{
     transform: translateX(-50%);
 }
 
+.subText{
+    position: relative;
+    top: -320px;
+    z-index: 16;
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 2px black;
+}
+
 .playButton{
     width:60px;
     height:60px;
+
 }
 .playButton:hover{
     cursor: pointer;
@@ -92,7 +153,6 @@ section{
 h1{
     font-family:"Matemasie";
     color:white;
-
     margin: 0;
     line-height: 1.2em;
     text-shadow: 2px 2px 2px black;
@@ -109,40 +169,49 @@ h4{
     margin-bottom:0;
 }
 
-.headline{
-    font-size: 4em;
-    top: 180px;
+.h1_animation{
+    font-size: 5.6rem;
+        width: 100%;
+        text-align: center;
+    top: 10px;
+    transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
+.headline{
+font-size: 4em;
+    top: -65px;
+    
 }
 
 #playScreen{
-    background-color: black;
-    overflow:hidden;
-    width:800px;
-    height:480px;   
-    top:246px;
-    border:3px solid white;
+width: 100%;
+    height: 100%;
+    display: flex;
+    top: 0;
+    border: 3px solid white;
     z-index: 10;
     position: absolute;
     border-radius: 20px;
     box-shadow: 3px 3px 4px 0px black;
+    justify-content: center;
 }
 
 canvas{
     background-color: black;
-
     z-index: 10;
     position: absolute;
+    border-radius: 20px;
+    top:0;
    
 }
 
 .menu{
-    z-index:9;
-    top:96px;
-    height:40px;
-    position:relative;
-    display:flex;
-    justify-content:center;
+    z-index: 9;
+    top: 250px;
+    height: 40px;
+    margin: auto;
+    position: relative;
+    display: flex;
     
 }
 
@@ -258,13 +327,13 @@ p{
  
 .control{
     display: flex;
-
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    position:absolute;
-       top:-380px;
-    right:-204px;
+    align-items: end;
+    position: absolute;
+    top: 50px;
+    /* right: -140px; */
+    width: 100%;
 }
 
 
@@ -277,7 +346,9 @@ p{
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     background-color: lightgoldenrodyellow;
-    margin-bottom: 10px
+    margin-bottom: 10px;
+    position:relative;
+    right:-46px;
 }
 
 #sound:hover,#play:hover{

@@ -15,11 +15,13 @@ let gamePaused = false;
 
 async function init() {
     restoreSoundStatus();
-    initLevel();
+    // initLevel();
     canvas = document.getElementById('canvas');
 
     window.world = new World(canvas);
     await preloadAudio();
+    await preloadSounds(soundPaths);
+    await preloadImages(imagePaths) ;
     allAmbientSounds();
 }
 
@@ -234,13 +236,20 @@ document.addEventListener('keyup', (e) => {
 
         });
 
-document.addEventListener("keyup", (event) => {
-            if (event.code === "ArrowRight") { // Sicherstellen, dass es wirklich die richtige Taste ist
-                audioPlaying["pepe_pollo"] = false;
-            }
-        });
+// document.addEventListener("keyup", (event) => {
+//             if (event.code === "ArrowRight") { 
+//                 audioPlaying["pepe_pollo"] = false;
+//             }
+//         });
+
+
+function startGame(){
 document.addEventListener('click', () => {
             audio.activateAudioContext();
         });
+
+
+    }
+
     
        

@@ -144,6 +144,10 @@ function getHowToHtml() {
 
 function createOverlayDiv() {
     let playScreen = document.getElementById("playScreen");
+        let existing = document.getElementById("overlayDiv");
+    if (existing) {
+        existing.remove();
+    }
     const darkLayer = document.createElement('div');
     darkLayer.id = 'overlayDiv';
     darkLayer.style.position = 'absolute';
