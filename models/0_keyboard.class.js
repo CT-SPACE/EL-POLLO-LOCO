@@ -4,6 +4,7 @@ class Keyboard {
     // UP = 38;
     // DOWN = 40;
     // SPACE = 32;
+    // ENTER = 13;
 
     LEFT = false;  
     RIGHT = false;
@@ -11,6 +12,7 @@ class Keyboard {
     DOWN = false;
     SPACE = false;
     THROW = false;
+    ENTER = false;
 
 
   constructor() {

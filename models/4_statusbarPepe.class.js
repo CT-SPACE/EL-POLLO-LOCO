@@ -10,7 +10,7 @@ class StatusBarPepe extends StaticObject {
     width = 5000;
     img;
 
-    IMAGES_SALUD_PEPE = [
+    static IMAGES_SALUD_PEPE = [
         './img/7_statusbars/1_statusbar/2_statusbar_health/orange/0.png',
         './img/7_statusbars/1_statusbar/2_statusbar_health/orange/20.png',
         './img/7_statusbars/1_statusbar/2_statusbar_health/orange/40.png',
@@ -21,7 +21,7 @@ class StatusBarPepe extends StaticObject {
 
     constructor() {
         super().loadImage('./img/7_statusbars/1_statusbar/2_statusbar_health/green/100.png');
-        this.loadImages(this.IMAGES_SALUD_PEPE);
+        this.loadImages(StatusBarPepe.IMAGES_SALUD_PEPE);
         //this.percentage = this.energy;
         this.x = 40;
         this.y = 20;
@@ -33,7 +33,7 @@ class StatusBarPepe extends StaticObject {
     setPercentage(percentage){
         this.percentage = percentage;
         console.log("Health % =", percentage);
-        let path = this.IMAGES_SALUD_PEPE[this.resolveImagePercent(percentage)];
+        let path = StatusBarPepe.IMAGES_SALUD_PEPE[this.resolveImagePercent(percentage)];
         this.img = this.imgCache[path];
 
         //console.log("Health score =", this.resolveImagePercent(percentage));

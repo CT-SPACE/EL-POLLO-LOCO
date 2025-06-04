@@ -8,7 +8,7 @@ class StatusBarCoin extends StaticObject {
     width;
     img;
 
-    IMAGES_COIN = [
+  static IMAGES_COIN = [
         './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png',
         './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/20.png',
         './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/40.png',
@@ -19,7 +19,7 @@ class StatusBarCoin extends StaticObject {
 
     constructor() {
         super().loadImage('./img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png');
-        this.loadImages(this.IMAGES_COIN);
+        this.loadImages(StatusBarCoin.IMAGES_COIN);
         this.x = 40;
         this.y = 90;
         this.width = 128;
@@ -31,7 +31,7 @@ class StatusBarCoin extends StaticObject {
         this.coincount = coincount;
         //console.log("Coins =", this.coincount);
 
-        let path = this.IMAGES_COIN[this.resolveImageCoin(this.coincount)];
+        let path = StatusBarCoin.IMAGES_COIN[this.resolveImageCoin(this.coincount)];
         this.img = this.imgCache[path];
 
         //console.log("Coin Count =", this.resolveImageCoin(this.coincount));

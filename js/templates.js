@@ -1,6 +1,6 @@
 
 
-function buttonContent(content) {
+function createButtonContent(content) {
     let contentType = document.getElementById(content);
     let contentScreen = document.getElementById("buttonContent");
 
@@ -11,53 +11,60 @@ function buttonContent(content) {
 
     if (contentScreen.classList.contains('open')) {
         closeContent(contentScreen, () => openContent(content, contentType, contentScreen));
+
     } else {
         openContent(content, contentType, contentScreen);
     }
 }
 
 function openContent(content, contentType, contentScreen) {
+    let headline = document.getElementById("stayHeadline");
     gamePaused = true;
     togglePlay("content", true);
+
     if (getSoundStatus()) {
-        audio.setMuted(false);
+        audioManager.setMuted(false);
         allAmbientSounds();
     } else {
-        audio.setMuted(true);
+        audioManager.setMuted(true);
     }
 
     resetOutClasses();
     contentType.classList.add("Out");
     contentScreen.classList.remove('hidden', 'close');
+     headline.style.top = "-150px";    
 
     setTimeout(() => {
         contentScreen.classList.add('open');
         contentScreen.dataset.active = content;
         switch (content) {
             case "story":
-                contentScreen.innerHTML = getStoryHtml();
+                contentScreen.innerHTML += getStoryHtml();
                 break;
             case "impressum":
-                contentScreen.innerHTML = getImpressumHtml();
+                contentScreen.innerHTML += getImpressumHtml();
                 break;
             case "howto":
-                contentScreen.innerHTML = getHowToHtml();
+                contentScreen.innerHTML += getHowToHtml();
                 break;
         }
+       }, 200); 
         createOverlayDiv();
         includeCloseButton(contentScreen);
         closeOnDarkLayer();
-    }, 10); // kleiner Timeout, damit die Transition greift
+// kleiner Timeout, damit die Transition greift
 }
 
-function closeContent(contentScreen, callback) {
+function closeContent() {
+    let contentScreen = document.getElementById("buttonContent");
+    let headline = document.getElementById("stayHeadline");
     gamePaused = false;
     // resumeGameSounds();
         if (getSoundStatus()) {
-        audio.setMuted(false);
+        audioManager.setMuted(false);
         allAmbientSounds();
     } else {
-        audio.setMuted(true);
+        audioManager.setMuted(true);
     }
      resetOutClasses()
     togglePlay();
@@ -71,8 +78,9 @@ function closeContent(contentScreen, callback) {
         gamePaused = false;
         removeOverlay();
         contentScreen.removeEventListener('transitionend', handler);
-        if (callback) callback();
+        // if (callback) callback();
     });
+    headline.style.removeProperty("top");
 }
 
 function ToggleClasses(contentType, contentScreen) {
@@ -81,8 +89,8 @@ function ToggleClasses(contentType, contentScreen) {
      contentScreen.classList.toggle('open');
      contentScreen.classList.toggle('close');
      if(contentScreen.classList.contains('close')){
-        let darkLayer = document.getElementById("overlayDiv"); 
-     closeContent(contentScreen, darkLayer);
+    // let darkLayer = document.getElementById("overlayDiv"); 
+     closeContent(contentScreen);
     }
 }
 
@@ -92,15 +100,24 @@ function removeOverlay() {
 }
 
 function resetOutClasses() {
-    document.getElementById("story").classList.remove("Out");
-    document.getElementById("impressum").classList.remove("Out");
-    document.getElementById("howto").classList.remove("Out");
+    try{
+        document.getElementById("story").classList.remove("Out");
+        document.getElementById("impressum").classList.remove("Out");
+        document.getElementById("howto").classList.remove("Out");
+    } catch {
+        return;
+    }
+
 }
 
 function getStoryHtml() {
-    return `
-    <div class="content">
+    return `        
+    <div class="fixedContentHead">
         <h3>Story</h3>
+        <hr class="contentLine">
+        </div>
+    <div class="content">
+
         <p></p>
         Pepe, el Peligroso, hat Hunger! <br>Er ist verrückt nach Hühnchen mit scharfer Soße. Sein Hunger ist so groß, dass die kleinen Hühner ihm gestohlen bleiben können. Ein Pollo asado gigante con Salsa picante muss her. 
         Er braucht etwas Großes. <p></p>Dieses Mega-Huhn, von dem er träumt, kann man aber nicht so einfach wie die kleinen Hühner durch Draufhüpfen zermatschen - außerdem will er dieses Geflügel ja auch noch essen. 
@@ -114,8 +131,12 @@ function getStoryHtml() {
 
 function getImpressumHtml() {
     return `
-    <div class="content">
+     <div class="fixedContentHead">
         <h3>Impressum</h3>
+        <hr class="contentLine">
+        </div>
+    <div class="content">
+
         <p>Angaben gemäß § 5 TMG</p>
         Dieses Spiel entstand im Rahmen des Kurses "Web-Entwicklung" an der <br>
         <bold>Developer Akademie GmbH</bold><br>
@@ -129,9 +150,14 @@ function getImpressumHtml() {
 }
 
 function getHowToHtml() {
-    return /*html*/ `
-    <div class="content">
+    return /*html*/ ` 
+    
+    <div class="fixedContentHead">
         <h3>How to Play</h3>
+        <hr class="contentLine">
+        </div>
+    <div class="content">
+
         <div class="table">
 <div class="row "><div class="cell rightAlign">SPACEBAR or&nbsp;<img src="./img/buttons/button-up_white.svg" alt="Spacebar or Key Up Arrow" class="key"></div><div class="cell">Pepe jumps</div></div>
 <div class="row"><div class="cell rightAlign"><img src="../img/buttons/button-right_white.svg" alt="Key Right Arrow" class="key"></div><div class="cell">Pepe runs right</div></div>
@@ -142,25 +168,33 @@ function getHowToHtml() {
     `;
 }
 
+// function createOverlayDiv() {
+//     let overlayScreen = document.getElementById("overflowHidden");
+//         let existing = document.getElementById("overlayDiv");
+//     if (existing) {
+//         existing.remove();
+//     }
+//     const darkLayer = document.createElement('div');
+//     darkLayer.id = 'overlayDiv';
+//     darkLayer.className = 'darkLayer';
+//     overlayScreen.appendChild(darkLayer);
+
+//     return darkLayer;
+// }
+
 function createOverlayDiv() {
-    let playScreen = document.getElementById("playScreen");
-        let existing = document.getElementById("overlayDiv");
+    let overlayScreen = document.getElementById("overflowHidden");
+    let existing = document.getElementById("overlayDiv");
     if (existing) {
         existing.remove();
     }
     const darkLayer = document.createElement('div');
     darkLayer.id = 'overlayDiv';
-    darkLayer.style.position = 'absolute';
-    darkLayer.style.top = '0';
-    darkLayer.style.left = '0';
-    darkLayer.style.width = '100%';
-    darkLayer.style.height = '100%';
-    darkLayer.style.background = 'rgba(0,0,0,0.5)';
-    darkLayer.style.zIndex = '11';
-    playScreen.appendChild(darkLayer);
-
+    darkLayer.className = 'darkLayer';
+    overlayScreen.appendChild(darkLayer);
     return darkLayer;
 }
+
 
 function closeOnDarkLayer() {
     let darkLayer = document.getElementById("overlayDiv"); 
@@ -171,16 +205,10 @@ function closeOnDarkLayer() {
 }
 
 function includeCloseButton(contentScreen) {
-     let darkLayer = document.getElementById("overlayDiv"); 
     let closeButton = document.createElement('div');
     closeButton.id = 'closeButton';
     contentScreen.appendChild(closeButton);
-        darkLayer.addEventListener("click", function () {
-        closeContent(contentScreen);
-        });
-        closeButton.addEventListener("click", function () {
-       closeContent(contentScreen);
-        });
-
-
+    closeButton.setAttribute("onclick", "closeContent()");
 }
+
+

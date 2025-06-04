@@ -3,6 +3,7 @@ class CollectableObject extends DrawableObject {
   y = 300;
   width = 100;
   height = 100;
+  audioManager;
   //CountableItem = 0;
   audio;
   images = [];
@@ -17,27 +18,28 @@ class CollectableObject extends DrawableObject {
   minX = 280;
   maxX = 3600;
 
-  BOTTLE_GROUND = [
+  static BOTTLE_GROUND = [
     "./img/6_salsa_bottle/1_salsa_bottle_on_ground.png",
     "./img/6_salsa_bottle/2_salsa_bottle_on_ground_.png",
   ];
-  COINS_BLINKING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
+  static COINS_BLINKING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
   offset;
 
   constructor(kindof, count, x, y, height, width, distanceX, Row2Probability) {
     super();
 
-    this.audio = new AudioManager();
+    // this.audio = new AudioManager();
+    this.audio = audioManager;
 
     this.kindof = kindof; // Art des Objekts (bottle oder coin)
 
     if (kindof === "coin") {
-      this.loadImages(this.COINS_BLINKING);
-      this.img = this.imgCache[this.COINS_BLINKING[0]];
+      this.loadImages(CollectableObject.COINS_BLINKING);
+      this.img = this.imgCache[CollectableObject.COINS_BLINKING[0]];
       this.offset = { left: 30, right: 30, top: 30, bottom: 30 };
     } else if (kindof === "bottle") {
-      this.loadImages(this.BOTTLE_GROUND);
-      this.img = this.imgCache[this.BOTTLE_GROUND[0]];
+      this.loadImages(CollectableObject.BOTTLE_GROUND);
+      this.img = this.imgCache[CollectableObject.BOTTLE_GROUND[0]];
       this.offset = { left: 60, right: 5, top: 5, bottom: 5 };
     }
 
@@ -153,11 +155,11 @@ class CollectableObject extends DrawableObject {
   animateBasedOnKind() {
     if (this.kindof === "coin") {
       setInterval(() => {
-        this.animateThings(this.COINS_BLINKING);
+        this.animateThings(CollectableObject.COINS_BLINKING);
       }, 300);
     } else if (this.kindof === "bottle") {
       setInterval(() => {
-        this.animateThings(this.BOTTLE_GROUND); 
+        this.animateThings(CollectableObject.BOTTLE_GROUND); 
       }, 800);
     }
   }

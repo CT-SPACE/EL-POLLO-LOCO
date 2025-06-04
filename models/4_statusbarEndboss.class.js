@@ -11,7 +11,7 @@ class StatusBarEndboss extends StaticObject {
 
     img;
 
-    IMAGES_SALUD_ENDBOSS = [
+    static IMAGES_SALUD_ENDBOSS = [
         './img/7_statusbars/2_statusbar_endboss/orange/orange0.png',
         './img/7_statusbars/2_statusbar_endboss/orange/orange20.png',
         './img/7_statusbars/2_statusbar_endboss/orange/orange40.png',
@@ -22,7 +22,7 @@ class StatusBarEndboss extends StaticObject {
 
     constructor() {
         super().loadImage('./img/7_statusbars/2_statusbar_endboss/green/green100.png');
-        this.loadImages(this.IMAGES_SALUD_ENDBOSS);
+        this.loadImages(StatusBarEndboss.IMAGES_SALUD_ENDBOSS);
         
         this.x = 650;
         this.y = 20;
@@ -34,7 +34,7 @@ class StatusBarEndboss extends StaticObject {
     setPercentage(percentage){
         this.percentage = percentage;
         console.log("Health % =", percentage);
-        let path = this.IMAGES_SALUD_ENDBOSS[this.resolveImageEndboss(percentage)];
+        let path = StatusBarEndboss.IMAGES_SALUD_ENDBOSS[this.resolveImageEndboss(percentage)];
         this.img = this.imgCache[path];
 
     }

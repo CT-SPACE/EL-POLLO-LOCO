@@ -20,16 +20,16 @@
 }
 
 body{
-    font-family:Ranchers;
+    font-family:Ojuju;
     display:flex;
     margin:0;
     /* padding-top:100px; */
     box-sizing:border-box;
-    justify-content: flex-start;
+    /* justify-content: flex-start;
     align-items: center;
-    flex-direction:column;
-    background-image: linear-gradient(180deg, #811800 680px, #fdf08f 7%);
-    background-color: #811800;
+    flex-direction:column; */
+    /* background-image: linear-gradient(180deg, #811800 680px, #fdf08f 7%); */
+    background-color: #fdf08f;
     color:white;
     height: 100vh;
 
@@ -38,11 +38,11 @@ body{
 .allScreens{
     position: relative;
     overflow: visible;
-    display: flex;
+    /* display: flex; */
     border: 0;
     width: 800px;
     height: 480px;
-    top: 20px;
+    /* top: 140px; */
     border-radius: 20px;
 }
 
@@ -50,52 +50,91 @@ body{
 width: 800px;
     height: 480px;
     position: absolute;
-    top: 257px;
-    left: 5px;
+    top: 3px;
+    left: 2px;
     display: flex;
-    justify-self: anchor-center;
+    /* justify-self: anchor-center; */
     background-image: url(../img/Desierto-portada_con_pepe.jpg);
     border-radius: 20px;
     text-align: center;
     background-size: cover;
     background-position-x: -28px;
+    align-items:center;
     z-index: 15;
 }
 
 #loader{
     color: white;
+    width:100%;
+    font-weight: 700;
     font-size: 2rem;
     margin-bottom: 2rem;
-    position: relative;
+    position: absolute;
     display: flex;
-    flex-direction: column;
+    justify-content:center;
     align-items: center;
-    top: -300px;
+    /* top: -320px; */
     z-index: 16;
 }
 
-#startGame{
-    padding:1rem 2rem;
-    display:none;
+/* #loader span {
+    height: 20px;
+    position: relative;
+    transition: opacity 0.2s ease-in-out 1s;
+} */
+
+@keyframes fadeDot {
+    0%, 40% { opacity: 1; }  
+    70% { opacity: 0.3; } 
+    100% { opacity: 0.1; } 
 }
 
-.spinner{
-    margin-top: 1rem;
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    width: 30px;
-    height: 30px;
-    animation: spin 1s linear infinite;
+#loader span {
+    display: inline-block;
+    font-size: 2rem;
+    animation: fadeDot 2s infinite ease-in;
+}
+
+
+#startGame{
+    /* padding:1rem 2rem; */
+    margin-top:20px;
+    display:none;
 }
 
 .startGame{
     border: unset;
     animation: unset;
-    width: 50px;
-    height: 50px;
+    border-radius:50%;
+    box-shadow: 2px 2px 4px 0px black;
+    width: 70px;
+    height: 70px;
     background-image: url(../img/buttons/play.svg);
+      transition: transform 0.3s ease-in-out;
+}
+
+.startGame:active{
+    
+     box-shadow: 0px 0px 1px 1px black;
+}
+.startGame:hover{
+    cursor: pointer;
+  
+    transform: scale(1.2);
+}
+
+
+.spinner{
+    margin-top: 1rem;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    justify-self: center;
+    width: 20px;
+    height: 20px;
+ 
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -103,9 +142,14 @@ width: 800px;
   100% { transform: rotate(360deg);}
 }
 
-.hidden{
-    display: none;
+.overflowHidden{
+       display: block;
+    border-radius: 20px;
+    overflow: hidden;
+    width: 800px;
+    height: 480px;
 }
+
 
 .startText{
 
@@ -119,18 +163,58 @@ width: 800px;
 }
 
 .subText{
-    position: relative;
-    top: -320px;
+
+    display: flex;
+    position: absolute;
+    justify-content: space-between;
+    width: 100%;
+    height: 200px;
+    top: -50px;
     z-index: 16;
-    font-size: 1.5rem;
+    flex-direction: column;
+    font-size: 1.3rem;
     text-shadow: 1px 1px 2px black;
 }
+
+.left40{
+    position:relative;
+    left:40px;
+}
+
+.contentLine{
+    background-color:#811800;
+    height:1px;
+    border:none;
+    box-shadow:none;
+    margin: 10px 0;
+}
+
+.fixedContentHead{
+    position:relative;
+    top:0;
+    background-color:#E9CE92;
+    height: 50px;
+    width:350px;
+
+
+}
+.positionAnimation{
+    position:relative;
+    transition: position 1s ease;
+    transition-delay: 2s;
+
+}
+
+.positionAnimation.fixedDelay {
+    position:fixed;
+}
+
 
 .playButton{
     width:60px;
     height:60px;
-
 }
+
 .playButton:hover{
     cursor: pointer;
     transform: scale(1.1);
@@ -141,12 +225,12 @@ width: 800px;
     transition: all 0.2s ease-in-out;
 }
 section{
-    display: flex; 
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width:100%;
-    height:100vh;
+    width: 100%;
+    height: 100vh;
     position: absolute;
 }
 
@@ -161,8 +245,12 @@ h1{
     text-align: center;
     z-index:20;
 }
+h2{
+        font-size: 1.2rem;
+    align-self: center;
+}
 h3{
-    margin-bottom:0;
+    margin:0;
 }
 
 h4{
@@ -178,15 +266,16 @@ h4{
 }
 
 .headline{
-font-size: 4em;
+font-size: 5.6rem;
     top: -65px;
     
 }
 
 #playScreen{
-width: 100%;
-    height: 100%;
+width: 800px;
+    height: 480px;
     display: flex;
+    overflow:hidden;
     top: 0;
     border: 3px solid white;
     z-index: 10;
@@ -205,14 +294,23 @@ canvas{
    
 }
 
-.menu{
+.menu {
     z-index: 9;
-    top: 250px;
-    height: 40px;
-    margin: auto;
+    width:100%;
     position: relative;
+    bottom: 10px;
     display: flex;
-    
+    align-items:end;
+    justify-content:center;
+ /* transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); */
+ transition: top 1s cubic-bezier(.09,.99,.9,.36);
+
+}
+
+.menu.show {
+    bottom: -50px; /* Zielposition */
+    /* transition: top 1s cubic-bezier(.09,.99,.9,.36); */
+
 }
 
 .button{
@@ -229,34 +327,35 @@ canvas{
     border-bottom-left-radius: 10px;
     height: 50px;
     border: 1px solid black;
+    position:relative;
 }
 
 
 .button:hover{
     cursor: pointer;
-    margin-top:8px;
-    transition: margin-top 0.2s ease-in-out;
+    bottom:-8px;
+    transition: bottom 0.2s ease;
 }
 .button:active{
     transform: scale(0.98);
     transition: all 0.2s ease-in-out;
 }
 .Out{
-margin-top:8px;
+bottom: -8px;
 font-weight:700;
 }
 
 #closeButton{
     position:absolute;
-    top: 60px;
-    right: 102px;
+    top: 100px;
+    right: 118px;
     width: 30px;
     height: 30px;
     cursor:pointer;
     background-image:url("../img/buttons/close_green.svg");
     background-size:contain;
     background-repeat:no-repeat;
-    z-index:12;
+    z-index:20;
 }
 #closeButton:hover{
     background-image:url("../img/buttons/close_grey.svg");
@@ -271,8 +370,8 @@ font-weight:700;
 
 .content{
     z-index:12;
-       height: 100%;
-
+    height: 84%;
+    position:relative;
     padding: 0px 30px 0px 0px;
     overflow:hidden;
     overflow-y:auto;
@@ -304,7 +403,7 @@ p{
     line-height:1.5em;
     color: rgb(112, 10, 10);
     bottom: -100%;
-    position:absolute;
+    position:relative;
     transition: bottom 0.5s cubic-bezier(.77,0,.18,1);
 
  
@@ -312,7 +411,7 @@ p{
 }
 #buttonContent.open{
     bottom:0;
-   
+   z-index:18;
 
 }
 #buttonContent.close{
@@ -325,6 +424,16 @@ p{
     bottom: -100%;
 } */
  
+.darkLayer{
+    position:absolute;
+    border-radius: 20px;
+    top:3px;
+    left:3px;
+    width:100%;
+    height:100%;
+    background-color:rgba(0,0,0,0.5);
+    z-index:17;
+}
 .control{
     display: flex;
     flex-direction: column;
@@ -447,13 +556,18 @@ p{
 }
 
 .fondo{
-    height: 680px;
+    height: 60%;
     z-index: 0;
     width:100vw;
     position:absolute;
+    background-color:#811800;
     background-image:url("../img/fondo_cactus.png");
     background-size:1000px;
     background-position-y:bottom;
     background-repeat:repeat-x;
 
+}
+
+.hidden{
+    display: none;
 }

@@ -108,8 +108,9 @@ playAudio(name, options = {}) {
     activateAudioContext() {
         if (this.audioContext.state === 'suspended') {
             this.audioContext.resume().then(() => {
-                // console.log('AudioContext wurde aktiviert.');
+                console.log('AudioContext wurde aktiviert.');
             }).catch((error) => {
+                console.log('this.audioContext.state:',this.audioContext.state);
                 console.error('Fehler beim Aktivieren des AudioContext:', error);
             });
         }

@@ -3,7 +3,7 @@ class movingBackground extends MovableObject{
     y = 0;
     height = 488;
     width = 1600;
-    hgparts = [
+    static IMAGES_MOVING = [
         './img/5_background/layers/3_third_layer/full.png',  // 0
         './img/5_background/layers/2_second_layer/full.png',  // 1
         './img/5_background/layers/2_second_layer/full.png',   // 2
@@ -45,7 +45,7 @@ class movingBackground extends MovableObject{
         ];
     
         constructor(i, factor = 1) {
-            super().loadImage(this.hgparts[i]);
+            super().loadImage(movingBackground.IMAGES_MOVING[i]);
             const pos = this.positions[i] || { x: 0, y: 0, height: 0, width: 0 };
             this.x = pos.x;
             this.y = pos.y;

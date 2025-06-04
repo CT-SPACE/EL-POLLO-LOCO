@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jose Luis Ignacio Vincente "Pepe" el Peligroso</title>
     <link rel="icon" href="polloloco.ico" />
-    <link rel="stylesheet" href="./style/style.css">
+
+    <link rel="preload" href="./fonts/Ojuju/Ojuju-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="./fonts/Matemasie/Matemasie-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+    <link  href="./style/style.css" rel="stylesheet">
     <script src="./models/2_drawable-object.class.js"></script>
     <script src="./levels/level01.js"></script>
     <script src="./models/0_level.class.js"></script>
@@ -32,47 +36,61 @@
     <script src="./models/4_collidable-object.class.js"></script>
     <script src="./models/0_keyboard.class.js"></script>
 
-    <script src="./js/game.js"></script>
+    <script src="./js/game.js" defer></script>
     <script src="./js/templates.js"></script>
 
 <body onload="init()">
+
     <div id="fondo" class="fondo"></div>
+
     <section id="contentbox">
         <div class="allScreens">
-        <h1 id="stayHeadline" class="h1_animation">EL POLLO LOCO</h1>
-        <div id="playScreen">
-            <canvas id="canvas" width="800" height="480"></canvas>
-            <div id="buttonContent" class="hidden close"></div>
-        </div>
 
-        <div id="buttons" class="menu">
-            <div id="story" alt="Story of Pepe" class="button" onclick="buttonContent('story')">Story</div>
-            <div id="impressum" alt="Impressum" class="button"
-                onclick="buttonContent('impressum')"">Impressum</div><div id=" howto" class="button" alt="How to Play"
-                onclick="buttonContent('howto')">How to Play</div>
-        </div> 
-        <div class="control">
-            <div id="sound" onclick="toggleSound()" title="Sound On/Off">
-                <div id="on-off" class="controlButton soundON"></div>
+            <h1 id="stayHeadline" class="h1_animation">EL POLLO LOCO</h1>
+            <div id="subText" class="subText hidden">
+                <h2>Click PLAY-Button or Press ENTER to start</h2>
+                <div class="left40">En verdad, Pepe es el loco - sólo digo.<br></div>
             </div>
-            <div id="play" onclick="togglePlay()" title="Play/Pause">
-                <div id="switch" class="controlButton play"></div>
-            </div>
-        </div>         
-    </div>
-    <div>
-        <div id="startScreen" class="start"></div>
-
-            <!-- <h1>EL POLLO LOCO</h1> -->
-            <div id="loader" style="color:white;font-size:2rem;margin-bottom:2rem;">
-                Loading...
-                <div class="spinner">
+            <div id="overflowHidden" class="overflowHidden">
+                <div id="playScreen">
+                    <canvas id="canvas" width="800" height="480"></canvas>
 
                 </div>
+
+                <div id="startScreen" class="start">
+
+                    <!-- <h1>EL POLLO LOCO</h1> -->
+                    <div id="loader" class="loader">
+
+                    </div>
+                    <!-- <p>
+                 <div class="spinner">
+                </div>
+                </p> -->
+
+
+
+                    <!-- <button id="startGame" style="padding:1rem 2rem;font-size:1.5rem;display:none;">Play</button> -->
+
+                </div>
+                <div id="buttonContent" class="hidden close"></div>
             </div>
-            <button id="startGame" style="padding:1rem 2rem;font-size:1.5rem;display:none;">Play</button>
-        <p class="subText">Click PLAY-Button or Press ENTER to start</p>
-     </div>   
+
+            <div id="buttons" class="menu">
+                <div id="story" alt="Story of Pepe" class="button" onclick="createButtonContent('story')">Story</div>
+                <div id="impressum" alt="Impressum" class="button"
+                    onclick="createButtonContent('impressum')">Impressum</div><div id="howto" class="button"
+                    alt="How to Play" onclick="createButtonContent('howto')">How to Play</div>
+            </div>
+            <div class="control">
+                <div id="sound" onclick="toggleSound()" title="Sound On/Off">
+                    <div id="on-off" class="controlButton soundON"></div>
+                </div>
+                <div id="play" onclick="togglePlay()" title="Play/Pause">
+                    <div id="switch" class="controlButton play"></div>
+                </div>
+            </div>
+        </div>
     </section>
     <div class="stimmungsbild">
         <img src="./img/skelett_gallina.png" alt="Skelett in der Wueste" class="skelett">

@@ -5,15 +5,17 @@ class World {
   character = new Pepe();
   background_static = new staticBackground();
   endboss = new Endboss(this);
+ enemies;
   energy;
   keyboard;
-  cameraX = 0;
+  cameraX;
   statusBarPepe = new StatusBarPepe();
   statusBarCoin = new StatusBarCoin();
   statusBarChilli = new StatusBarChilli();
   statusBarEndboss = new StatusBarEndboss();
   EndBossVisible;
-  endbossOfEnemies = this.level.enemies.find( (enemy) => enemy.type === "endboss");
+
+  endbossOfEnemies; 
   throwableObjects = [new ThrowableObject()];
 
   bottles;
@@ -24,11 +26,14 @@ class World {
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
-
+    this.endbossOfEnemies = this.level.enemies.find( (enemy) => enemy.type === "endboss");
+    this.cameraX = 0;
     this.canvas = canvas;
     this.endboss.world = this;
     this.EndBossVisible = false;
+    this.endbossOfEnemies.EndBossClose = false;
     this.throwableObjects = [];
+    this.enemies = this.level.enemies;
 
     this.canThrow = true;
     this.draw();
@@ -44,14 +49,21 @@ class World {
     this.statusBarPepe.world = this.statusBar;
   }
 
-  getAudio() {
-    return audio;
-  }
+  // getAudio() {
+  //   return audioManager;
+  // }
 
 draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.cameraX, 0);
-    this.handleEndbossCloseEffect();
+
+    if (this.endbossOfEnemies.EndBossClose) {
+    this.endbossOfEnemies.handleEndbossCloseEffect();
+} else {
+    console.error("EndBossClose ist nicht verfügbar:", this.someObject);
+}
+
+    this.handleEndBossCloseEffect();
     // if (this.endbossOfEnemies.status === true && !this.endbossOfEnemies.isDead) {
     //   console.log('status && !isdead', this.endboss.status, this.endboss.isDead);
     //     this.ctx.filter = "brightness(50%)";
@@ -126,7 +138,8 @@ draw() {
     return;
   }
 
-  handleEndbossCloseEffect() {
+  handleEndBossCloseEffect() {
+    
     let flash = false;
     if (this.endbossOfEnemies.EndBossClose === true) {
         // 5% Chance pro Frame für einen Blitz
@@ -141,12 +154,12 @@ draw() {
         // this.ctx.drawImage(this.flashImage, 0, 0, this.canvas.width, this.canvas.height);
     } else if (this.endbossOfEnemies.status === true && !this.endbossOfEnemies.isDead) {
         this.ctx.filter = "brightness(50%)";
-        if (audio.buffers["endbossBackground"] && !audio.audioPlaying["endbossBackground"]) {
-            audio.playAudio("endbossBackground", { play: true, loop: false, volume: 0.8 });
+        if (audioManager.buffers["endbossBackground"] && !audioManager.audioPlaying["endbossBackground"]) {
+            audioManager.playAudio("endbossBackground", { play: true, loop: false, volume: 0.8 });
         }
     } else if (this.endbossOfEnemies.isDead) {
         this.ctx.filter = "none";
-        audio.controlAudio("endbossBackground", { play: false, pause: true, currentTime: 0 });
+        audioManager.controlAudio("endbossBackground", { play: false, pause: true, currentTime: 0 });
     } else {
         this.ctx.filter = "none";
     }
@@ -160,8 +173,8 @@ draw() {
       let delta = currentTime - startThrow;
 
       if (keyboard.THROW && this.collectedBottles === 0) {
-        audio.loadAudio("noBottlesLeft", "./audio/bottle_no.mp3");
-        audio.playEffect("noBottlesLeft", { volume: 0.5 });
+        audioManager.loadAudio("noBottlesLeft", "./audio/bottle_no.mp3");
+        audioManager.playEffect("noBottlesLeft", { volume: 0.5 });
         keyboard.THROW = false; // verhindert Dauerschleife beim Halten der Taste
       }
 
@@ -264,8 +277,8 @@ draw() {
     this.level.coins = this.level.coins.filter((coin) => {
       if (this.character.isColliding(coin)) {
         collected++;
-        audio.loadAudio("WorldCoinCollecting", "./audio/coin_success.mp3");
-        audio.playEffect("WorldCoinCollecting", {
+        audioManager.loadAudio("WorldCoinCollecting", "./audio/coin_success.mp3");
+        audioManager.playEffect("WorldCoinCollecting", {
           loop: false,
           volume: 0.2,
           currentTime: 0,
@@ -293,8 +306,8 @@ draw() {
         );
         this.statusBarChilli.setPercentage(this.collectedBottles);
 
-        audio.loadAudio("WorldBottleCollecting", "./audio/bottle_collect.mp3");
-        audio.playAudio("WorldBottleCollecting", {
+        audioManager.loadAudio("WorldBottleCollecting", "./audio/bottle_collect.mp3");
+        audioManager.playAudio("WorldBottleCollecting", {
           loop: false,
           volume: 0.2,
           currentTime: 0,

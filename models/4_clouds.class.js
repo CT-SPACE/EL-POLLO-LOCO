@@ -10,7 +10,7 @@ class Clouds extends MovableObject{
     }
     width = 700;
     height = 300;
-    IMAGES_MOVING = [
+    static IMAGES_MOVING = [
         './img/5_background/layers/4_clouds/1.png',
         './img/5_background/layers/4_clouds/2.png'
     ];
@@ -18,7 +18,7 @@ class Clouds extends MovableObject{
 
 constructor(){
     super().loadImage('./img/5_background/layers/4_clouds/1.png');
-    this.loadImages(this.IMAGES_MOVING);
+    this.loadImages(Clouds.IMAGES_MOVING);
     this.x +=  300 + Math.random() * 5000;
    
     this.animateX();

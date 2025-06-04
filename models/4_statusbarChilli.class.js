@@ -8,7 +8,7 @@ class StatusBarChilli extends StaticObject {
     width;
     img;
 
-    IMAGES_CHILLI = [
+   static IMAGES_CHILLI = [
         './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png',
         './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png',
         './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/40.png',
@@ -19,7 +19,7 @@ class StatusBarChilli extends StaticObject {
 
     constructor() {
         super().loadImage('./img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png');
-        this.loadImages(this.IMAGES_CHILLI);
+        this.loadImages(StatusBarChilli.IMAGES_CHILLI);
         
         this.x = 40;
         this.y = 54;
@@ -32,7 +32,7 @@ class StatusBarChilli extends StaticObject {
     setPercentage(chillicount){
         this.chillicount = chillicount;
        // console.log("How Many Chilli-Fläschchen =", chillicount);
-        let path = this.IMAGES_CHILLI[this.resolveImageChilli(this.chillicount)];
+        let path = StatusBarChilli.IMAGES_CHILLI[this.resolveImageChilli(this.chillicount)];
         this.img = this.imgCache[path];
         return;
     }

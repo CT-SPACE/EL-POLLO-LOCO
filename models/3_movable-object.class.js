@@ -11,6 +11,7 @@ class MovableObject extends DrawableObject {
   energy = 1;
   offset;
   gravityInterval;
+  gamePaused = false;
   
   lastHit = 0;
 
@@ -114,15 +115,21 @@ hit(attacker) {
    let path = this.images[i];
    //console.log("playAnimation:",this.images);
 
-    if (this.images === this.IMAGES_DYING && i === this.images.length - 1) {
-      this.img = this.imgCache[this.images[i]];
-      this.disableKeyboard();
-      
-      
-    } else {
+if (this.isDead && i === this.images.length - 1) {
+  this.img = this.imgCache[this.images[i]];
+  this.disableKeyboard();
+  
+    if (typeof stopGame === 'function') stopGame();
+    
+ } else {
       this.img = this.imgCache[path];
         this.currentIMG++;
     }
+}
+
+stopGame() {
+  gamePaused = true;
+  // Optional: Overlay anzeigen, Buttons deaktivieren, etc.
 }
 
 disableKeyboard() {

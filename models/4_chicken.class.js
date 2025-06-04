@@ -5,9 +5,9 @@ class Chicken extends MovableObject{
     height = 80;
     width = 80;
     world;
-    audio;
+    audioManager;
 
-    IMAGES_WALKING = [
+    static IMAGES_WALKING = [
         './img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
         './img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
         './img/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
@@ -27,10 +27,10 @@ class Chicken extends MovableObject{
 
         constructor(world) {
             super().loadImage('./img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
-            this.loadImages(this.IMAGES_WALKING);
+            this.loadImages(Chicken.IMAGES_WALKING);
             this.world = world;
 
-            this.audio = audio; 
+            this.audio = audioManager; 
             this.x +=  300 + Math.random() * 1600;
             this.speed = 0.1 + Math.random() * 0.5; // Zufällige Geschwindigkeit zwischen 0.1 und 0.6
             this.animationSpeed = Math.random() * 20 + 100; // Zufällige Animationsgeschwindigkeit zwischen 100 und 300 ms
@@ -51,7 +51,7 @@ animateX() {
 animateWalk() {
     this.x += 1200;
     this.animateWalkInterval = setInterval(() => { // Speichere die Intervall-ID
-        this.playAnimation(this.IMAGES_WALKING);
+        this.playAnimation(Chicken.IMAGES_WALKING);
     }, this.animationSpeed);
 }
 
@@ -61,7 +61,7 @@ animateDeath() {
 
     clearInterval(this.animateXInterval);
     clearInterval(this.animateWalkInterval);
-    audio.playAudio("chicken_splat", {play:true, loop: false, volume: 0.5});
+    audioManager.playAudio("chicken_splat", {play:true, loop: false, volume: 0.5});
 
     this.loadImage(this.img_death);
     this.y = 362;
