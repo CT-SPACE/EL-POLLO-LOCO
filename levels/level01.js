@@ -1,7 +1,6 @@
-let Level01;
-function initLevel(){
-    Level01 = new Level(
 
+function initLevel() {
+    Level01 = new Level(
 
         [
             

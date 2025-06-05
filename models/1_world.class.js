@@ -2,9 +2,7 @@ class World {
   ctx;
   canvas;
   level = Level01;
-  character = new Pepe();
-  background_static = new staticBackground();
-  endboss = new Endboss(this);
+
  enemies;
   energy;
   keyboard;
@@ -15,8 +13,12 @@ class World {
   statusBarEndboss = new StatusBarEndboss();
   EndBossVisible;
 
-  endbossOfEnemies; 
+  endbossOfEnemies = this.level.enemies.find( (enemy) => enemy.type === "endboss");
   throwableObjects = [new ThrowableObject()];
+    character = new Pepe();
+  background_static = new staticBackground();
+  endboss = new Endboss(this);
+  chicken = new Chicken(this);
 
   bottles;
   collectedBottles = 0;
@@ -24,16 +26,23 @@ class World {
   offset;
   canThrow;
 
-  constructor(canvas, keyboard) {
-    this.ctx = canvas.getContext("2d");
-    this.endbossOfEnemies = this.level.enemies.find( (enemy) => enemy.type === "endboss");
+  constructor(canvas, level) {
+    this.ctx = canvas.getContext("2d"); 
     this.cameraX = 0;
+    this.level = level;
+ 
+    // this.endbossOfEnemies = this.level?.enemies?.find( (enemy) => enemy.type === "endboss");
+// console.log("Level in World:", window.world.level);
+console.log("Enemies in World:", this.level.enemies);
+
+
+   
     this.canvas = canvas;
     this.endboss.world = this;
     this.EndBossVisible = false;
     this.endbossOfEnemies.EndBossClose = false;
     this.throwableObjects = [];
-    this.enemies = this.level.enemies;
+   // this.enemies = this.level.enemies;
 
     this.canThrow = true;
     this.draw();
@@ -41,6 +50,7 @@ class World {
     this.run();
 
     this.checkThrowObjects();
+   
   }
 
   setWorld() {
@@ -56,14 +66,14 @@ class World {
 draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.cameraX, 0);
-
-    if (this.endbossOfEnemies.EndBossClose) {
-    this.endbossOfEnemies.handleEndbossCloseEffect();
-} else {
-    console.error("EndBossClose ist nicht verfügbar:", this.someObject);
+try{
+      if (this.endbossOfEnemies.EndBossClose) {
+    this.handleEndbossCloseEffect();
+} 
+} catch{
+ return;
 }
 
-    this.handleEndBossCloseEffect();
     // if (this.endbossOfEnemies.status === true && !this.endbossOfEnemies.isDead) {
     //   console.log('status && !isdead', this.endboss.status, this.endboss.isDead);
     //     this.ctx.filter = "brightness(50%)";

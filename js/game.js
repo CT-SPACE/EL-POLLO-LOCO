@@ -1,5 +1,6 @@
 let canvas;
 let world;
+let Level01;
 let keyboard = new Keyboard();
 let audioManager = new AudioManager();
 let audioPlaying = {};
@@ -25,6 +26,8 @@ let IMAGES_FASTLOAD = [
   "../img/Desierto-portada_con_pepe.jpg",
   "../img/paper-bg.png",
   "../img/5_background/layers/air.png",
+  "../img/skelett_gallina.png",
+  "../img/lightning.png"
 ];
 
 let imagePaths = [
@@ -50,41 +53,66 @@ let imagePaths = [
   ...Chicken.IMAGES_WALKING,
 ];
 
+document.addEventListener("DOMContentLoaded", async () => {
+    await init();
+});
 
 
 async function init() {
-  await fastPreload();
+    console.log("Starte init()...");
 
-  try {
-    LoadingVisual();
-  } catch (error) {
-    console.error(error);
+    await fastPreload();
 
+    try {
+        LoadingVisual();
+    } catch (error) {
+        console.error("Fehler in LoadingVisual:", error);
     }
+
     restoreSoundStatus();
+    startScreen = true;
 
-  startScreen = true;
-  // setInterval(animateDots, 400);
 
-  canvas = document.getElementById("canvas");
 
-  window.world = new World(canvas);
-  // initLevel();
-  await preloadAudio();
-  // await preloadSounds(soundPaths);
-  try {
-    await preloadImages();
-  } catch (error) {
-    console.error("Fehler beim Laden der Bilder:", error);
-    if (error.path) {
-      console.error("Fehlender Bildpfad:", error.path);
+    await preloadAudio();
+    try {
+        await preloadImages();
+    } catch (error) {
+        console.error("Fehler beim Laden der Bilder:", error);
     }
-  }
 
-
-  allAmbientSounds();
-
+    allAmbientSounds();
 }
+
+
+// async function init() {
+//   await fastPreload();
+
+//   try {
+//     LoadingVisual();
+//   } catch (error) {
+//     console.error(error);
+
+//     }
+//     restoreSoundStatus();
+
+//   startScreen = true;
+//   canvas = document.getElementById("canvas");
+
+//   window.world = new World(canvas);
+//   // initLevel();
+//   await preloadAudio();
+//   try {
+//     await preloadImages();
+//   } catch (error) {
+//     console.error("Fehler beim Laden der Bilder:", error);
+//     if (error.path) {
+//       console.error("Fehlender Bildpfad:", error.path);
+//     }
+//   }
+//   allAmbientSounds();
+
+// }
 window.addEventListener("unhandledrejection", event => {
   console.error("Uncaught Promise Fehler:", event.reason);
 });
@@ -106,23 +134,6 @@ async function fastPreload() {
   );
 }
 
-// async function preloadImages() {
-//     // Erst die Kern-Assets laden
-//     await fastPreload();
-
-//     // Danach die restlichen Bilder nachladen
-//     return Promise.all(
-//         imagePaths.map(
-//             path =>
-//                 new Promise((resolve, reject) => {
-//                     let IMG = new Image();
-//                     IMG.src = path;
-//                     IMG.onload = () => resolve({ path, IMG });
-//                     IMG.onerror = reject;
-//                 })
-//         )
-//     );
-// }
 
 async function preloadAudio() {
   await Promise.all([
@@ -144,20 +155,6 @@ async function preloadAudio() {
     audioManager.loadAudio("WorldCoinCollecting", "./audio/coin_success.mp3"),
   ]);
 }
-
-// async function preloadImages() {
-//   return Promise.all(
-//     imagePaths.map(
-//       (path) =>
-//         new Promise((resolve, reject) => {
-//           let IMG = new Image();
-//           IMG.src = path;
-//           IMG.onload = () => resolve({ path, IMG });
-//           IMG.onerror = reject;
-//         })
-//     )
-//   );
-// }
 
 async function preloadImages() {
   await fastPreload();
@@ -237,7 +234,6 @@ function togglePlay(toggleSource, value) {
   let playDiv = document.getElementById("play");
   let playIcon = document.getElementById("switch");
   console.log("toggleSource:", toggleSource, "value:", value);
-
   if (toggleSource === "content" && value === true) {
     playIcon.classList.remove("play");
     playIcon.classList.add("pause");
@@ -286,7 +282,7 @@ function hideLoaderAndShowPlayButton() {
 
   //   document.getElementById("subText").classList.remove("hidden");
   loaderContainer.innerHTML = "";
-  
+  keyboardEnabled = true;
   let startGame = document.createElement("div");
   startGame.id = "startGame";
   startGame.className = "startGame";
@@ -294,7 +290,7 @@ function hideLoaderAndShowPlayButton() {
   loaderContainer.appendChild(startGame);
   let subText = document.getElementById("subText");
   subText.classList.remove("hidden");
-  letsPlay(startGame, subText);
+  letsPlay(startGame);
 }
 
 function LoadingVisual() {
@@ -316,11 +312,15 @@ function LoadingVisual() {
   });
 }
 
-function letsPlay(startGame, subText) {
-   
-  if(keyboard.ENTER === true){
+function letsPlay(startGame) {
+   document.addEventListener("keydown", (e) => {
+  console.log(e);
+  if (e.code == "Enter") {
+    keyboard.ENTER = true;
     playConditions();
   }
+});
+
   startGame.addEventListener("click", () => {
 playConditions()
   });
@@ -330,8 +330,16 @@ playConditions()
 function playConditions(){
   document.getElementById("startScreen").style.display = "none";
       subText.classList.add("hidden");
-
   initLevel();
+      canvas = document.getElementById("canvas");
+    canvas.focus();
+
+    if (!Level01) {
+    console.error("Fehler: Level01 ist nicht initialisiert!");
+} else {
+      console.log("Erstelle neue Welt...");
+    window.world = new World(canvas, Level01);
+}
     togglePlay("play", true);
     // audio.activateAudioContext();
 
@@ -344,13 +352,10 @@ function playConditions(){
 
 document.addEventListener("keydown", (e) => {
 
- 
+
  if (gamePaused) return;
   if (!keyboardEnabled) return; // Ignorieren, wenn die Steuerung deaktiviert ist
 
-  if (e.code == "Enter") {
-    keyboard.ENTER = true;
-  }
   if (e.code == "Space") {
     keyboard.SPACE = true;
   }

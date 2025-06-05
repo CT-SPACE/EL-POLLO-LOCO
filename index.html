@@ -12,9 +12,10 @@
 
     <link  href="./style/style.css" rel="stylesheet">
     <script src="./models/2_drawable-object.class.js"></script>
-    <script src="./levels/level01.js"></script>
-    <script src="./models/0_level.class.js"></script>
-    <script src="./models/1_world.class.js"></script>
+<script src="./models/0_level.class.js"></script>  <!-- Level zuerst! -->
+<script src="./levels/level01.js"></script>        <!-- Dann Level01 -->
+<script src="./models/1_world.class.js"></script>  <!-- Danach World -->
+
 
     <script src="./models/0_audiomanager.class.js"></script>
     <script src="./models/3_movable-object.class.js"></script>
@@ -39,7 +40,7 @@
     <script src="./js/game.js" defer></script>
     <script src="./js/templates.js"></script>
 
-<body onload="init()">
+<body>
 
     <div id="fondo" class="fondo"></div>
 
@@ -53,7 +54,7 @@
             </div>
             <div id="overflowHidden" class="overflowHidden">
                 <div id="playScreen">
-                    <canvas id="canvas" width="800" height="480"></canvas>
+                    <canvas id="canvas" width="800" height="480"  tabindex="0"></canvas>
 
                 </div>
 
