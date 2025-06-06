@@ -46,37 +46,37 @@ drawObject(ctx) {
     }
     
 
-  drawFrames(ctx) {
-    if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject) {
+  // drawFrames(ctx) {
+  //   if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject) {
       
-      ctx.beginPath();
-      ctx.lineWidth = "5";
-      ctx.strokeStyle = "yellowgreen";
-      ctx.rect(this.x, this.y, this.width, this.height);
+  //     ctx.beginPath();
+  //     ctx.lineWidth = "5";
+  //     ctx.strokeStyle = "yellowgreen";
+  //     ctx.rect(this.x, this.y, this.width, this.height);
   
-      ctx.stroke();
-    }
-  }
+  //     ctx.stroke();
+  //   }
+  // }
 
-drawOffset(ctx) {
-    if (
-        this instanceof Pepe ||
-        this instanceof Chicken ||
-        this instanceof CollectableObject ||
-        this instanceof Endboss
-    ) {
-        ctx.beginPath();
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = "orangered";
-        ctx.rect(
-            this.x + (this.offset?.left || 0),
-            this.y + (this.offset?.top || 0),
-            this.width - ((this.offset?.left || 0) + (this.offset?.right || 0)),
-            this.height - ((this.offset?.top || 0) + (this.offset?.bottom || 0))
-        );
-        ctx.stroke();
-    }
-}
+// drawOffset(ctx) {
+//     if (
+//         this instanceof Pepe ||
+//         this instanceof Chicken ||
+//         this instanceof CollectableObject ||
+//         this instanceof Endboss
+//     ) {
+//         ctx.beginPath();
+//         ctx.lineWidth = 5;
+//         ctx.strokeStyle = "orangered";
+//         ctx.rect(
+//             this.x + (this.offset?.left || 0),
+//             this.y + (this.offset?.top || 0),
+//             this.width - ((this.offset?.left || 0) + (this.offset?.right || 0)),
+//             this.height - ((this.offset?.top || 0) + (this.offset?.bottom || 0))
+//         );
+//         ctx.stroke();
+//     }
+// }
 
 
 

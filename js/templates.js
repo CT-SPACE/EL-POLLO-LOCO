@@ -1,21 +1,40 @@
 
 
+// function createButtonContent(content) {
+//     let contentType = document.getElementById(content);
+//     let contentScreen = document.getElementById("buttonContent");
+
+//     if (contentScreen.classList.contains('open') && contentScreen.dataset.active === content) {
+//         closeContent(contentScreen);
+//         return;
+//     }
+
+//     if (contentScreen.classList.contains('open')) {
+//         closeContent(contentScreen, () => openContent(content, contentType, contentScreen));
+//     } else {
+//         openContent(content, contentType, contentScreen);
+//     }
+// }
+
 function createButtonContent(content) {
     let contentType = document.getElementById(content);
     let contentScreen = document.getElementById("buttonContent");
 
+    // Falls der gleiche Content bereits geöffnet ist, dann schließen
     if (contentScreen.classList.contains('open') && contentScreen.dataset.active === content) {
         closeContent(contentScreen);
         return;
     }
 
+    // Falls ein anderer Content geöffnet ist, erst schließen und danach neuen öffnen
     if (contentScreen.classList.contains('open')) {
         closeContent(contentScreen, () => openContent(content, contentType, contentScreen));
-
     } else {
         openContent(content, contentType, contentScreen);
     }
 }
+
+
 
 function openContent(content, contentType, contentScreen) {
     let headline = document.getElementById("stayHeadline");
@@ -55,21 +74,23 @@ function openContent(content, contentType, contentScreen) {
 // kleiner Timeout, damit die Transition greift
 }
 
-function closeContent() {
-    let contentScreen = document.getElementById("buttonContent");
+function closeContent(contentScreen, callback) {
+    console.log("closeContent wurde aufgerufen!", contentScreen);
     let headline = document.getElementById("stayHeadline");
     gamePaused = false;
-    // resumeGameSounds();
-        if (getSoundStatus()) {
+
+    if (getSoundStatus()) {
         audioManager.setMuted(false);
         allAmbientSounds();
     } else {
         audioManager.setMuted(true);
     }
-     resetOutClasses()
+
+    resetOutClasses();
     togglePlay();
     contentScreen.classList.remove('open');
     contentScreen.classList.add('close');
+
     contentScreen.addEventListener('transitionend', function handler() {
         contentScreen.classList.add('hidden');
         contentScreen.classList.remove('close');
@@ -78,10 +99,14 @@ function closeContent() {
         gamePaused = false;
         removeOverlay();
         contentScreen.removeEventListener('transitionend', handler);
-        // if (callback) callback();
+
+        // Falls eine Callback-Funktion übergeben wurde, rufe sie auf!
+        if (callback) callback();
     });
+
     headline.style.removeProperty("top");
 }
+
 
 function ToggleClasses(contentType, contentScreen) {
     resetOutClasses();
@@ -204,11 +229,31 @@ function closeOnDarkLayer() {
     });
 }
 
+// function includeCloseButton(contentScreen) {
+//     let closeButton = document.createElement('div');
+//     closeButton.id = 'closeButton';
+//     contentScreen.appendChild(closeButton);
+//     closeButton.setAttribute("onclick", "closeContent()");
+// }
+
 function includeCloseButton(contentScreen) {
-    let closeButton = document.createElement('div');
+      let closeButton = document.createElement('div');
     closeButton.id = 'closeButton';
     contentScreen.appendChild(closeButton);
-    closeButton.setAttribute("onclick", "closeContent()");
+
+  setTimeout(() => {
+    let closeButton = document.getElementById("closeButton");
+    if (closeButton) {
+        closeButton.addEventListener("click", () => {
+            console.log("Schließen-Button wurde geklickt!");
+            closeContent(document.getElementById("buttonContent"));
+        });
+    } else {
+        console.error("Schließen-Button existiert nicht!");
+    }
+}, 500);
 }
+
+
 
 

@@ -114,7 +114,7 @@ class CollectableObject extends DrawableObject {
   }
 
   checkForBottleCollisions(character, bottles) {
-    console.log("checkForBottleCollisions - bottles:", bottles);
+    // console.log("checkForBottleCollisions - bottles:", bottles);
     this.bottles = bottles;
 
     this.character = character;

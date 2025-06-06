@@ -33,7 +33,7 @@ class World {
  
     // this.endbossOfEnemies = this.level?.enemies?.find( (enemy) => enemy.type === "endboss");
 // console.log("Level in World:", window.world.level);
-console.log("Enemies in World:", this.level.enemies);
+// console.log("Enemies in World:", this.level.enemies);
 
 
    
@@ -134,7 +134,7 @@ try{
       this.addToMap(this.statusBarEndboss);
     }
 
-    if (this.isPepeNearEndboss() < 350) {
+    if (this.isPepeNearEndboss() < 700) {
       this.endbossOfEnemies.EndBossClose = true;
       this.addToMap(this.statusBarEndboss);
       this.EndBossVisible = true;
@@ -148,12 +148,12 @@ try{
     return;
   }
 
-  handleEndBossCloseEffect() {
+  handleEndbossCloseEffect() {
     
     let flash = false;
     if (this.endbossOfEnemies.EndBossClose === true) {
         // 5% Chance pro Frame für einen Blitz
-        if (Math.random() < 0.005) {
+        if (Math.random() < 0.008) {
             flash = true;
         }
     }
@@ -308,12 +308,12 @@ try{
     this.level.bottles.forEach((bottle, index) => {
       if (this.character.isColliding(bottle)) {
         this.collectedBottles++;
-        console.log("collectedBottles = ", this.collectedBottles);
+        // console.log("collectedBottles = ", this.collectedBottles);
         this.level.bottles.splice(index, 1);
-        console.log(
-          "Rest of collectable Bottles = ",
-          this.level.bottles.length
-        );
+        // console.log(
+        //   "Rest of collectable Bottles = ",
+        //   this.level.bottles.length
+        // );
         this.statusBarChilli.setPercentage(this.collectedBottles);
 
         audioManager.loadAudio("WorldBottleCollecting", "./audio/bottle_collect.mp3");
@@ -379,10 +379,10 @@ try{
       this.flipImage(Obj);
     }
 
-    if (Obj !== staticBackground) {
-      Obj.drawFrames(this.ctx);
-      Obj.drawOffset(this.ctx);
-    }
+    // if (Obj !== staticBackground) {
+    //   Obj.drawFrames(this.ctx);
+    //   Obj.drawOffset(this.ctx);
+    // }
 
     Obj.drawObject(this.ctx);
 

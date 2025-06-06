@@ -7,14 +7,16 @@
     <title>Jose Luis Ignacio Vincente "Pepe" el Peligroso</title>
     <link rel="icon" href="polloloco.ico" />
 
-    <link rel="preload" href="./fonts/Ojuju/Ojuju-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin="anonymous">
-    <link rel="preload" href="./fonts/Matemasie/Matemasie-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="./fonts/Ojuju/Ojuju-VariableFont_wght.ttf" as="font" type="font/ttf"
+        crossorigin="anonymous">
+    <link rel="preload" href="./fonts/Matemasie/Matemasie-Regular.ttf" as="font" type="font/ttf"
+        crossorigin="anonymous">
 
-    <link  href="./style/style.css" rel="stylesheet">
+    <link href="./style/style.css" rel="stylesheet">
     <script src="./models/2_drawable-object.class.js"></script>
-<script src="./models/0_level.class.js"></script>  <!-- Level zuerst! -->
-<script src="./levels/level01.js"></script>        <!-- Dann Level01 -->
-<script src="./models/1_world.class.js"></script>  <!-- Danach World -->
+    <script src="./models/0_level.class.js"></script> <!-- Level zuerst! -->
+    <script src="./levels/level01.js"></script> <!-- Dann Level01 -->
+    <script src="./models/1_world.class.js"></script> <!-- Danach World -->
 
 
     <script src="./models/0_audiomanager.class.js"></script>
@@ -54,34 +56,28 @@
             </div>
             <div id="overflowHidden" class="overflowHidden">
                 <div id="playScreen">
-                    <canvas id="canvas" width="800" height="480"  tabindex="0"></canvas>
+                    <canvas id="canvas" width="800" height="480" tabindex="0"></canvas>
 
                 </div>
 
                 <div id="startScreen" class="start">
-
-                    <!-- <h1>EL POLLO LOCO</h1> -->
-                    <div id="loader" class="loader">
-
-                    </div>
-                    <!-- <p>
-                 <div class="spinner">
+                    <div id="loader" class="loader"></div>
                 </div>
-                </p> -->
-
-
-
-                    <!-- <button id="startGame" style="padding:1rem 2rem;font-size:1.5rem;display:none;">Play</button> -->
-
+                <div id="gameOverScreen" class="gameOver hidden">
+                    <div id="gameOverBG" class="gameOverBG">
+                    <div class="gameOverText">
+                        <h2>Click REPLY-Button to restart</h2>
+                    </div></div>
                 </div>
                 <div id="buttonContent" class="hidden close"></div>
             </div>
 
             <div id="buttons" class="menu">
                 <div id="story" alt="Story of Pepe" class="button" onclick="createButtonContent('story')">Story</div>
-                <div id="impressum" alt="Impressum" class="button"
-                    onclick="createButtonContent('impressum')">Impressum</div><div id="howto" class="button"
-                    alt="How to Play" onclick="createButtonContent('howto')">How to Play</div>
+                <div id="impressum" alt="Impressum" class="button" onclick="createButtonContent('impressum')">Impressum
+                </div>
+                <div id="howto" class="button" alt="How to Play" onclick="createButtonContent('howto')">How to Play
+                </div>
             </div>
             <div class="control">
                 <div id="sound" onclick="toggleSound()" title="Sound On/Off">

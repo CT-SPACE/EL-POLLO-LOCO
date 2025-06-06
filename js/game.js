@@ -59,14 +59,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 async function init() {
-    console.log("Starte init()...");
-
     await fastPreload();
-
     try {
         LoadingVisual();
     } catch (error) {
         console.error("Fehler in LoadingVisual:", error);
+        return;
     }
 
     restoreSoundStatus();
@@ -167,9 +165,9 @@ async function preloadImages() {
           let loadedCount = 0;
           IMG.onload = () => {
             loadedCount++;
-            console.log(
-              `Bild geladen: ${path} (${loadedCount}/${imagePaths.length})`
-            );
+            // console.log(
+            //   `Bild geladen: ${path} (${loadedCount}/${imagePaths.length})`
+            // );
             resolve({ path, IMG });
           };
 
@@ -233,7 +231,7 @@ function restoreSoundStatus() {
 function togglePlay(toggleSource, value) {
   let playDiv = document.getElementById("play");
   let playIcon = document.getElementById("switch");
-  console.log("toggleSource:", toggleSource, "value:", value);
+ 
   if (toggleSource === "content" && value === true) {
     playIcon.classList.remove("play");
     playIcon.classList.add("pause");
@@ -314,7 +312,7 @@ function LoadingVisual() {
 
 function letsPlay(startGame) {
    document.addEventListener("keydown", (e) => {
-  console.log(e);
+  // console.log(e);
   if (e.code == "Enter") {
     keyboard.ENTER = true;
     playConditions();
@@ -337,7 +335,7 @@ function playConditions(){
     if (!Level01) {
     console.error("Fehler: Level01 ist nicht initialisiert!");
 } else {
-      console.log("Erstelle neue Welt...");
+      // console.log("Erstelle neue Welt...");
     window.world = new World(canvas, Level01);
 }
     togglePlay("play", true);
@@ -345,7 +343,7 @@ function playConditions(){
 
      if (!audioManager.audioContext) {
        activateAudioContext();
-        console.log("AudioContext gestartet:", audioManager.audioContext.state);
+        // console.log("AudioContext gestartet:", audioManager.audioContext.state);
 }
 }
 
@@ -375,7 +373,7 @@ document.addEventListener("keydown", (e) => {
     if (!throwKeyDownTime) {
       throwKeyDownTime = Date.now();
     }
-    console.log("KeyD pressed");
+    // console.log("KeyD pressed");
   }
 
 });
