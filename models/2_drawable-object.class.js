@@ -44,10 +44,10 @@ drawObject(ctx) {
         console.log('Error drawing object:', ctx, this.img, this.x, this.y, this.width, this.height);
     }
     }
-    
+
 
   // drawFrames(ctx) {
-  //   if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject) {
+  //   if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject || this instanceof MiniChicken) {
       
   //     ctx.beginPath();
   //     ctx.lineWidth = "5";
@@ -63,11 +63,12 @@ drawObject(ctx) {
 //         this instanceof Pepe ||
 //         this instanceof Chicken ||
 //         this instanceof CollectableObject ||
-//         this instanceof Endboss
+//         this instanceof Endboss ||
+//         this instanceof MiniChicken
 //     ) {
 //         ctx.beginPath();
-//         ctx.lineWidth = 5;
-//         ctx.strokeStyle = "orangered";
+//         ctx.lineWidth = 0;
+//         ctx.strokeStyle = "unset";
 //         ctx.rect(
 //             this.x + (this.offset?.left || 0),
 //             this.y + (this.offset?.top || 0),
@@ -78,6 +79,28 @@ drawObject(ctx) {
 //     }
 // }
 
+drawOffset(ctx) {
+    if (this.drawDebug) { // Nur wenn Debug-Modus aktiv ist
+        if (
+            this instanceof Pepe ||
+            this instanceof Chicken ||
+            this instanceof CollectableObject ||
+            this instanceof Endboss ||
+            this instanceof MiniChicken
+        ) {
+            ctx.beginPath();
+            ctx.lineWidth = 0;
+            ctx.strokeStyle = "orangered"; 
+            ctx.rect(
+                this.x + (this.offset?.left || 0),
+                this.y + (this.offset?.top || 0),
+                this.width - ((this.offset?.left || 0) + (this.offset?.right || 0)),
+                this.height - ((this.offset?.top || 0) + (this.offset?.bottom || 0))
+            );
+            ctx.stroke();
+        }
+    }
+}
 
 
 

@@ -4,7 +4,7 @@ class MovableObject extends DrawableObject {
   keyboard;
   keyboardEnabled = true;
   cameraX;
-  factor = 1
+  factor = 1;
   speed = 20;
   speedY;
   acceleration = 4.2;
@@ -12,6 +12,8 @@ class MovableObject extends DrawableObject {
   offset;
   gravityInterval;
   gamePaused = false;
+  deathHandled = false;
+  isDead = false;
   
   lastHit = 0;
 
@@ -71,11 +73,29 @@ isZeroHealthscore(){
   timepassed = timepassed / 1000; // Differenz in s
   return timepassed < 0.5;
  }
+
+   moveRightMini(speed) {
+     if (gamePaused) return;
+    this.x += speed;
+  }
  
   moveRight() {
-    this.x += this.speed * this.factor;
+     if (gamePaused) return;
+    this.x += this.speed;
     this.otherDirection = false;
   }
+
+  // moveRight(speed) {
+  //   let minichicken = this.level.enemies.find( (enemy) => enemy.type === "minichicken");
+
+  //   if (gamePaused) return;
+  //   if (minichicken){
+  //     this.otherDirection = true; // Setzt die Richtung auf "umgekehrt" für Minichicken
+  //   } else {
+  //   this.otherDirection = false;
+  //   } 
+  //             this.x += speed;// Setzt die Richtung auf "nicht umgekehrt"
+  // }
 
   moveLeft(speed) {
     if (gamePaused) return;
@@ -83,7 +103,6 @@ isZeroHealthscore(){
   }
 
   jump() {
-    // this.speedY = 34;
  
       if (!this.isAboveGround()) { // Nur springen, wenn Pepe auf dem Boden ist
           this.speedY = 34; // Sprunggeschwindigkeit setzen
@@ -97,7 +116,10 @@ hit(attacker) {
 
   // Überprüfen, ob der Angreifer der Endboss ist
   if (attacker instanceof Endboss) {
-      damage *= 100; // Schaden verdoppeln, wenn der Angreifer der Endboss ist
+      damage *= 150; // Schaden verdoppeln, wenn der Angreifer der Endboss ist
+  }
+    if (attacker instanceof MiniChicken) {
+      damage *= 0.2;
   }
 
   this.energy -= damage;
@@ -109,28 +131,57 @@ hit(attacker) {
   }
 }
 
-  playAnimation(images) {
-    this.images = images;
-   let i = this.currentIMG % this.images.length;
-   let path = this.images[i];
-   //console.log("playAnimation:",this.images);
+//   playAnimation(images) {
+//     this.images = images;
+//    let i = this.currentIMG % this.images.length;
+//    let path = this.images[i];
+//    console.log("playAnimation:",this.images);
 
-if (this.isDead && i === this.images.length - 1) {
-  this.img = this.imgCache[this.images[i]];
-  this.disableKeyboard();
+// if (this.isDead && i === this.images.length - 1) {
+//   this.img = this.imgCache[this.images[i]];
+//   this.currentIMG = i;
+//   this.handleGameOver() ;
+//   this.disableKeyboard();
   
-    if (typeof stopGame === 'function') stopGame();
+//     // if (typeof stopGame === 'function') stopGame();
     
- } else {
-      this.img = this.imgCache[path];
-        this.currentIMG++;
+//  } else {
+//       this.img = this.imgCache[path];
+//         this.currentIMG++;
+//     }
+// }
+
+ playAnimation(images) {
+        this.images = images;
+        let i = this.currentIMG % this.images.length;
+        let path = this.images[i];
+
+        if (Pepe.isDead && i === (this.images.length - 2) || Endboss.isDead && i === (this.images.length - 1)) {
+            // Stay on last death frame
+            this.img = this.imgCache[this.images[i]];
+            this.currentIMG = i;
+            
+            // Trigger game over only once
+            if (!this.deathHandled) {
+                this.deathHandled = true;
+                this.world.handleGameOver();
+            }
+        } else {
+            this.img = this.imgCache[path];
+            this.currentIMG++;
+        }
     }
-}
 
 stopGame() {
   gamePaused = true;
-  // Optional: Overlay anzeigen, Buttons deaktivieren, etc.
+        clearInterval(this.animateInterval);
+        clearInterval(this.animateWalkInterval);
+        clearInterval(this.animateXInterval);
+        clearInterval(this.gravityInterval);
+        clearInterval(this.animateBounceMiniInterval);
+        clearInterval(this.animateDeathInterval);
 }
+
 
 disableKeyboard() {
   keyboardEnabled = false; // Steuerung deaktivieren

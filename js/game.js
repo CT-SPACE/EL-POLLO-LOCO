@@ -51,6 +51,8 @@ let imagePaths = [
   ...Endboss.IMAGES_DEAD,
   ...Clouds.IMAGES_MOVING,
   ...Chicken.IMAGES_WALKING,
+  ...MiniChicken.IMAGES_WALKING,
+  ...MiniChicken.IMAGES_HIT
 ];
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -82,35 +84,6 @@ async function init() {
     allAmbientSounds();
 }
 
-
-// async function init() {
-//   await fastPreload();
-
-//   try {
-//     LoadingVisual();
-//   } catch (error) {
-//     console.error(error);
-
-//     }
-//     restoreSoundStatus();
-
-//   startScreen = true;
-//   canvas = document.getElementById("canvas");
-
-//   window.world = new World(canvas);
-//   // initLevel();
-//   await preloadAudio();
-//   try {
-//     await preloadImages();
-//   } catch (error) {
-//     console.error("Fehler beim Laden der Bilder:", error);
-//     if (error.path) {
-//       console.error("Fehlender Bildpfad:", error.path);
-//     }
-//   }
-//   allAmbientSounds();
-
-// }
 window.addEventListener("unhandledrejection", event => {
   console.error("Uncaught Promise Fehler:", event.reason);
 });
@@ -143,6 +116,13 @@ async function preloadAudio() {
 
     audioManager.loadAudio("chicken_run", "./audio/chicken_group.mp3"),
     audioManager.loadAudio("chicken_splat", "./audio/chicken_splat.mp3"),
+
+    audioManager.loadAudio("mini_run_0", "./audio/mini_chicken_run.mp3"),
+    audioManager.loadAudio("mini_run_1", "./audio/mini_chicken_run.mp3"),
+    audioManager.loadAudio("mini_run_2", "./audio/mini_chicken_run.mp3"),
+    audioManager.loadAudio("mini_run_3", "./audio/mini_chicken_run.mp3"),
+    audioManager.loadAudio("mini_run_4", "./audio/mini_chicken_run.mp3"),
+    audioManager.loadAudio("mini_bounce", "./audio/mini_chicken_squeeze_1.mp3"),
 
     audioManager.loadAudio("endbossBackground", "./audio/endboss_thunder.mp3"),
     audioManager.loadAudio("endboss_attack", "./audio/endboss_attack.mp3"),
@@ -274,11 +254,7 @@ function allAmbientSounds() {
 
 function hideLoaderAndShowPlayButton() {
   const loaderContainer = document.getElementById("loader");
-  // document.addEventListener("DOMContentLoaded", () => {
-  //   document.getElementById("subText").classList.remove("hidden");
-  // });
-
-  //   document.getElementById("subText").classList.remove("hidden");
+ 
   loaderContainer.innerHTML = "";
   keyboardEnabled = true;
   let startGame = document.createElement("div");
@@ -325,27 +301,30 @@ playConditions()
 
 }
 
+
 function playConditions(){
   document.getElementById("startScreen").style.display = "none";
       subText.classList.add("hidden");
+  document.getElementById("stayHeadline").classList.add("headline");
   initLevel();
       canvas = document.getElementById("canvas");
     canvas.focus();
 
     if (!Level01) {
     console.error("Fehler: Level01 ist nicht initialisiert!");
-} else {
+    } else {
       // console.log("Erstelle neue Welt...");
     window.world = new World(canvas, Level01);
-}
+    }
     togglePlay("play", true);
     // audio.activateAudioContext();
 
      if (!audioManager.audioContext) {
        activateAudioContext();
         // console.log("AudioContext gestartet:", audioManager.audioContext.state);
+    }
 }
-}
+
 
 
 document.addEventListener("keydown", (e) => {

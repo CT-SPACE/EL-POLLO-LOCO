@@ -56,7 +56,10 @@ class Pepe extends MovableObject {
   audioManager;
   lastKeyPressTime = Date.now();
   isSleepingState = false;
+  isDead = false;
+  deathHandled = false; // Flag to check if death animation has been handled
   animateWalkInterval;
+  animateDeathInterval;
   timeToSleep = 60000;
   keyboard;
   cameraX;
@@ -124,6 +127,7 @@ class Pepe extends MovableObject {
   handleRightMovement(){
              this.stopSleepAnimation();
           this.playAnimation(Pepe.IMAGES_WALKING);
+          // this.otherDirection = false;
           this.moveRight();
           if (!this.audio.audioPlaying["pepe_pollo"]) {
              this.audio.playAudio("pepe_pollo", { loop: false, volume: 0.4 });
@@ -182,10 +186,28 @@ class Pepe extends MovableObject {
   }
 
   animateDeath() {
+    this.isDead = true;
+    this.deathHandled = false; 
     this.playAnimation(Pepe.IMAGES_DYING);
     this.audio.controlAudio("pepe_snore", { pause: true, currentTime: 0 });
 
   }
+
+
+// animateDeath() {
+//     if (!this.isDead) {
+//         this.isDead = true;
+//         this.animateDeathInterval = setInterval(() => {
+//             if (this.IMAGES_DYING.length - 1) {
+//                 clearInterval(this.animateDeathInterval);
+//                 this.animateDeathInterval = null; // Wichtig für die Prüfung!
+//             } else {
+//                 this.playAnimation(this.IMAGES_DYING);
+//             }
+//         }, 100);
+//         this.audio.controlAudio("pepe_snore", { pause: true, currentTime: 0 });
+//     }
+// }
 
   animateJump() {
     this.playAnimation(Pepe.IMAGES_JUMPING);

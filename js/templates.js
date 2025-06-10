@@ -51,7 +51,11 @@ function openContent(content, contentType, contentScreen) {
     resetOutClasses();
     contentType.classList.add("Out");
     contentScreen.classList.remove('hidden', 'close');
-     headline.style.top = "-150px";    
+    contentScreen.offsetHeight; 
+     contentScreen.classList.add('open');
+    if(!headline.classList.contains('headline')){ 
+           headline.style.top = "-150px";    
+    };
 
     setTimeout(() => {
         contentScreen.classList.add('open');
@@ -67,7 +71,7 @@ function openContent(content, contentType, contentScreen) {
                 contentScreen.innerHTML += getHowToHtml();
                 break;
         }
-       }, 200); 
+       }, 50); 
         createOverlayDiv();
         includeCloseButton(contentScreen);
         closeOnDarkLayer();
@@ -75,49 +79,65 @@ function openContent(content, contentType, contentScreen) {
 }
 
 function closeContent(contentScreen, callback) {
-    console.log("closeContent wurde aufgerufen!", contentScreen);
     let headline = document.getElementById("stayHeadline");
     gamePaused = false;
 
+    mutePerSoundStatus();
+    resetOutClasses();
+    togglePlay();
+    
+    // Start closing animation
+    contentScreen.classList.remove('open');
+    contentScreen.classList.add('close');
+    
+    // Listen for animation end only once
+    contentScreen.addEventListener('transitionend', function handler() {
+        contentScreen.removeEventListener('transitionend', handler);
+        finishClosing(contentScreen, callback);
+    });
+
+    headline.style.removeProperty("top");
+}
+
+function finishClosing(contentScreen, callback) {
+    contentScreen.innerHTML = '';
+    contentScreen.dataset.active = '';
+    contentScreen.classList.add('hidden');
+    removeOverlay();
+    
+    if (callback) callback();
+}
+
+function prepareAnimation(contentScreen) {
+    contentScreen.classList.remove('hidden');
+    contentScreen.offsetHeight; // Force reflow
+    
+    requestAnimationFrame(() => {
+        contentScreen.classList.remove('close');
+        requestAnimationFrame(() => {
+            contentScreen.classList.add('open');
+        });
+    });
+}
+
+function mutePerSoundStatus() {
     if (getSoundStatus()) {
         audioManager.setMuted(false);
         allAmbientSounds();
     } else {
         audioManager.setMuted(true);
     }
+}
 
-    resetOutClasses();
-    togglePlay();
-    contentScreen.classList.remove('open');
-    contentScreen.classList.add('close');
-
-    contentScreen.addEventListener('transitionend', function handler() {
+function ToggleClasses(contentScreen) {
         contentScreen.classList.add('hidden');
-        contentScreen.classList.remove('close');
-        contentScreen.innerHTML = '';
-        contentScreen.dataset.active = '';
+
+
         gamePaused = false;
         removeOverlay();
-        contentScreen.removeEventListener('transitionend', handler);
-
-        // Falls eine Callback-Funktion übergeben wurde, rufe sie auf!
-        if (callback) callback();
-    });
-
-    headline.style.removeProperty("top");
+        
 }
 
-
-function ToggleClasses(contentType, contentScreen) {
-    resetOutClasses();
-     contentType.classList.add("Out");
-     contentScreen.classList.toggle('open');
-     contentScreen.classList.toggle('close');
-     if(contentScreen.classList.contains('close')){
-    // let darkLayer = document.getElementById("overlayDiv"); 
-     closeContent(contentScreen);
-    }
-}
 
 function removeOverlay() {
     let overlay = document.getElementById("overlayDiv");
@@ -193,20 +213,6 @@ function getHowToHtml() {
     `;
 }
 
-// function createOverlayDiv() {
-//     let overlayScreen = document.getElementById("overflowHidden");
-//         let existing = document.getElementById("overlayDiv");
-//     if (existing) {
-//         existing.remove();
-//     }
-//     const darkLayer = document.createElement('div');
-//     darkLayer.id = 'overlayDiv';
-//     darkLayer.className = 'darkLayer';
-//     overlayScreen.appendChild(darkLayer);
-
-//     return darkLayer;
-// }
-
 function createOverlayDiv() {
     let overlayScreen = document.getElementById("overflowHidden");
     let existing = document.getElementById("overlayDiv");
@@ -229,12 +235,6 @@ function closeOnDarkLayer() {
     });
 }
 
-// function includeCloseButton(contentScreen) {
-//     let closeButton = document.createElement('div');
-//     closeButton.id = 'closeButton';
-//     contentScreen.appendChild(closeButton);
-//     closeButton.setAttribute("onclick", "closeContent()");
-// }
 
 function includeCloseButton(contentScreen) {
       let closeButton = document.createElement('div');
@@ -243,17 +243,29 @@ function includeCloseButton(contentScreen) {
 
   setTimeout(() => {
     let closeButton = document.getElementById("closeButton");
-    if (closeButton) {
+
         closeButton.addEventListener("click", () => {
             console.log("Schließen-Button wurde geklickt!");
             closeContent(document.getElementById("buttonContent"));
         });
-    } else {
-        console.error("Schließen-Button existiert nicht!");
-    }
 }, 500);
 }
 
+function showGameOverScreen(pepeIsDead) {
+    let gameOverScreen = document.getElementById('gameOverScreen');
+    gameOverScreen.classList.add('backdrop');
+      gameOverScreen.classList.remove('hidden');
+    let canvas = document.getElementById('canvas');
+      canvas.classList.add('hidden');
+
+    if (pepeIsDead) {
+              gameOverScreen.innerHTML += `<h3>¡Game Over!</h3>Oh no, Pepe died for his dream!`;
+
+    } else {
+        gameOverScreen.innerHTML = '¡Que Aproveches! YOU WON!';
+        gameOverScreen.classList.add('winning-BG');
+    }
+}
 
 
 

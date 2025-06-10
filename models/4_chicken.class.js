@@ -77,10 +77,10 @@ animateDeath() {
 
 
     if((this.x - pepeX) > 700 && this.x == 0 && this.audio[chicken_run].playing){
-        this.audio.controlAudio("chicken_run", {pause:true, currentTime: 0});
+        audioManager.controlAudio("chicken_run", {pause:true, currentTime: 0});
    
     } else {
-        this.audio.playAudio("chicken_run", {play:true, loop: true, volume: 0.05});
+        audioManager.playAudio("chicken_run", {play:true, loop: true, volume: 0.05});
 
     }
 }

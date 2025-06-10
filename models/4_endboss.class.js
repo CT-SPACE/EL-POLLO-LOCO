@@ -120,6 +120,7 @@ animateAttack() {
 animateDeath() {
     if (this.isDead) return;
     this.isDead = true;
+    this.deathHandled = false; 
      this.status = false;
     clearInterval(this.animateWalkInterval);
     clearInterval(this.animateAttackInterval);
@@ -141,6 +142,7 @@ animateDeath() {
     // audio.controlAudio("endboss_attack", {play: false, pause: true, currentTime: 0});
     this.audio.playAudio("endbossBackground", {play: false, pause: true});
 }
+
 
   isAttacking(status) {
     if (status === true) {
