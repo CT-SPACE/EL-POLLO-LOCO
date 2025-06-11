@@ -7,6 +7,7 @@ class Endboss extends MovableObject {
   audioManager;
   character;
   EndBossClose = false;
+  deathHandled = false;
   energy = 100;
   status = false;
   isDead = false;
@@ -117,31 +118,39 @@ animateAttack() {
     }, 3000 / 25);
 }
 
-animateDeath() {
-    if (this.isDead) return;
+  animateDeath() {
     this.isDead = true;
     this.deathHandled = false; 
-     this.status = false;
-    clearInterval(this.animateWalkInterval);
-    clearInterval(this.animateAttackInterval);
-    clearInterval(this.animateAlertInterval);
+    this.playAnimation(Endboss.IMAGES_DEAD);
+ this.audio.controlAudio("endbossBackground", { play: false, pause: true});
 
-    let deathFrame = 0;
-    this.deathInterval = setInterval(() => {
-        if (deathFrame < Endboss.IMAGES_DEAD.length) {
-            this.img = this.imgCache[Endboss.IMAGES_DEAD[deathFrame]];
-            deathFrame++;
-        } else {
-            clearInterval(this.deathInterval);
-            this.status = false;
-             this.audio.playAudio("endbossBackground", { play: false, pause: true});
-        }
-    }, 500); 
+  }
+
+// animateDeath() {
+//     if (this.isDead) return;
+//     this.isDead = true;
+//     this.deathHandled = false; 
+//      this.status = false;
+//     clearInterval(this.animateWalkInterval);
+//     clearInterval(this.animateAttackInterval);
+//     clearInterval(this.animateAlertInterval);
+
+//     let deathFrame = 0;
+//     this.deathInterval = setInterval(() => {
+//         if (deathFrame < Endboss.IMAGES_DEAD.length) {
+//             this.img = this.imgCache[Endboss.IMAGES_DEAD[deathFrame]];
+//             deathFrame++;
+//         } else {
+//             clearInterval(this.deathInterval);
+//             this.status = false;
+//              this.audio.playAudio("endbossBackground", { play: false, pause: true});
+//         }
+//     }, 500); 
    
-    this.speed = 0;
-    // audio.controlAudio("endboss_attack", {play: false, pause: true, currentTime: 0});
-    this.audio.playAudio("endbossBackground", {play: false, pause: true});
-}
+//     this.speed = 0;
+//     // audio.controlAudio("endboss_attack", {play: false, pause: true, currentTime: 0});
+//     this.audio.playAudio("endbossBackground", {play: false, pause: true});
+// }
 
 
   isAttacking(status) {

@@ -12,8 +12,7 @@ class MovableObject extends DrawableObject {
   offset;
   gravityInterval;
   gamePaused = false;
-  deathHandled = false;
-  isDead = false;
+  // isDead = false;
   
   lastHit = 0;
 
@@ -151,26 +150,43 @@ hit(attacker) {
 //     }
 // }
 
- playAnimation(images) {
-        this.images = images;
-        let i = this.currentIMG % this.images.length;
-        let path = this.images[i];
+playAnimation(images) {
+    this.images = images;
+    let i = this.currentIMG % this.images.length;
+    let path = this.images[i];
 
-        if (Pepe.isDead && i === (this.images.length - 2) || Endboss.isDead && i === (this.images.length - 1)) {
-            // Stay on last death frame
+    // Check if this is a death animation
+    if (this.isDead) {
+        const isLastFrame = (this instanceof Pepe && i === Pepe.IMAGES_DYING.length - 2) || 
+                              (this instanceof Endboss && i === Endboss.IMAGES_DEAD.length - 1);
+
+        if (isLastFrame) {
+            // Stop at last frame
             this.img = this.imgCache[this.images[i]];
             this.currentIMG = i;
-            
-            // Trigger game over only once
+
+            // Handle death only once
             if (!this.deathHandled) {
                 this.deathHandled = true;
-                this.world.handleGameOver();
+                this.stopGame();
+                this.disableKeyboard();
+                
+                // Pass the correct character type to handleGameOver
+                const deathCharacter = this instanceof Pepe ? "Pepe" : "Endboss";
+                console.log(`${deathCharacter} died at frame ${i}`);
+                this.world.handleGameOver(deathCharacter);
             }
         } else {
+            // Continue death animation
             this.img = this.imgCache[path];
             this.currentIMG++;
         }
+    } else {
+        // Normal animation
+        this.img = this.imgCache[path];
+        this.currentIMG++;
     }
+}
 
 stopGame() {
   gamePaused = true;

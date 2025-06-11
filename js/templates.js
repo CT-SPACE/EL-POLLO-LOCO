@@ -1,21 +1,4 @@
 
-
-// function createButtonContent(content) {
-//     let contentType = document.getElementById(content);
-//     let contentScreen = document.getElementById("buttonContent");
-
-//     if (contentScreen.classList.contains('open') && contentScreen.dataset.active === content) {
-//         closeContent(contentScreen);
-//         return;
-//     }
-
-//     if (contentScreen.classList.contains('open')) {
-//         closeContent(contentScreen, () => openContent(content, contentType, contentScreen));
-//     } else {
-//         openContent(content, contentType, contentScreen);
-//     }
-// }
-
 function createButtonContent(content) {
     let contentType = document.getElementById(content);
     let contentScreen = document.getElementById("buttonContent");
@@ -50,7 +33,7 @@ function openContent(content, contentType, contentScreen) {
 
     resetOutClasses();
     contentType.classList.add("Out");
-    contentScreen.classList.remove('hidden', 'close');
+    contentScreen.classList.remove('displayNone', 'close');
     contentScreen.offsetHeight; 
      contentScreen.classList.add('open');
     if(!headline.classList.contains('headline')){ 
@@ -102,14 +85,14 @@ function closeContent(contentScreen, callback) {
 function finishClosing(contentScreen, callback) {
     contentScreen.innerHTML = '';
     contentScreen.dataset.active = '';
-    contentScreen.classList.add('hidden');
+    contentScreen.classList.add('displayNone');
     removeOverlay();
     
     if (callback) callback();
 }
 
 function prepareAnimation(contentScreen) {
-    contentScreen.classList.remove('hidden');
+    contentScreen.classList.remove('displayNone');
     contentScreen.offsetHeight; // Force reflow
     
     requestAnimationFrame(() => {
@@ -130,7 +113,7 @@ function mutePerSoundStatus() {
 }
 
 function ToggleClasses(contentScreen) {
-        contentScreen.classList.add('hidden');
+        contentScreen.classList.add('displayNone');
 
 
         gamePaused = false;
@@ -251,21 +234,69 @@ function includeCloseButton(contentScreen) {
 }, 500);
 }
 
-function showGameOverScreen(pepeIsDead) {
-    let gameOverScreen = document.getElementById('gameOverScreen');
+function showGameOverScreen(somebodyIsDead) {
+  let gameOverScreen = document.getElementById("gameOverScreen");
+  prepareGameOverScreen(gameOverScreen);
+
+  document.querySelectorAll(".control, .button").forEach((element) => {
+    element.classList.add("visibilityHidden");
+  });
+
+  if (somebodyIsDead === "Pepe") {
+    handleWinningPepe(gameOverScreen);
+  } else if (somebodyIsDead === "Endboss") {
+    handleWinningEndboss(gameOverScreen);
+  } else return;
+
+    includeReplayButton(gameOverScreen);
+}
+
+function prepareGameOverScreen(gameOverScreen) {
+
+    let stayHeadline = document.getElementById("stayHeadline");
+    stayHeadline.classList.remove('headline');
     gameOverScreen.classList.add('backdrop');
-      gameOverScreen.classList.remove('hidden');
+    gameOverScreen.classList.add('pepeGrab');
+      gameOverScreen.classList.remove('displayNone');
+
     let canvas = document.getElementById('canvas');
-      canvas.classList.add('hidden');
+      canvas.classList.add('displayNone');
+}
 
-    if (pepeIsDead) {
-              gameOverScreen.innerHTML += `<h3>¡Game Over!</h3>Oh no, Pepe died for his dream!`;
+function handleWinningPepe(gameOverScreen) {
+                  let pepeGrave = document.createElement("div");
+          pepeGrave.id = "grave";
+  pepeGrave.className = "pepeGrave";
+              gameOverScreen.innerHTML += `<div class="gameOverText"><h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!</div>
+                 <div id="retry" class="replayButton"></div>`;
+         gameOverScreen.appendChild(pepeGrave);
+         let graveIMG = document.getElementById("grave");
+         graveIMG.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
+}
 
-    } else {
-        gameOverScreen.innerHTML = '¡Que Aproveches! YOU WON!';
-        gameOverScreen.classList.add('winning-BG');
-    }
+function handleWinningEndboss(gameOverScreen) {
+      audioManager.playAudio("winning_whoppi", { play: true, volume: 0.2 });
+        gameOverScreen.innerHTML += `<h3>YOU WON!</h3> ¡Que Aproveches! `;
+                let rueda = createElement('div');
+        rueda.classList.add('winning-BG');
+       setTimeout(() => {
+         rueda.classList.add('big');
+       },1000);
 }
 
 
-
+function includeReplayButton(gameOverScreen) {
+    let replay = document.getElementById("retry");
+    
+    replay.onclick = function (){
+        
+        gameOverScreen.classList.add('displayNone');
+        replay.classList.add('displayNone');
+        document.querySelectorAll(".control, .button").forEach((element) => {
+            element.classList.remove("visibilityHidden");
+        
+        })
+        init();
+    }
+    
+}

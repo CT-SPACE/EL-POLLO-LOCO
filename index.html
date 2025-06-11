@@ -51,7 +51,7 @@
         <div class="allScreens">
 
             <h1 id="stayHeadline" class="h1_animation">EL POLLO LOCO</h1>
-            <div id="subText" class="subText hidden">
+            <div id="subText" class="subText displayNone">
                 <h2>Click PLAY-Button or Press ENTER to start</h2>
                 <div class="left40">En verdad, Pepe es el loco - sólo digo.<br></div>
             </div>
@@ -64,13 +64,13 @@
                 <div id="startScreen" class="start">
                     <div id="loader" class="loader"></div>
                 </div>
-                <div id="gameOverScreen" class="gameOver hidden">
+                <div id="gameOverScreen" class="gameOver displayNone">
                   
-                    <div class="gameOverText">
-                        <!-- <h2>Click REPLY-Button to restart</h2> -->
+                    <div class="winner-BG">
                     </div>
+                  
                 </div>
-                <div id="buttonContent" class="hidden close"></div>
+                <div id="buttonContent" class="displayNone close"></div>
             </div>
 
             <div id="buttons" class="menu">
@@ -79,6 +79,7 @@
                 </div>
                 <div id="howto" class="button" alt="How to Play" onclick="createButtonContent('howto')">How to Play
                 </div>
+               
             </div>
             <div class="control">
                 <div id="sound" onclick="toggleSound()" title="Sound On/Off">

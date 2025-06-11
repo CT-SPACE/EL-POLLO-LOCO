@@ -28,6 +28,7 @@ class World {
   countBottles = 15;
   offset;
   canThrow;
+  isGameEnding;
 
   constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
@@ -38,6 +39,7 @@ class World {
     this.endboss.world = this;
     this.EndBossVisible = false;
     this.endbossOfEnemies.EndBossClose = false;
+    this.isGameEnding = false;
     this.throwableObjects = [];
     // this.enemies = this.level.enemies;
 
@@ -380,22 +382,18 @@ class World {
 //     }
 // }
 
-handleGameOver() {
-        if (this.isGameEnding) return;
-        this.isGameEnding = true;
+handleGameOver(deathCandidate) {
 
-        // Stop all game elements
+  console.log("Game Over triggered for:", deathCandidate, this.isGameEnding);
+      if (this.isGameEnding === true) return;
+          this.isGameEnding = true;
+
         this.stopAllAnimations();
         
-        // Show game over screen after delay
         setTimeout(() => {
-          showGameOverScreen(this.character.isDead);
-          // if (this.endbossOfEnemies.isDead) {
-          //   showGameOverWON(this.endbossOfEnemies.isDead);
-          // } else if (this.character.isDead) {     
-          //   showGameOverLOST(this.character.isDead);
-          // }
-        }, 3000);
+          showGameOverScreen(deathCandidate);
+          
+        }, 2000);
     }
 
     stopAllAnimations() {
@@ -415,18 +413,6 @@ handleGameOver() {
         togglePlay("content", true);
     }
 
-    // showGameOverScreen() {
-    //     const gameOverScreen = document.getElementById('gameOverScreen');
-    //     gameOverScreen.classList.remove('hidden');
-        
-    //     // Determine win/lose condition
-    //     const gameOverText = document.getElementById('gameOverText');
-    //     if (this.endbossOfEnemies.isDead) {
-    //         gameOverText.innerHTML = '¡Que Aproveches! You Won!';
-    //     } else {
-    //         gameOverText.innerHTML = '¡Game Over! Pepe se queda con hambre!';
-    //     }
-    // }
 
 
   addObjects(objects) {

@@ -296,22 +296,39 @@ width: 800px;
     font-family:"Ojuju";
     border-radius:20px;
 
-    background-color: rgba(133, 231, 35, 0.8);
+    background-color:#70231380;
     backdrop-filter: grayscale(100%) invert(100%);
     position:absolute;
 }
 
 .gameOver{
      display:flex;
-     flex-direction: column;
+             flex-direction: column;
     justify-content:center;
     align-items:center;
     font-size: 2.2em;
-    line-height:3.5em;
 }
 
-.gameOver h3{
+.gameOverText h3{
+
     font-size:4.8rem;
+    margin: 40px 0;
+}
+
+.gameOverText{
+    display:flex;
+        flex-direction: column;
+    justify-content:center;
+    align-items:center;
+    position: absolute;
+}
+
+.pepeGrave{
+    width: 80px;
+    height: 100px;
+    position: absolute;
+    right: 10%;
+    top: 40%;
 }
 
 .winning-BG{
@@ -484,6 +501,51 @@ p{
     width: 100%;
 }
 
+.replayButton{
+    overflow:hidden;
+        background-image: url("../img/buttons/replay.svg");
+position:relative;
+    background-size: 70px;
+        background-repeat: no-repeat;
+    background-position: 8px;
+        background-color: white;
+    padding: 5px;
+    box-sizing: border-box;
+    margin: 0 5px;
+    top: 160px;
+    right: -360px;
+    width: 80px;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+    height: 80px;
+    border: 1px solid black;
+    position: relative;
+    z-index: 20;
+
+}
+.replayButton:hover{
+overflow: unset;
+    cursor: pointer;
+    background-size: 70px;
+    box-shadow: 1px 1px 2px 0px black;
+    width: 200px;
+    right: -300px;
+}
+
+
+.replayButton::before {
+        font-size: 1.1rem;
+        font-weight:600;
+    color:#811800;
+    content: "A LA REVANCHA!";
+    position: absolute;
+    top:10px;
+    left: 85px;
+}
+
+.replayButton:active{
+ background-size: 64px;
+}
 
 #sound,#play{
     display: flex;
@@ -607,6 +669,10 @@ p{
 
 }
 
-.hidden{
+.visibilityHidden{
+    visibility:hidden;
+}
+
+.displayNone{
     display: none;
 }

@@ -84,9 +84,9 @@ async function init() {
     allAmbientSounds();
 }
 
-window.addEventListener("unhandledrejection", event => {
-  console.error("Uncaught Promise Fehler:", event.reason);
-});
+// window.addEventListener("unhandledrejection", event => {
+//   console.error("Uncaught Promise Fehler:", event.reason);
+// });
 
   window.onload = hideLoaderAndShowPlayButton;
 
@@ -113,7 +113,7 @@ async function preloadAudio() {
     audioManager.loadAudio("pepe_hurt", "./audio/pepe_grunts_2.mp3"),
     audioManager.loadAudio("pepe_pollo", "./audio/pepe_pollo_funny.mp3"),
     audioManager.loadAudio("pepe_snore", "./audio/pepe_snore.mp3"),
-
+    
     audioManager.loadAudio("chicken_run", "./audio/chicken_group.mp3"),
     audioManager.loadAudio("chicken_splat", "./audio/chicken_splat.mp3"),
 
@@ -131,6 +131,9 @@ async function preloadAudio() {
     audioManager.loadAudio("WorldBottleCollecting", "./audio/bottle_collect.mp3"),
     audioManager.loadAudio("coinCollecting", "./audio/coin_success.mp3"),
     audioManager.loadAudio("WorldCoinCollecting", "./audio/coin_success.mp3"),
+
+    audioManager.loadAudio("pepe_wins", "./audio/winning_whoppi.mp3"),
+    audioManager.loadAudio("pepe_loses", "./audio/failed_drum.mp3"),
   ]);
 }
 
@@ -263,7 +266,7 @@ function hideLoaderAndShowPlayButton() {
   startGame.style.display = "block";
   loaderContainer.appendChild(startGame);
   let subText = document.getElementById("subText");
-  subText.classList.remove("hidden");
+  subText.classList.remove("displayNone");
   letsPlay(startGame);
 }
 
@@ -304,7 +307,7 @@ playConditions()
 
 function playConditions(){
   document.getElementById("startScreen").style.display = "none";
-      subText.classList.add("hidden");
+      subText.classList.add("displayNone");
   document.getElementById("stayHeadline").classList.add("headline");
   initLevel();
       canvas = document.getElementById("canvas");
@@ -324,6 +327,7 @@ function playConditions(){
         // console.log("AudioContext gestartet:", audioManager.audioContext.state);
     }
 }
+
 
 
 
