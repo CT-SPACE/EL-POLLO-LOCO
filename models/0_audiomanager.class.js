@@ -42,7 +42,8 @@ class AudioManager {
 
 
 playAudio(name, options = {}) {
-    if (this.muted) return;
+  if (this.muted && (name !== "pepe_loses" && name !== "pepe_wins")) return;
+
     if (!this.buffers[name]) return;
 
     if (this.audioPlaying[name]) return;

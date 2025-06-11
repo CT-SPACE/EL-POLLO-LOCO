@@ -243,9 +243,9 @@ function showGameOverScreen(somebodyIsDead) {
   });
 
   if (somebodyIsDead === "Pepe") {
-    handleWinningPepe(gameOverScreen);
-  } else if (somebodyIsDead === "Endboss") {
     handleWinningEndboss(gameOverScreen);
+  } else if (somebodyIsDead === "Endboss") {
+    handleWinningPepe(gameOverScreen);
   } else return;
 
     includeReplayButton(gameOverScreen);
@@ -263,7 +263,8 @@ function prepareGameOverScreen(gameOverScreen) {
       canvas.classList.add('displayNone');
 }
 
-function handleWinningPepe(gameOverScreen) {
+function handleWinningEndboss(gameOverScreen) {
+     audioManager.playAudio("pepe_loses", { play: true, volume: 0.2 });
                   let pepeGrave = document.createElement("div");
           pepeGrave.id = "grave";
   pepeGrave.className = "pepeGrave";
@@ -274,7 +275,7 @@ function handleWinningPepe(gameOverScreen) {
          graveIMG.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
 }
 
-function handleWinningEndboss(gameOverScreen) {
+function handleWinningPepe(gameOverScreen) {
       audioManager.playAudio("winning_whoppi", { play: true, volume: 0.2 });
         gameOverScreen.innerHTML += `<h3>YOU WON!</h3> ¡Que Aproveches! `;
                 let rueda = createElement('div');
@@ -289,14 +290,14 @@ function includeReplayButton(gameOverScreen) {
     let replay = document.getElementById("retry");
     
     replay.onclick = function (){
-        
+        document.getElementById("canvas").classList.remove('displayNone');
         gameOverScreen.classList.add('displayNone');
         replay.classList.add('displayNone');
         document.querySelectorAll(".control, .button").forEach((element) => {
             element.classList.remove("visibilityHidden");
-        
+         restartGame();
         })
-        init();
+       
     }
     
 }

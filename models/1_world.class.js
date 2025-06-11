@@ -393,7 +393,7 @@ handleGameOver(deathCandidate) {
         setTimeout(() => {
           showGameOverScreen(deathCandidate);
           
-        }, 2000);
+        }, 500);
     }
 
     stopAllAnimations() {

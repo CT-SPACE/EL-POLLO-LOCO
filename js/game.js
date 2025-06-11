@@ -60,35 +60,57 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-async function init() {
-    await fastPreload();
-    try {
-        LoadingVisual();
-    } catch (error) {
-        console.error("Fehler in LoadingVisual:", error);
-        return;
-    }
+// async function init() {
+//     await fastPreload();
+//     try {
+//         LoadingVisual();
+//     } catch (error) {
+//         console.error("Fehler in LoadingVisual:", error);
+//         return;
+//     }
 
-    restoreSoundStatus();
-    startScreen = true;
+//     restoreSoundStatus();
+//     startScreen = true;
 
 
 
-    await preloadAudio();
-    try {
-        await preloadImages();
-    } catch (error) {
-        console.error("Fehler beim Laden der Bilder:", error);
-    }
+//     await preloadAudio();
+//     try {
+//         await preloadImages();
+//     } catch (error) {
+//         console.error("Fehler beim Laden der Bilder:", error);
+//     }
 
-    allAmbientSounds();
-}
+//     allAmbientSounds();
+// }
 
 // window.addEventListener("unhandledrejection", event => {
 //   console.error("Uncaught Promise Fehler:", event.reason);
 // });
 
-  window.onload = hideLoaderAndShowPlayButton;
+async function init() {
+    // Starte den Ladevorgang
+    await loadGameAssets();
+
+    // Zeige den Startbildschirm an
+    showStartScreen();
+}
+
+async function loadGameAssets() {
+    // Lade alle Assets (Bilder, Sounds)
+    await fastPreload();
+    LoadingVisual();
+    await preloadAudio();
+    await preloadImages();
+}
+
+function showStartScreen() {
+    // Zeige den Startbildschirm an
+    restoreSoundStatus();
+    startScreen = true;
+    allAmbientSounds();
+    hideLoaderAndShowPlayButton();
+}
 
 
 async function fastPreload() {
@@ -267,7 +289,7 @@ function hideLoaderAndShowPlayButton() {
   loaderContainer.appendChild(startGame);
   let subText = document.getElementById("subText");
   subText.classList.remove("displayNone");
-  letsPlay(startGame);
+  letsPlay();
 }
 
 function LoadingVisual() {
@@ -289,7 +311,8 @@ function LoadingVisual() {
   });
 }
 
-function letsPlay(startGame) {
+function letsPlay() {
+  let startGame = document.getElementById("startGame");
    document.addEventListener("keydown", (e) => {
   // console.log(e);
   if (e.code == "Enter") {
@@ -305,7 +328,7 @@ playConditions()
 }
 
 
-function playConditions(){
+async function playConditions(){
   document.getElementById("startScreen").style.display = "none";
       subText.classList.add("displayNone");
   document.getElementById("stayHeadline").classList.add("headline");
@@ -328,6 +351,41 @@ function playConditions(){
     }
 }
 
+function restartGame() {
+      gamePaused = false;
+    keyboardEnabled = true;
+    EndBossClose = false;
+    // world = null;
+    level = null;
+    // keyboard = new Keyboard();
+    canvas = document.getElementById("canvas");
+canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+document.removeEventListener("keydown", letsPlay);
+let startGame = document.getElementById("startGame");
+startGame.removeEventListener("click", letsPlay);
+
+    if (window.world) {
+    window.world = null; 
+}
+
+    // Reset audio
+    audioManager.setMuted(false);
+    audioManager.activateAudioContext();
+    
+    // Reset UI
+    document.getElementById('gameOverScreen').classList.add('displayNone');
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("subText").classList.add("displayNone");
+    document.getElementById("stayHeadline").classList.add("headline");
+    
+     letsPlay();
+    
+    // Create new world
+    window.world = new World(canvas, Level01);
+    
+    // Start new game
+    togglePlay("play", true);
+}
 
 
 
