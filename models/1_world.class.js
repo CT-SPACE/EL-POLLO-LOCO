@@ -22,7 +22,7 @@ class World {
   endboss = new Endboss(this);
   chicken = new Chicken(this);
   minichicken = new MiniChicken(this);
-;
+  gameRestarted = false;
   bottles;
   collectedBottles = 0;
   countBottles = 15;
@@ -64,6 +64,11 @@ class World {
     try {
       if (this.endbossOfEnemies.EndBossClose) {
         this.handleEndbossCloseEffect();
+      // if (gamePaused) {
+      //   this.drawObjects();
+      //   requestAnimationFrame(() => this.draw());
+      //   return;
+      //     }
       }
     } catch {
       return;
@@ -183,7 +188,7 @@ class World {
         this.canThrow
       ) {
         let duration = Math.min(throwDuration || 0, 1000);
-        console.log("duration", duration);
+        // console.log("duration", duration);
         let speed = 10 + (duration / 1000) * 20;
 
         let bottle = new ThrowableObject(
@@ -384,8 +389,9 @@ class World {
 
 handleGameOver(deathCandidate) {
 
-  console.log("Game Over triggered for:", deathCandidate, this.isGameEnding);
       if (this.isGameEnding === true) return;
+        console.log("Game Over triggered for:", deathCandidate, this.isGameEnding);
+
           this.isGameEnding = true;
 
         this.stopAllAnimations();
@@ -398,9 +404,9 @@ handleGameOver(deathCandidate) {
 
     stopAllAnimations() {
         // Stop all animations
-        this.character.stopGame();
-        this.endbossOfEnemies.stopGame();
-        this.level.enemies.forEach(enemy => enemy.stopGame());
+        this.character.stopAllIntervals();
+        this.endbossOfEnemies.stopAllIntervals();
+        this.level.enemies.forEach(enemy => enemy.stopAllIntervals());
         
         // Disable controls
         keyboardEnabled = false;

@@ -122,7 +122,7 @@ class CollectableObject extends DrawableObject {
       this.bottles.forEach((bottle, index) => {
         if (this.character.isColliding(bottle)) {
           this.bottles.splice(index, 1);
-          console.log("CheckforBottleCollisions", this.bottles);
+          // console.log("CheckforBottleCollisions", this.bottles);
         }
       });
     }, 500);

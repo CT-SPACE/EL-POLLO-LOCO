@@ -228,7 +228,7 @@ function includeCloseButton(contentScreen) {
     let closeButton = document.getElementById("closeButton");
 
         closeButton.addEventListener("click", () => {
-            console.log("Schließen-Button wurde geklickt!");
+            // console.log("Schließen-Button wurde geklickt!");
             closeContent(document.getElementById("buttonContent"));
         });
 }, 500);
@@ -248,7 +248,6 @@ function showGameOverScreen(somebodyIsDead) {
     handleWinningPepe(gameOverScreen);
   } else return;
 
-    includeReplayButton(gameOverScreen);
 }
 
 function prepareGameOverScreen(gameOverScreen) {
@@ -264,12 +263,14 @@ function prepareGameOverScreen(gameOverScreen) {
 }
 
 function handleWinningEndboss(gameOverScreen) {
+    
      audioManager.playAudio("pepe_loses", { play: true, volume: 0.2 });
-                  let pepeGrave = document.createElement("div");
+    let pepeGrave = document.createElement("div");
           pepeGrave.id = "grave";
-  pepeGrave.className = "pepeGrave";
-              gameOverScreen.innerHTML += `<div class="gameOverText"><h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!</div>
-                 <div id="retry" class="replayButton"></div>`;
+            pepeGrave.className = "pepeGrave";
+    gameOverScreen.innerHTML = ''; 
+includeReplayButton(gameOverScreen);
+
          gameOverScreen.appendChild(pepeGrave);
          let graveIMG = document.getElementById("grave");
          graveIMG.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
@@ -287,17 +288,16 @@ function handleWinningPepe(gameOverScreen) {
 
 
 function includeReplayButton(gameOverScreen) {
+    
+                  gameOverScreen.innerHTML += `<div class="gameOverText"><h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!</div>
+                 <div id="retry" class="replayButton"></div>`;
+     
     let replay = document.getElementById("retry");
+
     
     replay.onclick = function (){
-        document.getElementById("canvas").classList.remove('displayNone');
-        gameOverScreen.classList.add('displayNone');
-        replay.classList.add('displayNone');
-        document.querySelectorAll(".control, .button").forEach((element) => {
-            element.classList.remove("visibilityHidden");
-         restartGame();
-        })
-       
+
+       location.reload(); // Reload the page to restart the game
     }
     
 }

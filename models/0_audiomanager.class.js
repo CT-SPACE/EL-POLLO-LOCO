@@ -24,7 +24,7 @@ class AudioManager {
         let arrayBuffer = await response.arrayBuffer();
         this.buffers[name] = await this.audioContext.decodeAudioData(arrayBuffer);
         } catch (error) {
-            console.log(`LA - Fehler beim Laden oder Dekodieren von "${name}":`, error);
+            // console.log(`LA - Fehler beim Laden oder Dekodieren von "${name}":`, error);
             return;
         }
 
@@ -70,7 +70,8 @@ playAudio(name, options = {}) {
             this.startedAt[name] = 0;
         };
     } catch (error) {
-        console.error(`PlayAudio - Fehler beim Abspielen von "${name}":`, error);
+        // console.error(`PlayAudio - Fehler beim Abspielen von "${name}":`, error);
+     return;
     }
 }
 
@@ -112,8 +113,8 @@ playAudio(name, options = {}) {
             this.audioContext.resume().then(() => {
                 // console.log('AudioContext wurde aktiviert.');
             }).catch((error) => {
-                console.log('this.audioContext.state:',this.audioContext.state);
-                console.error('Fehler beim Aktivieren des AudioContext:', error);
+                // console.log('this.audioContext.state:',this.audioContext.state);
+                // console.error('Fehler beim Aktivieren des AudioContext:', error);
                 return;
             });
         }

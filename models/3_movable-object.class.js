@@ -12,7 +12,8 @@ class MovableObject extends DrawableObject {
   offset;
   gravityInterval;
   gamePaused = false;
-  // isDead = false;
+  gameRestarted = false; // Flag to check if the game has been restarted
+ isDead = false;
   
   lastHit = 0;
 
@@ -155,8 +156,8 @@ playAnimation(images) {
     let i = this.currentIMG % this.images.length;
     let path = this.images[i];
 
-    // Check if this is a death animation
-    if (this.isDead) {
+    if (this.isDead  && !gameRestarted) {
+      //  console.log('playAnimation - 1 isDead:', this.isDead, gameRestarted); 
         const isLastFrame = (this instanceof Pepe && i === Pepe.IMAGES_DYING.length - 2) || 
                               (this instanceof Endboss && i === Endboss.IMAGES_DEAD.length - 1);
 
@@ -168,28 +169,28 @@ playAnimation(images) {
             // Handle death only once
             if (!this.deathHandled) {
                 this.deathHandled = true;
-                this.stopGame();
+                // this.stopAllIntervals();
+                  gamePaused = true;
                 this.disableKeyboard();
-                
-                // Pass the correct character type to handleGameOver
+
                 const deathCharacter = this instanceof Pepe ? "Pepe" : "Endboss";
-                console.log(`${deathCharacter} died at frame ${i}`);
                 this.world.handleGameOver(deathCharacter);
             }
         } else {
-            // Continue death animation
+
             this.img = this.imgCache[path];
             this.currentIMG++;
         }
     } else {
+      //  console.log('playAnimation - 3 isDead / gameRestarted:', this.isDead, gameRestarted); 
+
         // Normal animation
         this.img = this.imgCache[path];
         this.currentIMG++;
     }
 }
 
-stopGame() {
-  gamePaused = true;
+stopAllIntervals() {
         clearInterval(this.animateInterval);
         clearInterval(this.animateWalkInterval);
         clearInterval(this.animateXInterval);

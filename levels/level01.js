@@ -1,5 +1,5 @@
 
-function initLevel() {
+async function initLevel() {
     Level01 = new Level(
 
         [
