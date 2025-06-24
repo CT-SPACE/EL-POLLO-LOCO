@@ -22,7 +22,7 @@ class World {
   endboss = new Endboss(this);
   chicken = new Chicken(this);
   minichicken = new MiniChicken(this);
-  gameRestarted = false;
+  // gameRestarted = false;
   bottles;
   collectedBottles = 0;
   countBottles = 15;
@@ -55,6 +55,10 @@ class World {
     this.character.keyboard = keyboard;
     this.character.world = this;
     this.minichicken.world = this;
+    this.endbossOfEnemies.world = this;
+    console.log("Endboss of enemies:", this.endbossOfEnemies);
+    this.endboss.world = this;
+    console.log("Endboss:", this.endboss);
     this.statusBarPepe.world = this.statusBar;
   }
 
@@ -145,7 +149,7 @@ class World {
       this.endbossOfEnemies.status === true &&
       !this.endbossOfEnemies.isDead
     ) {
-      this.ctx.filter = "brightness(50%)";
+       this.ctx.filter = "brightness(50%)";
       if (
         audioManager.buffers["endbossBackground"] &&
         !audioManager.audioPlaying["endbossBackground"]
@@ -157,6 +161,7 @@ class World {
         });
       }
     } else if (this.endbossOfEnemies.isDead) {
+       flash = false;
       this.ctx.filter = "none";
       audioManager.controlAudio("endbossBackground", {
         play: false,
@@ -164,6 +169,7 @@ class World {
         currentTime: 0,
       });
     } else {
+       flash = false;
       this.ctx.filter = "none";
     }
   }
@@ -246,7 +252,7 @@ class World {
             }
           
         });
-    }, 300);
+    }, 400);
 
     this.checkCollisionsCoins(this.character);
     this.checkCollisionsBottles();

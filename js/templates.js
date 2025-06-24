@@ -166,7 +166,7 @@ function getImpressumHtml() {
     <div class="content">
 
         <p>Angaben gemäß § 5 TMG</p>
-        Dieses Spiel entstand im Rahmen des Kurses "Web-Entwicklung" an der <br>
+        Dieses Spiel entstand im Rahmen des Kurses "Web-Developer" an der <br>
         <bold>Developer Akademie GmbH</bold><br>
         Tassiloplatz 25,<br>
         81541 München<br>
@@ -188,9 +188,17 @@ function getHowToHtml() {
 
         <div class="table">
 <div class="row "><div class="cell rightAlign">SPACEBAR or&nbsp;<img src="./img/buttons/button-up_white.svg" alt="Spacebar or Key Up Arrow" class="key"></div><div class="cell">Pepe jumps</div></div>
-<div class="row"><div class="cell rightAlign"><img src="../img/buttons/button-right_white.svg" alt="Key Right Arrow" class="key"></div><div class="cell">Pepe runs right</div></div>
-<div class="row"><div class="cell rightAlign"><img src="../img/buttons/button-left_white.svg" alt="Key Left Arrow" class="key"></div><div class="cell">Pepe runs left</div></div>
-<div class="row"><div class="cell rightAlign"><img src="../img/buttons/button-D_white.svg" alt="Key D" class="key"></div><div class="cell">Pepe throws bottle</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-right_white.svg" alt="Key Right Arrow" class="key"></div><div class="cell">Pepe runs right</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-left_white.svg" alt="Key Left Arrow" class="key"></div><div class="cell">Pepe runs left</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-D_white.svg" alt="Key D" class="key"></div><div class="cell">Pepe throws bottle</div></div>
+        </div>
+     <div class="table">
+<div class="row "><div class="cell rightAlign"><img src="./img/icon_minichicken.svg" alt="Mini-Chicken" class="key"></div><div class="cell">A collision reduces Pepe's health score by 0.1%. These chickens cannot be killed. But you can jump on them without taking damage. They turn back at the edge of the playing field.</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/icon_chicken.svg" alt="Chicken Enemies" class="key"></div><div class="cell">Reduces Pepe's health score by 10%. You can jump on them to kill them. They only run in one direction.</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/icon_endboss.svg" alt="Endboss Chicken Mum" class="key"></div><div class="cell">A collision with the Endboss reduces Pepe's health by 20%. You must throw 10 bottles to kill him. This enemy only runs in one direction. But he gets angry if you throw bottles at him.</div></div>
+
+<div class="row"><div class="cell rightAlign"><img src="./img/icon_coin.svg" alt="Coin" class="key"></div><div class="cell">Collectable Item</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/6_salsa_bottle/1_salsa_bottle_on_ground.png" alt="Salsa" class="key"></div><div class="cell">Collectable and needed for the fight against the Endboss.  It does not work against other chickens.</div></div>
         </div>
     </div>
     `;
@@ -254,8 +262,8 @@ function prepareGameOverScreen(gameOverScreen) {
 
     let stayHeadline = document.getElementById("stayHeadline");
     stayHeadline.classList.remove('headline');
-    gameOverScreen.classList.add('backdrop');
-    gameOverScreen.classList.add('pepeGrab');
+//  gameOverScreen.classList.add('backdrop');   
+    // gameOverScreen.classList.add('pepeGrab');
       gameOverScreen.classList.remove('displayNone');
 
     let canvas = document.getElementById('canvas');
@@ -267,6 +275,7 @@ function handleWinningEndboss(gameOverScreen) {
      audioManager.playAudio("pepe_loses", { play: true, volume: 0.2 });
     let pepeGrave = document.createElement("div");
           pepeGrave.id = "grave";
+           gameOverScreen.classList.add('backdrop');   
             pepeGrave.className = "pepeGrave";
     gameOverScreen.innerHTML = ''; 
 includeReplayButton(gameOverScreen);
@@ -279,8 +288,8 @@ includeReplayButton(gameOverScreen);
 function handleWinningPepe(gameOverScreen) {
       audioManager.playAudio("winning_whoppi", { play: true, volume: 0.2 });
         gameOverScreen.innerHTML += `<h3>YOU WON!</h3> ¡Que Aproveches! `;
-                let rueda = createElement('div');
-        rueda.classList.add('winning-BG');
+    let rueda = document.createElement('div');
+        rueda.classList.add('winningBG');
        setTimeout(() => {
          rueda.classList.add('big');
        },1000);

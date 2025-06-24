@@ -14,7 +14,7 @@ let throwDuration;
 let gamePaused = true;
 let activeIndex = 0;
 let startScreen;
-let gameRestarted = false;
+// let gameRestarted = false;
 let letters = Array.from(document.querySelectorAll("#loader span"));
 // let IMAGES_SINGLES = [
 //   "./img/5_background/layers/air.png",
@@ -103,7 +103,7 @@ async function loadGameAssets() {
 }
 
 function showStartScreen() {
-  // Zeige den Startbildschirm an
+
   restoreSoundStatus();
   startScreen = true;
   allAmbientSounds();
@@ -124,40 +124,40 @@ async function fastPreload() {
   );
 }
 
-function saveInitialState() {
-    const initialState = {
-        character: {
-            x: 120,
-            y: 235,
-            energy: 100,
-            isDead: false,
-            deathHandled: false,
-            isPlayingHurtAudio: false,
-            isPlayingWalkAudio: false,
-            isSleepingState: false,
-            otherDirection: false
-        },
-        world: {
-            cameraX: 0,
-            throwableObjects: [],
-            collectedBottles: 0,
-            isGameEnding: false,
-            gameRestarted: false
-        },
-        endboss: {
-            energy: 100,
-            isDead: false,
-            deathHandled: false
-        },
-        globals: {
-            gamePaused: false,
-            keyboardEnabled: true,
-            EndBossClose: false,
-            gameRestarted: false
-        }
-    };
-    localStorage.setItem('elPolloLocoInitialState', JSON.stringify(initialState));
-}
+// function saveInitialState() {
+//     const initialState = {
+//         character: {
+//             x: 120,
+//             y: 235,
+//             energy: 100,
+//             isDead: false,
+//             deathHandled: false,
+//             isPlayingHurtAudio: false,
+//             isPlayingWalkAudio: false,
+//             isSleepingState: false,
+//             otherDirection: false
+//         },
+//         world: {
+//             cameraX: 0,
+//             throwableObjects: [],
+//             collectedBottles: 0,
+//             isGameEnding: false,
+//             gameRestarted: false
+//         },
+//         endboss: {
+//             energy: 100,
+//             isDead: false,
+//             deathHandled: false
+//         },
+//         globals: {
+//             gamePaused: false,
+//             keyboardEnabled: true,
+//             EndBossClose: false,
+//             gameRestarted: false
+//         }
+//     };
+//     localStorage.setItem('elPolloLocoInitialState', JSON.stringify(initialState));
+// }
 
 async function preloadAudio() {
   await Promise.all([
@@ -323,6 +323,7 @@ function hideLoaderAndShowPlayButton() {
   loaderContainer.appendChild(startGame);
   let subText = document.getElementById("subText");
   subText.classList.remove("displayNone");
+
   letsPlay();
 }
 
@@ -361,13 +362,14 @@ function letsPlay() {
 }
 
 async function playConditions(origin) {
-  gameRestarted = false;
+  // gameRestarted = false;
   if (origin !== "initial") {
     document.getElementById("gameOverScreen").classList.add("displayNone");
   }
   document.getElementById("startScreen").style.display = "none";
   document.getElementById("subText").classList.add("displayNone");
   document.getElementById("stayHeadline").classList.add("headline");
+document.getElementById("play").style.display = "";
 
   await initLevel();
   canvas = document.getElementById("canvas");
@@ -377,7 +379,7 @@ async function playConditions(origin) {
     console.error("Fehler: Level01 ist nicht initialisiert!");
   } else {
     window.world = new World(canvas, Level01);
-     saveInitialState();
+    //  saveInitialState();
     //  gameRestarted = false;
     // }
     togglePlay("play", true);
@@ -574,22 +576,22 @@ document.addEventListener("keydown", (e) => {
   if (gamePaused) return;
   if (!keyboardEnabled) return; // Ignorieren, wenn die Steuerung deaktiviert ist
 
-  if (gameRestarted && !window.world.character.isDead) {
-    console.log("Before reset, gameRestarted:", gameRestarted);
-    if (
-      [
-        "Space",
-        "ArrowRight",
-        "ArrowLeft",
-        "ArrowUp",
-        "ArrowDown",
-        "KeyD",
-      ].includes(e.code)
-    ) {
-      gameRestarted = false;
-      console.log("Reset gameRestarted to false by key:", e.code);
-    }
-  }
+  // if (!window.world.character.isDead) {
+
+  //   if (
+  //     [
+  //       "Space",
+  //       "ArrowRight",
+  //       "ArrowLeft",
+  //       "ArrowUp",
+  //       "ArrowDown",
+  //       "KeyD",
+  //     ].includes(e.code)
+  //   ) {
+  //     // gameRestarted = false;
+  //     console.log("Reset gameRestarted to false by key:", e.code);
+  //   }
+  // }
 
   if (e.code == "Space") {
     keyboard.SPACE = true;

@@ -12,7 +12,7 @@ class MovableObject extends DrawableObject {
   offset;
   gravityInterval;
   gamePaused = false;
-  gameRestarted = false; // Flag to check if the game has been restarted
+  // gameRestarted = false; // Flag to check if the game has been restarted
  isDead = false;
   
   lastHit = 0;
@@ -156,7 +156,7 @@ playAnimation(images) {
     let i = this.currentIMG % this.images.length;
     let path = this.images[i];
 
-    if (this.isDead  && !gameRestarted) {
+    if (this.isDead) {
       //  console.log('playAnimation - 1 isDead:', this.isDead, gameRestarted); 
         const isLastFrame = (this instanceof Pepe && i === Pepe.IMAGES_DYING.length - 2) || 
                               (this instanceof Endboss && i === Endboss.IMAGES_DEAD.length - 1);
