@@ -31,19 +31,19 @@ async function initLevel() {
 
         ],
         [ 
-            new Chicken(world),
-            new Chicken(world), 
-            new Chicken(world), 
-            new Chicken(world),
-            new Chicken(world),
-            new Chicken(world),
-            new Chicken(world),
+            // new Chicken(world),
+            // new Chicken(world), 
+            // new Chicken(world), 
+            // new Chicken(world),
+            // new Chicken(world),
+            // new Chicken(world),
+            // new Chicken(world),
 
-            new MiniChicken(world),
-            new MiniChicken(world),
-            new MiniChicken(world),
-            new MiniChicken(world),     
-            new MiniChicken(world),
+            // new MiniChicken(world),
+            // new MiniChicken(world),
+            // new MiniChicken(world),
+            // new MiniChicken(world),     
+            // new MiniChicken(world),
       
   
             new Endboss(world)

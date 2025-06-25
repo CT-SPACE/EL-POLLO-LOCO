@@ -286,7 +286,7 @@ includeReplayButton(gameOverScreen);
 }
 
 function handleWinningPepe(gameOverScreen) {
-      audioManager.playAudio("winning_whoppi", { play: true, volume: 0.2 });
+      audioManager.playAudio("pepe_wins", { play: true, volume: 0.2 });
         gameOverScreen.innerHTML += `<h3>YOU WON!</h3> ¡Que Aproveches! `;
     let rueda = document.createElement('div');
         rueda.classList.add('winningBG');

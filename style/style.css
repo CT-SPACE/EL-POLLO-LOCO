@@ -230,7 +230,7 @@ section{
     align-items: center;
     flex-direction: column;
     width: 100vw;
-    height: 100vh;
+    height: 90vh;
     position: absolute;
 }
 
@@ -335,7 +335,7 @@ width: 800px;
 }
 
 .winningBG{
-    background-image:url('./img/4_enemie_boss_chicken/5_dead/G27.png');
+    background-image:url('../img/4_enemie_boss_chicken/5_dead/G27.png');
     background-repeat:no-repeat;
     background-size:contain;
      transition: width 2s, height 2s, transform 2s;

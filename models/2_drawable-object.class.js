@@ -12,22 +12,47 @@ class DrawableObject {
     itemCounter = 0;
     factor = 1;
     
-    loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
-    }
+    // loadImage(path) {
+    //     this.img = new Image();
+    //     this.img.src = path;
+    // }
 
-      /**
-   *
-   * @param {Array} arr
-   */
+
+    loadImage(entry) {
+    const path = typeof entry === "string" ? entry : entry.src;
+
+    this.img = new Image();
+    this.img.src = path;
+}
+
+  //     /**
+  //  *
+  //  * @param {Array} arr
+  //  */
+  // loadImages(arr) {
+  //   arr.forEach((path) => {
+  //     let img = new Image();
+  //     img.src = path;
+  //     this.imgCache[path] = img;
+  //   });
+  // }
+
   loadImages(arr) {
-    arr.forEach((path) => {
-      let img = new Image();
-      img.src = path;
-      this.imgCache[path] = img;
+    arr.forEach((entry) => {
+        const path = typeof entry === "string" ? entry : entry.src;
+
+        if (!this.imgCache[path]) {
+    let img = new Image();
+    img.src = path;
+    this.imgCache[path] = img;
+}
+
+        // let img = new Image();
+        // img.src = path;
+        // this.imgCache[path] = img;
     });
-  }
+}
+
 
   loadAudio(arr) {
     arr.forEach((path) => {

@@ -23,12 +23,12 @@ let letters = Array.from(document.querySelectorAll("#loader span"));
 // ];
 
 let IMAGES_FASTLOAD = [
-  "../img/fondo_cactus.png",
-  "../img/Desierto-portada_con_pepe.jpg",
-  "../img/paper-bg.png",
-  "../img/5_background/layers/air.png",
-  "../img/skelett_gallina.png",
-  "../img/lightning.png",
+  "./img/fondo_cactus.png",
+  "./img/Desierto-portada_con_pepe.jpg",
+  "./img/paper-bg.png",
+  "./img/5_background/layers/air.png",
+  "./img/skelett_gallina.png",
+  "./img/lightning.png",
 ];
 
 let imagePaths = [
@@ -112,9 +112,10 @@ function showStartScreen() {
 
 async function fastPreload() {
   return Promise.all(
-    IMAGES_FASTLOAD.map(
-      (path) =>
-        new Promise((resolve, reject) => {
+    IMAGES_FASTLOAD.map((entry) =>
+        new Promise((resolve, reject) => { 
+          path = typeof entry === "string" ? entry : entry.src; // zusatz
+
           let IMG = new Image();
           IMG.src = path;
           IMG.onload = () => resolve({ path, IMG });
@@ -193,31 +194,56 @@ async function preloadAudio() {
   ]);
 }
 
+// async function preloadImages() {
+//   await fastPreload();
+//   return Promise.all(
+//     imagePaths.map(
+//       (path) =>
+//         new Promise((resolve, reject) => {
+//           let IMG = new Image();
+//           IMG.src = path;
+//           let loadedCount = 0;
+//           IMG.onload = () => {
+//             loadedCount++;
+//             // console.log(
+//             //   `Bild geladen: ${path} (${loadedCount}/${imagePaths.length})`
+//             // );
+//             resolve({ path, IMG });
+//           };
+
+//           IMG.onerror = () => {
+//             console.error(`Fehler beim Laden des Bildes: ${path}`);
+//             reject();
+//           };
+//         })
+//     )
+//   );
+// }
+
 async function preloadImages() {
   await fastPreload();
-  return Promise.all(
-    imagePaths.map(
-      (path) =>
-        new Promise((resolve, reject) => {
-          let IMG = new Image();
-          IMG.src = path;
-          let loadedCount = 0;
-          IMG.onload = () => {
-            loadedCount++;
-            // console.log(
-            //   `Bild geladen: ${path} (${loadedCount}/${imagePaths.length})`
-            // );
-            resolve({ path, IMG });
-          };
 
-          IMG.onerror = () => {
-            console.error(`Fehler beim Laden des Bildes: ${path}`);
-            reject();
-          };
-        })
-    )
+  return Promise.all(
+    imagePaths.map((entry) => {
+      let path = typeof entry === "string" ? entry : entry.src;
+
+      return new Promise((resolve, reject) => {
+        let IMG = new Image();
+        IMG.src = path;
+
+        IMG.onload = () => {
+          resolve({ path, IMG });
+        };
+
+        IMG.onerror = () => {
+          console.error(`Fehler beim Laden des Bildes: ${path}`);
+          reject(new Error(`Bild konnte nicht geladen werden: ${path}`));
+        };
+      });
+    })
   );
 }
+
 
 function pauseGameSounds() {
   audioManager.setMuted(true);

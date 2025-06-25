@@ -56,9 +56,7 @@ class World {
     this.character.world = this;
     this.minichicken.world = this;
     this.endbossOfEnemies.world = this;
-    console.log("Endboss of enemies:", this.endbossOfEnemies);
     this.endboss.world = this;
-    console.log("Endboss:", this.endboss);
     this.statusBarPepe.world = this.statusBar;
   }
 
