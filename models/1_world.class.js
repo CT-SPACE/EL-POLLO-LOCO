@@ -338,7 +338,7 @@ class World {
       if (bottle.isColliding(this.endbossOfEnemies) && !bottle.splashed) {
         this.endbossOfEnemies.energy = Math.max(
           0,
-          this.endbossOfEnemies.energy - 10
+          this.endbossOfEnemies.energy - 10 // ZURÜCKSETZEN AUF 10 WENN #DEBUGGING VORBEI IST
         );
 
         if (
@@ -406,7 +406,7 @@ handleGameOver(deathCandidate) {
         }, 500);
     }
 
-    stopAllAnimations() {
+stopAllAnimations() {
         // Stop all animations
         this.character.stopAllIntervals();
         this.endbossOfEnemies.stopAllIntervals();

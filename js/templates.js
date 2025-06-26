@@ -250,7 +250,7 @@ function showGameOverScreen(somebodyIsDead) {
     element.classList.add("visibilityHidden");
   });
 
-  if (somebodyIsDead === "Pepe") {
+  if (somebodyIsDead == "Pepe") {
     handleWinningEndboss(gameOverScreen);
   } else if (somebodyIsDead === "Endboss") {
     handleWinningPepe(gameOverScreen);
@@ -262,51 +262,114 @@ function prepareGameOverScreen(gameOverScreen) {
 
     let stayHeadline = document.getElementById("stayHeadline");
     stayHeadline.classList.remove('headline');
-//  gameOverScreen.classList.add('backdrop');   
-    // gameOverScreen.classList.add('pepeGrab');
       gameOverScreen.classList.remove('displayNone');
+      gameOverScreen.classList.add('winningGameOverBG');
 
     let canvas = document.getElementById('canvas');
       canvas.classList.add('displayNone');
 }
 
-function handleWinningEndboss(gameOverScreen) {
+// function handleWinningEndboss(gameOverScreen) {
     
-     audioManager.playAudio("pepe_loses", { play: true, volume: 0.2 });
-    let pepeGrave = document.createElement("div");
-          pepeGrave.id = "grave";
-           gameOverScreen.classList.add('backdrop');   
-            pepeGrave.className = "pepeGrave";
-    gameOverScreen.innerHTML = ''; 
-includeReplayButton(gameOverScreen);
+//      audioManager.playAudio("pepe_loses", { play: true, volume: 0.2 });
+//     let pepeGrave = document.createElement("div");
+//           pepeGrave.id = "grave";
+//            gameOverScreen.classList.add('backdrop');   
+//             pepeGrave.className = "pepeGrave";
+//     gameOverScreen.innerHTML = ''; 
+// includeReplayButton(gameOverScreen,"lose");
+// gameOverScreen.innerHTML += `
+// <div class="gameOverText"><h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!</div>
+// `;
+//          gameOverScreen.appendChild(pepeGrave);
+//          let graveIMG = document.getElementById("grave");
+//          graveIMG.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
+// }
 
-         gameOverScreen.appendChild(pepeGrave);
-         let graveIMG = document.getElementById("grave");
-         graveIMG.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
+function handleWinningEndboss(gameOverScreen) {
+    audioManager.playAudio("pepe_loses", { play: true, volume: 0.2 });
+    gameOverScreen.innerHTML = '';
+    gameOverScreen.classList.add('backdrop');
+    let pepeGrave = document.createElement("div");
+    pepeGrave.id = "grave";
+    pepeGrave.className = "pepeGrave";
+    pepeGrave.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
+
+    const gameOverText = document.createElement("div");
+    gameOverText.className = "gameOverText";
+    gameOverText.innerHTML = `<h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!`;
+
+    includeReplayButton(gameOverScreen, "lose") ;
+    // Alles an den gameOverScreen anhängen
+  
+    gameOverScreen.appendChild(gameOverText);
+    gameOverScreen.appendChild(pepeGrave);
 }
+
+
+// function handleWinningPepe(gameOverScreen) {
+//       audioManager.playAudio("pepe_wins", { play: true, volume: 0.2 });
+//       includeReplayButton(gameOverScreen,"win");
+//         gameOverScreen.innerHTML += `<h3>YOU WON!</h3> ¡Que Aproveches! `;
+//     let rueda = document.createElement('div');
+//         rueda.classList.add('winningBG');
+//        setTimeout(() => {
+//          rueda.classList.add('big');
+//        },10);
+// }
 
 function handleWinningPepe(gameOverScreen) {
-      audioManager.playAudio("pepe_wins", { play: true, volume: 0.2 });
-        gameOverScreen.innerHTML += `<h3>YOU WON!</h3> ¡Que Aproveches! `;
+    audioManager.playAudio("pepe_wins", { play: true, volume: 0.2 });
+    
+    
+    
+    gameOverScreen.innerHTML += ` <div class="gameOverText"><h3>YOU WON!</h3> ¡Que Aproveches! </div>`;
+
     let rueda = document.createElement('div');
-        rueda.classList.add('winningBG');
-       setTimeout(() => {
-         rueda.classList.add('big');
-       },1000);
+    rueda.classList.add('winningBG');
+    gameOverScreen.appendChild(rueda); 
+
+    setTimeout(() => {
+        rueda.classList.add('big');
+        includeReplayButton(gameOverScreen, "win");
+    }, 10);
 }
 
 
-function includeReplayButton(gameOverScreen) {
+
+// function includeReplayButton(gameOverScreen, status) {
     
-                  gameOverScreen.innerHTML += `<div class="gameOverText"><h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!</div>
-                 <div id="retry" class="replayButton"></div>`;
+//                   gameOverScreen.innerHTML += `
+//                  <div id="retry" class="replayButton"></div>`;
      
-    let replay = document.getElementById("retry");
+//     let replay = document.getElementById("retry");
+//     console.log("1 Replay gefunden?", replay);
 
+//     if (status === "lose"){
+//          console.log("lose Replay gefunden?", replay);
+//         replay.classList.add("lose");
+//     } else {
+//         console.log("win Replay gefunden?", replay);
+//     replay.classList.add("win");
+//     };
     
-    replay.onclick = function (){
+//     replay.onclick = function (){
+// console.log("reload Replay gefunden?", replay);
+//        location.reload(); // Reload the page to restart the game
+//     }
+    
+// }
 
-       location.reload(); // Reload the page to restart the game
-    }
-    
+function includeReplayButton(gameOverScreen, status) {
+    let replay = document.createElement("div");
+    replay.id = "retry";
+    replay.classList.add("replayButton", status === "lose" ? "lose" : "win");
+    replay.addEventListener("click", () => {
+        console.log("Replay clicked!"); // ← sollte erscheinen
+        location.reload();
+    });
+
+    gameOverScreen.appendChild(replay);
 }
+
+

@@ -69,6 +69,7 @@ class Endboss extends MovableObject {
     this.loadImages(Endboss.IMAGES_ATTACK);
     this.loadImages(Endboss.IMAGES_HURT);
     this.loadImages(Endboss.IMAGES_DEAD);
+ 
     this.type = "endboss";
     this.world = world;
     this.EndBossClose = false;
@@ -78,7 +79,7 @@ class Endboss extends MovableObject {
 
     this.animateWalk();
 
-    this.x = 3800;
+    this.x = 2800; // ZURÜCKSETZEN AUF 3800 WENN #DEBUGGING VORBEI IST
   }
 
 
@@ -112,19 +113,46 @@ animateAttack() {
     this.animateAttackInterval = setInterval(() => {
         if (gamePaused) return;
         this.playAnimation(Endboss.IMAGES_ATTACK);
-        if (this.currentIMG % Endboss.IMAGES_ATTACK.length === 5) {
+        if (this.currentImage % Endboss.IMAGES_ATTACK.length === 5) {
             this.x -= jumpDistance;
         }
     }, 3000 / 25);
 }
 
-  animateDeath() {
-    this.isDead = true;
-    this.deathHandled = false; 
-    this.playAnimation(Endboss.IMAGES_DEAD);
- this.audio.controlAudio("endbossBackground", { play: false, pause: true});
+animateDeath() {
+  this.audio.controlAudio("endbossBackground", { play: false, pause: true});
+    if (!this.deathHandled) {
+        this.deathHandled = true;
+        this.isDead = true;
+        this.currentImage = 0;
+        gamePaused = true;
+        this.disableKeyboard();
+            this.animateDeathInterval = setInterval(() => {
+                 this.playAnimation(Endboss.IMAGES_DEAD);
+                 console.log("Current Image:", this.currentImage);
+            if (this.moduloCurrentImage(Endboss.IMAGES_DEAD) === Endboss.IMAGES_DEAD.length - 1) {
+                          clearInterval(this.animateDeathInterval);    
+          
+                    this.world.handleGameOver("Endboss");
+            }
+             }, 100);
+    }
+}
 
-  }
+
+  moduloCurrentImage(images) {
+    let i = this.currentImage % images.length;
+    return i; 
+}
+
+
+//   animateDeath() {
+//     this.isDead = true;
+//     this.deathHandled = false; 
+//     this.playAnimation(Endboss.IMAGES_DEAD);
+//  this.audio.controlAudio("endbossBackground", { play: false, pause: true});
+
+//   }
 
 // animateDeath() {
 //     if (this.isDead) return;

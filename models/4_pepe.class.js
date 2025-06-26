@@ -60,7 +60,7 @@ class Pepe extends MovableObject {
   deathHandled = false; // Flag to check if death animation has been handled
   animateWalkInterval;
   animateDeathInterval;
-  timeToSleep = 60000;
+  timeToSleep = 20000;
   keyboard;
   cameraX;
   speed = 20;
@@ -83,7 +83,7 @@ class Pepe extends MovableObject {
     this.loadImages(Pepe.IMAGES_HURT);
     this.loadImages(Pepe.IMAGES_SLEEPING);
     this.audio = audioManager;
-    
+    // this.currentImage = 0;
     this.animateWalk();
     this.applyGravity();
     this.listenForKeyPress(this.lastKeyPressTime);
@@ -110,7 +110,7 @@ class Pepe extends MovableObject {
 
         this.world.cameraX = -this.x + 100;
       
-    }, 3000 / 25);
+    }, 2000 / 25);
 }
 
   listenForKeyPress(lastKeyPressTime) {
@@ -185,14 +185,32 @@ class Pepe extends MovableObject {
 
   }
 
-  animateDeath() {
-    this.isDead = true;
-    this.deathHandled = false; 
-    this.playAnimation(Pepe.IMAGES_DYING);
-    this.audio.controlAudio("pepe_snore", { pause: true, currentTime: 0 });
+animateDeath() {
+    if (!this.deathHandled) {
+        this.deathHandled = true;
+        this.isDead = true;
+        this.currentImage = 0;
+        gamePaused = true;
+        this.disableKeyboard();
+            this.animateDeathInterval = setInterval(() => {
+                 this.playAnimation(Pepe.IMAGES_DYING);
+                 console.log("Current Image:", this.currentImage);
+            if (this.moduloCurrentImage(Pepe.IMAGES_DYING) === Pepe.IMAGES_DYING.length - 1) {
+                          clearInterval(this.animateDeathInterval);    
+          
+                    this.world.handleGameOver("Pepe");
+            
+    
+          
+            }
+             }, 100);
+    }
+}
 
-  }
-
+moduloCurrentImage(images){
+  let i =  this.currentImage % images.length;
+  return i;
+}
 
 // animateDeath() {
 //     if (!this.isDead) {

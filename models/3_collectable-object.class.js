@@ -7,7 +7,7 @@ class CollectableObject extends DrawableObject {
   //CountableItem = 0;
   audio;
   images = [];
-  currentIMG = 0;
+  currentImage = 0;
   world;
   level;
   count = 50;
@@ -143,12 +143,12 @@ class CollectableObject extends DrawableObject {
   animateThings(images) {
     if (this.kindof === "bottle" || this.kindof === "coin") {
       this.images = images;
-      let i = this.currentIMG % this.images.length;
+      let i = this.currentImage % this.images.length;
       let path = this.images[i];
       if (this.imgCache[path]) {
         this.img = this.imgCache[path];
       }
-      this.currentIMG++;
+      this.currentImage++;
     }
   }
 

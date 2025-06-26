@@ -8,7 +8,7 @@ class DrawableObject {
     img;
     imgCache = {};
     audioCache = {};
-    currentIMG = 0;
+    currentImage = 0;
     itemCounter = 0;
     factor = 1;
     

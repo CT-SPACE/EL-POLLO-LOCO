@@ -12,6 +12,8 @@ class MovableObject extends DrawableObject {
   offset;
   gravityInterval;
   gamePaused = false;
+  imgCache = {};
+  currentImage = 0;
   // gameRestarted = false; // Flag to check if the game has been restarted
  isDead = false;
   
@@ -223,38 +225,65 @@ hit(attacker) {
 //     this.currentIMG++;
 // }
 
+// playAnimation(images) {
+//     this.images = images;
+//     let i = this.currentIMG % this.images.length;
+//     let frame = this.images[i];
+//     let imagePath = typeof frame === "string" ? frame : frame.src;
+//     this.img = this.imgCache[imagePath]; // Bild immer setzen
+
+//     const isEndbossDeathAnimation = this instanceof Endboss && this.images === Endboss.IMAGES_DEAD;
+//     const isLastFrame =
+//         (this instanceof Pepe && i === Pepe.IMAGES_DYING.length - 2) ||
+//         (isEndbossDeathAnimation && !!frame.lastFrame);
+
+//     if (this.isDead && isLastFrame) {
+//         this.currentIMG = i; // Nicht weiterzählen
+
+//         if (!this.deathHandled) {
+//             this.deathHandled = true;
+//             gamePaused = true;
+//             this.disableKeyboard();
+
+//             const deathCharacter = this instanceof Pepe ? "Pepe" : "Endboss";
+//                 this.world.handleGameOver(deathCharacter);
+//         }
+
+//     } else{
+
+//           this.currentIMG++; // Nur wenn kein Stopp
+//     }
+
+
+
 playAnimation(images) {
-    this.images = images;
-    let i = this.currentIMG % this.images.length;
-    let frame = this.images[i];
-    let imagePath = typeof frame === "string" ? frame : frame.src;
-    this.img = this.imgCache[imagePath]; // Bild immer setzen
+ this.images = images; 
+  let i = this.currentImage % this.images.length;
+     let frame = this.images[i];
+  let path = typeof frame === "string" ? frame : frame.src;
 
-    const isEndbossDeathAnimation = this instanceof Endboss && this.images === Endboss.IMAGES_DEAD;
-    const isLastFrame =
-        (this instanceof Pepe && i === Pepe.IMAGES_DYING.length - 2) ||
-        (isEndbossDeathAnimation && !!frame.lastFrame);
-
-    if (this.isDead && isLastFrame) {
-        this.currentIMG = i; // Nicht weiterzählen
-
-        if (!this.deathHandled) {
-            this.deathHandled = true;
-            gamePaused = true;
-            this.disableKeyboard();
-
-            const deathCharacter = this instanceof Pepe ? "Pepe" : "Endboss";
-                this.world.handleGameOver(deathCharacter);
-        }
-
-    } else{
-
-          this.currentIMG++; // Nur wenn kein Stopp
-    }
-
-
+ 
+    this.img = this.imgCache[path];
+  this.currentImage++;
 }
 
+playAnimation(images) {
+    
+    this.images = images;
+
+
+
+    let i = this.currentImage % this.images.length;
+    let frame = this.images[i];
+
+    // Bildpfad extrahieren (String oder Objekt)
+    let path = typeof frame === "string" ? frame : frame.src;
+
+        this.img = this.imgCache[path];
+
+
+    this.currentImage++;
+}
 
 
 
