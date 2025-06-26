@@ -79,7 +79,7 @@ class Endboss extends MovableObject {
 
     this.animateWalk();
 
-    this.x = 2800; // ZURÜCKSETZEN AUF 3800 WENN #DEBUGGING VORBEI IST
+    this.x = 3800; // ZURÜCKSETZEN AUF 3800 WENN #DEBUGGING VORBEI IST
   }
 
 

@@ -194,31 +194,6 @@ async function preloadAudio() {
   ]);
 }
 
-// async function preloadImages() {
-//   await fastPreload();
-//   return Promise.all(
-//     imagePaths.map(
-//       (path) =>
-//         new Promise((resolve, reject) => {
-//           let IMG = new Image();
-//           IMG.src = path;
-//           let loadedCount = 0;
-//           IMG.onload = () => {
-//             loadedCount++;
-//             // console.log(
-//             //   `Bild geladen: ${path} (${loadedCount}/${imagePaths.length})`
-//             // );
-//             resolve({ path, IMG });
-//           };
-
-//           IMG.onerror = () => {
-//             console.error(`Fehler beim Laden des Bildes: ${path}`);
-//             reject();
-//           };
-//         })
-//     )
-//   );
-// }
 
 async function preloadImages() {
   await fastPreload();
