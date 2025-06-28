@@ -1,10 +1,4 @@
 class Keyboard {
-    // LEFT = 37;  // Key code for left arrow
-    // RIGHT = 39;
-    // UP = 38;
-    // DOWN = 40;
-    // SPACE = 32;
-    // ENTER = 13;
 
     LEFT = false;  
     RIGHT = false;
@@ -17,6 +11,5 @@ class Keyboard {
 
   constructor() {
     this.name = 'Keyboard';
-    // console.log('Keyboard', this);
   }
 }

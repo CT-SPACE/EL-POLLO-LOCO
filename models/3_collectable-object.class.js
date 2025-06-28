@@ -4,7 +4,6 @@ class CollectableObject extends DrawableObject {
   width = 100;
   height = 100;
   audioManager;
-  //CountableItem = 0;
   audio;
   images = [];
   currentImage = 0;
@@ -28,20 +27,10 @@ class CollectableObject extends DrawableObject {
   constructor(kindof, count, x, y, height, width, distanceX, Row2Probability) {
     super();
 
-    // this.audio = new AudioManager();
     this.audio = audioManager;
 
-    this.kindof = kindof; // Art des Objekts (bottle oder coin)
-
-    if (kindof === "coin") {
-      this.loadImages(CollectableObject.COINS_BLINKING);
-      this.img = this.imgCache[CollectableObject.COINS_BLINKING[0]];
-      this.offset = { left: 30, right: 30, top: 30, bottom: 30 };
-    } else if (kindof === "bottle") {
-      this.loadImages(CollectableObject.BOTTLE_GROUND);
-      this.img = this.imgCache[CollectableObject.BOTTLE_GROUND[0]];
-      this.offset = { left: 60, right: 5, top: 5, bottom: 5 };
-    }
+    this.kindof = kindof; 
+    this.kindofCollectableObject(this.kindof);
 
     this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
     this.y = y;
@@ -50,34 +39,37 @@ class CollectableObject extends DrawableObject {
     this.animateBasedOnKind(); // Animation starten
   }
 
+  kindofCollectableObject(kindof){
+    if (kindof === "coin") {
+      this.loadImages(CollectableObject.COINS_BLINKING);
+      this.img = imgCache[CollectableObject.COINS_BLINKING[0]];
+      this.offset = { left: 30, right: 30, top: 30, bottom: 30 };
+    } else if (kindof === "bottle") {
+      this.loadImages(CollectableObject.BOTTLE_GROUND);
+      this.img = imgCache[CollectableObject.BOTTLE_GROUND[0]];
+      this.offset = { left: 60, right: 5, top: 5, bottom: 5 };
+    }
+    }
+
+
   static createCoins(count, distanceX, Row2Probability) {
     let coins = [];
     this.height = 100;
     this.width = 100;
-    const yRow1 = 280; // Y-Koordinate für Ebene 1
-    const yRow2 = 150; // Ebene 2 liegt höher
-    //console.log("yRow2", yRow2, yRow1);
-    let coinsPerRow = Math.ceil(count); // Coins auf Reihen verteilen
+    const yRow1 = 280; 
+    const yRow2 = 150;
+    let coinsPerRow = Math.ceil(count); 
 
     for (let row = 0; row < 2; row++) {
       for (let i = 0; i < coinsPerRow; i++) {
         let index = row * coinsPerRow + i;
-        if (index >= count) break; // Verhindert Überschuss an Coins
+        if (index >= count) break; 
 
         let x = i * distanceX + 110;
         let y = Math.random() < Row2Probability ? yRow2 : yRow1;
 
         coins.push(
-          new CollectableObject(
-            "coin",
-            count,
-            x,
-            y,
-            this.height,
-            this.width,
-            distanceX,
-            Row2Probability
-          )
+          new CollectableObject("coin",count,x,y, this.height, this.width, distanceX, Row2Probability)
         );
       }
     }
@@ -89,32 +81,21 @@ class CollectableObject extends DrawableObject {
     let bottles = [];
     this.height = 70;
     this.width = 70;
-    let y = 380; // Y-Koordinate
-    // console.log("createBottles - bottlesCount:", bottlesCount);
+    let y = 380; 
 
     for (let i = 0; i < bottlesCount; i++) {
       if (i >= bottlesCount) break;
 
-      let x = Math.random() * (3400 - 100) + 100; // Berechnung der X-Koordinate
+      let x = Math.random() * (3400 - 100) + 100; 
 
       bottles.push(
-        new CollectableObject(
-          "bottle",
-          bottlesCount,
-          x,
-          y,
-          this.height,
-          this.width,
-          distanceX
-        )
+        new CollectableObject("bottle", bottlesCount, x, y, this.height, this.width, distanceX)
       );
     }
-    // console.log("Initialisierte Flaschen:", bottles.length);
     return bottles;
   }
 
   checkForBottleCollisions(character, bottles) {
-    // console.log("checkForBottleCollisions - bottles:", bottles);
     this.bottles = bottles;
 
     this.character = character;
@@ -122,7 +103,6 @@ class CollectableObject extends DrawableObject {
       this.bottles.forEach((bottle, index) => {
         if (this.character.isColliding(bottle)) {
           this.bottles.splice(index, 1);
-          // console.log("CheckforBottleCollisions", this.bottles);
         }
       });
     }, 500);
@@ -145,8 +125,8 @@ class CollectableObject extends DrawableObject {
       this.images = images;
       let i = this.currentImage % this.images.length;
       let path = this.images[i];
-      if (this.imgCache[path]) {
-        this.img = this.imgCache[path];
+      if (imgCache[path]) {
+        this.img = imgCache[path];
       }
       this.currentImage++;
     }

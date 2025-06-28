@@ -56,10 +56,10 @@ class Endboss extends MovableObject {
     "./img/4_enemie_boss_chicken/4_hurt/G23.png",
   ];
   static IMAGES_DEAD = [
-    {src:"./img/4_enemie_boss_chicken/5_dead/G24.png", lastFrame: false},
-    {src:"./img/4_enemie_boss_chicken/5_dead/G25.png",lastFrame: false},
-    {src:"./img/4_enemie_boss_chicken/5_dead/G26.png",lastFrame: false},
-    {src:"./img/4_enemie_boss_chicken/5_dead/G27.png",lastFrame: true}
+    { src: "./img/4_enemie_boss_chicken/5_dead/G24.png", lastFrame: false },
+    { src: "./img/4_enemie_boss_chicken/5_dead/G25.png", lastFrame: false },
+    { src: "./img/4_enemie_boss_chicken/5_dead/G26.png", lastFrame: false },
+    { src: "./img/4_enemie_boss_chicken/5_dead/G27.png", lastFrame: true },
   ];
 
   constructor(world) {
@@ -69,7 +69,7 @@ class Endboss extends MovableObject {
     this.loadImages(Endboss.IMAGES_ATTACK);
     this.loadImages(Endboss.IMAGES_HURT);
     this.loadImages(Endboss.IMAGES_DEAD);
- 
+
     this.type = "endboss";
     this.world = world;
     this.EndBossClose = false;
@@ -79,9 +79,8 @@ class Endboss extends MovableObject {
 
     this.animateWalk();
 
-    this.x = 3800; // ZURÜCKSETZEN AUF 3800 WENN #DEBUGGING VORBEI IST
+    this.x = 3800;
   }
-
 
   animateWalk() {
     clearInterval(this.animateAttackInterval);
@@ -104,86 +103,47 @@ class Endboss extends MovableObject {
     }, 2000 / 25);
   }
 
-animateAttack() {
+  animateAttack() {
     clearInterval(this.animateWalkInterval);
     clearInterval(this.animateAlertInterval);
     if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
 
     let jumpDistance = 40;
     this.animateAttackInterval = setInterval(() => {
-        if (gamePaused) return;
-        this.playAnimation(Endboss.IMAGES_ATTACK);
-        if (this.currentImage % Endboss.IMAGES_ATTACK.length === 5) {
-            this.x -= jumpDistance;
-        }
+      if (gamePaused) return;
+      this.playAnimation(Endboss.IMAGES_ATTACK);
+      if (this.currentImage % Endboss.IMAGES_ATTACK.length === 5) {
+        this.x -= jumpDistance;
+      }
     }, 3000 / 25);
-}
+  }
 
-animateDeath() {
-  this.audio.controlAudio("endbossBackground", { play: false, pause: true});
+  animateDeath() {
+    this.audio.controlAudio("endbossBackground", { play: false, pause: true });
     if (!this.deathHandled) {
-        this.deathHandled = true;
-        this.isDead = true;
-        this.currentImage = 0;
-        gamePaused = true;
-        this.disableKeyboard();
-            this.animateDeathInterval = setInterval(() => {
-                 this.playAnimation(Endboss.IMAGES_DEAD);
-                 console.log("Current Image:", this.currentImage);
-            if (this.moduloCurrentImage(Endboss.IMAGES_DEAD) === Endboss.IMAGES_DEAD.length - 1) {
-                          clearInterval(this.animateDeathInterval);    
-          
-                    this.world.handleGameOver("Endboss");
-            }
-             }, 100);
+      this.deathHandled = true;
+      this.isDead = true;
+      this.currentImage = 0;
+      gamePaused = true;
+      this.disableKeyboard();
+      this.animateDeathInterval = setInterval(() => {
+        this.playAnimation(Endboss.IMAGES_DEAD);
+        if (this.moduloCurrentImage(Endboss.IMAGES_DEAD) === Endboss.IMAGES_DEAD.length - 1) {
+          clearInterval(this.animateDeathInterval);
+          this.world.handleGameOver("Endboss");
+        }
+      }, 100);
     }
-}
-
+  }
 
   moduloCurrentImage(images) {
     let i = this.currentImage % images.length;
-    return i; 
-}
-
-
-//   animateDeath() {
-//     this.isDead = true;
-//     this.deathHandled = false; 
-//     this.playAnimation(Endboss.IMAGES_DEAD);
-//  this.audio.controlAudio("endbossBackground", { play: false, pause: true});
-
-//   }
-
-// animateDeath() {
-//     if (this.isDead) return;
-//     this.isDead = true;
-//     this.deathHandled = false; 
-//      this.status = false;
-//     clearInterval(this.animateWalkInterval);
-//     clearInterval(this.animateAttackInterval);
-//     clearInterval(this.animateAlertInterval);
-
-//     let deathFrame = 0;
-//     this.deathInterval = setInterval(() => {
-//         if (deathFrame < Endboss.IMAGES_DEAD.length) {
-//             this.img = this.imgCache[Endboss.IMAGES_DEAD[deathFrame]];
-//             deathFrame++;
-//         } else {
-//             clearInterval(this.deathInterval);
-//             this.status = false;
-//              this.audio.playAudio("endbossBackground", { play: false, pause: true});
-//         }
-//     }, 500); 
-   
-//     this.speed = 0;
-//     // audio.controlAudio("endboss_attack", {play: false, pause: true, currentTime: 0});
-//     this.audio.playAudio("endbossBackground", {play: false, pause: true});
-// }
-
+    return i;
+  }
 
   isAttacking(status) {
     if (status === true) {
-       this.audio.playAudio("endboss_attack", {play: true});
+      this.audio.playAudio("endboss_attack", { play: true });
       return true;
     } else {
       this.audio.controlAudio("endboss_attack", {
@@ -195,12 +155,12 @@ animateDeath() {
     }
   }
 
-startAttackMode() {
+  startAttackMode() {
     this.status = true;
     this.isAttacking(this.status);
     if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
     this.animateAttack();
-}
+  }
 
   isAlert() {
     return (
@@ -208,28 +168,20 @@ startAttackMode() {
     );
   }
 
-animateHurt() {
+  animateHurt() {
     clearInterval(this.animateAttackInterval);
     clearInterval(this.animateWalkInterval);
     clearInterval(this.animateAlertInterval);
 
     if (this.animateHurtInterval) clearInterval(this.animateHurtInterval);
-
-    let hurtFrame = 0;
-    this.animateHurtInterval = setInterval(() => {
+      let hurtFrame = 0;
+      this.animateHurtInterval = setInterval(() => {
         if (this.isDead) {
-
-            clearInterval(this.animateHurtInterval);
-            return;
+          clearInterval(this.animateHurtInterval);
+          return;
         }
-        this.img = this.imgCache[Endboss.IMAGES_HURT[hurtFrame]];
-        hurtFrame = (hurtFrame + 1) % Endboss.IMAGES_HURT.length; // Endlos-Schleife
-
+      this.img = imgCache[Endboss.IMAGES_HURT[hurtFrame]];
+      hurtFrame = (hurtFrame + 1) % Endboss.IMAGES_HURT.length;
     }, 500);
-}
-
-
-  
-
-
+  }
 }

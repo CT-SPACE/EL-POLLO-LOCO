@@ -45,7 +45,6 @@ class Pepe extends MovableObject {
     "./img/2_character_pepe/1_idle/long_idle/I-20.png",
   ];
 
-
   isPlayingHurtAudio = false;
 
   x = 0;
@@ -90,28 +89,24 @@ class Pepe extends MovableObject {
     this.isPlayingHurtAudio = false;
     this.animateStates();
   }
-  
 
   animateWalk() {
     this.x = 100;
 
-     this.animateWalkInterval = setInterval(() => {
-         if (this.energy <= 0) return;
-
-        if (keyboard.RIGHT && this.x < this.world.level.level_endX) {
-          this.handleRightMovement();
+    this.animateWalkInterval = setInterval(() => {
+      if (this.energy <= 0) return;
+      if (keyboard.RIGHT && this.x < this.world.level.level_endX) {
+        this.handleRightMovement();
       }
-        if (keyboard.LEFT && this.x > 100) {
-          this.handleLeftMovement();
-        }
-        if ((keyboard.UP || keyboard.SPACE) && this.y >= 100) {
-          this.jump();
-        }
-
-        this.world.cameraX = -this.x + 100;
-      
+      if (keyboard.LEFT && this.x > 100) {
+        this.handleLeftMovement();
+      }
+      if ((keyboard.UP || keyboard.SPACE) && this.y >= 100) {
+        this.jump();
+      }
+      this.world.cameraX = -this.x + 100;
     }, 2000 / 25);
-}
+  }
 
   listenForKeyPress(lastKeyPressTime) {
     this.lastKeyPressTime = lastKeyPressTime;
@@ -124,22 +119,21 @@ class Pepe extends MovableObject {
     });
   }
 
-  handleRightMovement(){
-             this.stopSleepAnimation();
-          this.playAnimation(Pepe.IMAGES_WALKING);
-          // this.otherDirection = false;
-          this.moveRight();
-          if (!this.audio.audioPlaying["pepe_pollo"]) {
-             this.audio.playAudio("pepe_pollo", { loop: false, volume: 0.4 });
-           
-        }
+  handleRightMovement() {
+    this.stopSleepAnimation();
+    this.playAnimation(Pepe.IMAGES_WALKING);
+    // this.otherDirection = false;
+    this.moveRight();
+    if (!this.audio.audioPlaying["pepe_pollo"]) {
+      this.audio.playAudio("pepe_pollo", { loop: false, volume: 0.4 });
+    }
   }
 
-  handleLeftMovement(){
-          this.stopSleepAnimation();
-          this.playAnimation(Pepe.IMAGES_WALKING);
-          this.moveLeft(this.speed);
-          this.otherDirection = true;
+  handleLeftMovement() {
+    this.stopSleepAnimation();
+    this.playAnimation(Pepe.IMAGES_WALKING);
+    this.moveLeft(this.speed);
+    this.otherDirection = true;
   }
 
   stopSleepAnimation() {
@@ -150,7 +144,6 @@ class Pepe extends MovableObject {
       pause: true,
       currentTime: 0,
     });
-
   }
 
   animateStates() {
@@ -163,7 +156,6 @@ class Pepe extends MovableObject {
         this.animateHurt();
       } else if (this.isAboveGround()) {
         this.playAnimation(Pepe.IMAGES_JUMPING);
-
       } else if (Date.now() - this.lastKeyPressTime >= this.timeToSleep) {
         this.isSleepingState = true;
         this.animateSleep();
@@ -175,57 +167,46 @@ class Pepe extends MovableObject {
 
   animateSleep() {
     this.isSleepingState = true;
-
     this.playAnimation(Pepe.IMAGES_SLEEPING);
     if (!this.audio.audioPlaying["pepe_snore"]) {
       this.audio.playAudio("pepe_snore", { loop: true, volume: 0.4 });
       this.audio.audioPlaying["pepe_snore"] = true;
     }
-    this.audio.controlAudio("pepe_pollo", { play:false, pause: true, currentTime: 0 });
-
+    this.audio.controlAudio("pepe_pollo", {
+      play: false,
+      pause: true,
+      currentTime: 0,
+    });
   }
 
-animateDeath() {
+  animateDeath() {
     if (!this.deathHandled) {
-        this.deathHandled = true;
-        this.isDead = true;
-        this.currentImage = 0;
-        gamePaused = true;
-        this.disableKeyboard();
-            this.animateDeathInterval = setInterval(() => {
-                 this.playAnimation(Pepe.IMAGES_DYING);
-                 console.log("Current Image:", this.currentImage);
-            if (this.moduloCurrentImage(Pepe.IMAGES_DYING) === Pepe.IMAGES_DYING.length - 1) {
-                          clearInterval(this.animateDeathInterval);    
-          
-                    this.world.handleGameOver("Pepe");
-            
-    
-          
-            }
-             }, 100);
+      this.deathHandled = true;
+      this.isDead = true;
+      this.currentImage = 0;
+      gamePaused = true;
+      this.disableKeyboard();
+      this.animateDeathInterval = setInterval(() => {
+        this.intervalSettingForAnimateDeath();
+      }, 100);
     }
-}
+  }
 
-moduloCurrentImage(images){
-  let i =  this.currentImage % images.length;
-  return i;
-}
+  intervalSettingForAnimateDeath() {
+    this.playAnimation(Pepe.IMAGES_DYING);
+    if (
+      this.moduloCurrentImage(Pepe.IMAGES_DYING) ===
+      Pepe.IMAGES_DYING.length - 1
+    ) {
+      clearInterval(this.animateDeathInterval);
+      this.world.handleGameOver("Pepe");
+    }
+  }
 
-// animateDeath() {
-//     if (!this.isDead) {
-//         this.isDead = true;
-//         this.animateDeathInterval = setInterval(() => {
-//             if (this.IMAGES_DYING.length - 1) {
-//                 clearInterval(this.animateDeathInterval);
-//                 this.animateDeathInterval = null; // Wichtig für die Prüfung!
-//             } else {
-//                 this.playAnimation(this.IMAGES_DYING);
-//             }
-//         }, 100);
-//         this.audio.controlAudio("pepe_snore", { pause: true, currentTime: 0 });
-//     }
-// }
+  moduloCurrentImage(images) {
+    let i = this.currentImage % images.length;
+    return i;
+  }
 
   animateJump() {
     this.playAnimation(Pepe.IMAGES_JUMPING);
@@ -235,8 +216,11 @@ moduloCurrentImage(images){
     this.playAnimation(Pepe.IMAGES_HURT);
 
     if (!this.isPlayingHurtAudio) {
-      this.audio.playAudio("pepe_hurt", { play: true, volume: 0.5, loop: false });
-
+      this.audio.playAudio("pepe_hurt", {
+        play: true,
+        volume: 0.5,
+        loop: false,
+      });
     }
   }
 }

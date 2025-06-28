@@ -22,7 +22,7 @@ class World {
   endboss = new Endboss(this);
   chicken = new Chicken(this);
   minichicken = new MiniChicken(this);
-  // gameRestarted = false;
+
   bottles;
   collectedBottles = 0;
   countBottles = 15;
@@ -33,7 +33,7 @@ class World {
   constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
     this.cameraX = 0;
-    this.level = level;  
+    this.level = level;
 
     this.canvas = canvas;
     this.endboss.world = this;
@@ -41,16 +41,19 @@ class World {
     this.endbossOfEnemies.EndBossClose = false;
     this.isGameEnding = false;
     this.throwableObjects = [];
-    // this.enemies = this.level.enemies;
 
     this.canThrow = true;
     this.draw();
+    this.addObjectsForDraw();
     this.setWorld();
     this.run();
 
     this.checkThrowObjects();
   }
 
+  /**
+   * Create the World with all needed Components.
+   */
   setWorld() {
     this.character.keyboard = keyboard;
     this.character.world = this;
@@ -60,22 +63,20 @@ class World {
     this.statusBarPepe.world = this.statusBar;
   }
 
+  /**
+   * All Elements of the Game will be drawed on the canvas by this function
+   */
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.cameraX, 0);
-    try {
-      if (this.endbossOfEnemies.EndBossClose) {
-        this.handleEndbossCloseEffect();
-      // if (gamePaused) {
-      //   this.drawObjects();
-      //   requestAnimationFrame(() => this.draw());
-      //   return;
-      //     }
-      }
-    } catch {
-      return;
-    }
-
+    this.handleEndbossCloseEffect();
+    // try {
+    //   if (this.endbossOfEnemies.EndBossClose) {
+    //     this.handleEndbossCloseEffect();
+    //   }
+    // } catch {
+    //   return;
+    // }
     this.addToMap(this.background_static);
     this.ctx.filter = "none";
 
@@ -89,6 +90,7 @@ class World {
 
     this.addObjects(this.level.coins);
     this.addObjects(this.level.bottles);
+
     this.addToMap(this.character);
 
     this.ctx.translate(-this.cameraX, 0);
@@ -98,7 +100,6 @@ class World {
     this.addToMap(this.statusBarChilli);
 
     this.handleEndboss();
-    // this.checkGameOver()
 
     self = this;
     requestAnimationFrame(() => self.draw());
@@ -112,6 +113,30 @@ class World {
     }, 1000 / 60);
   }
 
+  addObjectsForDraw() {
+    this.addToMap(this.background_static);
+    this.ctx.filter = "none";
+
+    this.addObjects(this.level.clouds);
+    this.addObjects(this.level.background_moving);
+    this.addObjects(this.level.enemies);
+    this.throwableObjects = this.throwableObjects.filter(
+      (bottle) => !bottle.toBeRemoved
+    );
+    this.addObjects(this.throwableObjects);
+
+    this.addObjects(this.level.coins);
+    this.addObjects(this.level.bottles);
+
+    this.addToMap(this.character);
+
+    this.ctx.translate(-this.cameraX, 0);
+
+    this.addToMap(this.statusBarPepe);
+    this.addToMap(this.statusBarCoin);
+    this.addToMap(this.statusBarChilli);
+  }
+
   handleEndboss() {
     if (this.character.x > 3100 || this.EndBossVisible === true) {
       this.EndBossVisible = true;
@@ -123,7 +148,6 @@ class World {
       this.addToMap(this.statusBarEndboss);
       this.EndBossVisible = true;
       this.endbossOfEnemies.status = true;
-
     } else {
       this.endbossOfEnemies.status = false;
       this.endbossOfEnemies.EndBossClose = false;
@@ -132,9 +156,9 @@ class World {
   }
 
   handleEndbossCloseEffect() {
-    let flash = false;
+        try {
+      let flash = false;
     if (this.endbossOfEnemies.EndBossClose === true) {
-      // 8% Chance pro Frame für einen Blitz
       if (Math.random() < 0.008) {
         flash = true;
       }
@@ -142,12 +166,11 @@ class World {
 
     if (flash) {
       this.ctx.filter = "brightness(250%)";
-      
     } else if (
       this.endbossOfEnemies.status === true &&
       !this.endbossOfEnemies.isDead
     ) {
-       this.ctx.filter = "brightness(50%)";
+      this.ctx.filter = "brightness(50%)";
       if (
         audioManager.buffers["endbossBackground"] &&
         !audioManager.audioPlaying["endbossBackground"]
@@ -159,7 +182,7 @@ class World {
         });
       }
     } else if (this.endbossOfEnemies.isDead) {
-       flash = false;
+      flash = false;
       this.ctx.filter = "none";
       audioManager.controlAudio("endbossBackground", {
         play: false,
@@ -167,8 +190,11 @@ class World {
         currentTime: 0,
       });
     } else {
-       flash = false;
+      flash = false;
       this.ctx.filter = "none";
+    }
+     } catch {
+      return;
     }
   }
 
@@ -221,35 +247,31 @@ class World {
       this.level.enemies.forEach((enemy) => {
         if (enemy.type === "endboss") return;
         if (this.character.isColliding(enemy) && this.character.speedY < 0) {
-            if (enemy.type === "minichicken") {
-              enemy.animateBounce();
-              clearInterval(enemy.animateWalkInterval);
-              this.character.speedY = 40; 
-              this.character.speed = 30; 
-            } else {
-              enemy.animateDeath();
-              this.character.speedY = 20; // Standard-Sprunghöhe
-              this.character.speed = 20;
-            }
+          if (enemy.type === "minichicken") {
+            enemy.animateBounce();
+            clearInterval(enemy.animateWalkInterval);
+            this.character.speedY = 40;
+            this.character.speed = 30;
+          } else {
+            enemy.animateDeath();
+            this.character.speedY = 20; // Standard-Sprunghöhe
+            this.character.speed = 20;
           }
+        }
 
-            if (
-              this.character.isColliding(enemy) &&
-              this.character.energy > 0 &&
-              !this.character.isAboveGround()
-            ) {
-              this.character.hit(enemy);
-              this.statusBarPepe.setPercentage(this.character.energy);
-            }
+        if (
+          this.character.isColliding(enemy) &&
+          this.character.energy > 0 &&
+          !this.character.isAboveGround()
+        ) {
+          this.character.hit(enemy);
+          this.statusBarPepe.setPercentage(this.character.energy);
+        }
 
-            if (
-              this.character.isColliding(enemy) &&
-              this.character.energy == 0
-            ) {
-              return;
-            }
-          
-        });
+        if (this.character.isColliding(enemy) && this.character.energy == 0) {
+          return;
+        }
+      });
     }, 400);
 
     this.checkCollisionsCoins(this.character);
@@ -275,7 +297,6 @@ class World {
   }
 
   isPepeNearEndboss() {
-
     const endbossX = this.endbossOfEnemies
       ? this.endbossOfEnemies.x
       : undefined;
@@ -377,53 +398,49 @@ class World {
     });
   }
 
-// checkGameOver() {
-//     if (this.isGameEnding) return; // Prevent multiple triggers
+  // checkGameOver() {
+  //     if (this.isGameEnding) return; // Prevent multiple triggers
 
-//     const isDead = (obj, images) => 
-//         obj.currentIMG === images.length - 1;
+  //     const isDead = (obj, images) =>
+  //         obj.currentIMG === images.length - 1;
 
-//     if (isDead(this.character, Pepe.IMAGES_DYING) || 
-//         isDead(this.endbossOfEnemies, Endboss.IMAGES_DEAD)) {
-        
-//         this.isGameEnding = true;
-//         this.handleGameOver();
-//     }
-// }
+  //     if (isDead(this.character, Pepe.IMAGES_DYING) ||
+  //         isDead(this.endbossOfEnemies, Endboss.IMAGES_DEAD)) {
 
-handleGameOver(deathCandidate) {
+  //         this.isGameEnding = true;
+  //         this.handleGameOver();
+  //     }
+  // }
 
-      if (this.isGameEnding === true) return;
-        console.log("Game Over triggered for:", deathCandidate, this.isGameEnding);
+  handleGameOver(deathCandidate) {
+    if (this.isGameEnding === true) return;
+    console.log("Game Over triggered for:", deathCandidate, this.isGameEnding);
 
-          this.isGameEnding = true;
+    this.isGameEnding = true;
 
-        this.stopAllAnimations();
-        
-        setTimeout(() => {
-          showGameOverScreen(deathCandidate);
-          
-        }, 500);
-    }
+    this.stopAllAnimations();
 
-stopAllAnimations() {
-        // Stop all animations
-        this.character.stopAllIntervals();
-        this.endbossOfEnemies.stopAllIntervals();
-        this.level.enemies.forEach(enemy => enemy.stopAllIntervals());
-        
-        // Disable controls
-        keyboardEnabled = false;
-        gamePaused = true;
-        
-        // Stop sounds
-        audioManager.setMuted(true);
-        
-        // Update UI
-        togglePlay("content", true);
-    }
+    setTimeout(() => {
+      showGameOverScreen(deathCandidate);
+    }, 500);
+  }
 
+  stopAllAnimations() {
+    // Stop all animations
+    this.character.stopAllIntervals();
+    this.endbossOfEnemies.stopAllIntervals();
+    this.level.enemies.forEach((enemy) => enemy.stopAllIntervals());
 
+    // Disable controls
+    keyboardEnabled = false;
+    gamePaused = true;
+
+    // Stop sounds
+    audioManager.setMuted(true);
+
+    // Update UI
+    togglePlay("content", true);
+  }
 
   addObjects(objects) {
     objects.forEach((object) => {

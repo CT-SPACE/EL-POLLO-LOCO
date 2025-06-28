@@ -1,3 +1,8 @@
+/**
+ * Declaration of global variables and constants
+ * This file is responsible for initializing the game, loading assets, and managing the game state.
+ */
+
 let canvas;
 let world;
 let Level01;
@@ -14,13 +19,8 @@ let throwDuration;
 let gamePaused = true;
 let activeIndex = 0;
 let startScreen;
-// let gameRestarted = false;
+let imgCache = {};
 let letters = Array.from(document.querySelectorAll("#loader span"));
-// let IMAGES_SINGLES = [
-//   "./img/5_background/layers/air.png",
-//   "./img/5_background/Desierto-portada_con_pepe.jpg",
-//   "./img/paper-bg.png",
-// ];
 
 let IMAGES_FASTLOAD = [
   "./img/fondo_cactus.png",
@@ -29,137 +29,99 @@ let IMAGES_FASTLOAD = [
   "./img/5_background/layers/air.png",
   "./img/skelett_gallina.png",
   "./img/lightning.png",
+  "./img/2_character_pepe/1_idle/idle/I-1.png"
 ];
 
 let imagePaths = [
   ...movingBackground.IMAGES_MOVING,
-  ...ThrowableObject.IMAGES_BOTTLE_ROTATE,
-  ...ThrowableObject.IMAGES_BOTTLE_SPLASH,
   ...ThrowableObject.IMAGES_BOTTLE_ONGROUND,
-  ...StatusBarPepe.IMAGES_SALUD_PEPE,
-  ...StatusBarEndboss.IMAGES_SALUD_ENDBOSS,
-  ...StatusBarCoin.IMAGES_COIN,
-  ...StatusBarChilli.IMAGES_CHILLI,
+  ...Chicken.IMAGES_WALKING,
+  ...MiniChicken.IMAGES_WALKING,
   ...Pepe.IMAGES_WALKING,
   ...Pepe.IMAGES_JUMPING,
   ...Pepe.IMAGES_DYING,
   ...Pepe.IMAGES_HURT,
   ...Pepe.IMAGES_SLEEPING,
+  ...StatusBarPepe.IMAGES_SALUD_PEPE,
+  ...StatusBarCoin.IMAGES_COIN,
+  ...StatusBarChilli.IMAGES_CHILLI,
+  ...Clouds.IMAGES_MOVING,
+  ...ThrowableObject.IMAGES_BOTTLE_ROTATE,
+  ...ThrowableObject.IMAGES_BOTTLE_SPLASH,
+  ...MiniChicken.IMAGES_HIT,
+
+  ...StatusBarEndboss.IMAGES_SALUD_ENDBOSS,
   ...Endboss.IMAGES_ALERT,
   ...Endboss.IMAGES_WALK,
   ...Endboss.IMAGES_ATTACK,
   ...Endboss.IMAGES_HURT,
   ...Endboss.IMAGES_DEAD,
-  ...Clouds.IMAGES_MOVING,
-  ...Chicken.IMAGES_WALKING,
-  ...MiniChicken.IMAGES_WALKING,
-  ...MiniChicken.IMAGES_HIT,
 ];
 
+/**
+ * Starts the Init-Function after the DOM is fully loaded.
+ */
 document.addEventListener("DOMContentLoaded", async () => {
   await init();
 });
 
-// async function init() {
-//     await fastPreload();
-//     try {
-//         LoadingVisual();
-//     } catch (error) {
-//         console.error("Fehler in LoadingVisual:", error);
-//         return;
-//     }
-
-//     restoreSoundStatus();
-//     startScreen = true;
-
-//     await preloadAudio();
-//     try {
-//         await preloadImages();
-//     } catch (error) {
-//         console.error("Fehler beim Laden der Bilder:", error);
-//     }
-
-//     allAmbientSounds();
-// }
-
-// window.addEventListener("unhandledrejection", event => {
-//   console.error("Uncaught Promise Fehler:", event.reason);
-// });
-
+/**
+ * Initialises the game by loading assets and showing the start screen.
+ */
 async function init() {
-  // Starte den Ladevorgang
   await loadGameAssets();
-
-  // Zeige den Startbildschirm an
   showStartScreen();
 }
 
+/**
+ * Starts the Preloading of all game assets.
+ */
 async function loadGameAssets() {
-  // Lade alle Assets (Bilder, Sounds)
   await fastPreload();
   LoadingVisual();
-  await preloadAudio();
   await preloadImages();
+  await preloadAudio();
+  await initLevel();
+
 }
 
+/**
+ * Prepares the game by introducing the start screen, the audio and needed Buttons
+ */
 function showStartScreen() {
-
   restoreSoundStatus();
   startScreen = true;
   allAmbientSounds();
   hideLoaderAndShowPlayButton();
+
 }
 
+/**
+ * 
+ * @returns {Promise} A promise that resolves when all fast-loading images are preloaded.
+ */
 async function fastPreload() {
   return Promise.all(
     IMAGES_FASTLOAD.map((entry) =>
-        new Promise((resolve, reject) => { 
-          path = typeof entry === "string" ? entry : entry.src; // zusatz
+      new Promise((resolve, reject) => {
+        const path = typeof entry === "string" ? entry : entry.src;
 
-          let IMG = new Image();
-          IMG.src = path;
-          IMG.onload = () => resolve({ path, IMG });
-          IMG.onerror = reject;
-        })
+        const IMG = new Image();
+        IMG.onload = () => {
+          imgCache[path] = IMG;         // Cache speichern
+          resolve({ path, IMG });       // Promise auflösen
+        };
+        IMG.onerror = reject;
+        IMG.src = path;
+      })
     )
   );
 }
 
-// function saveInitialState() {
-//     const initialState = {
-//         character: {
-//             x: 120,
-//             y: 235,
-//             energy: 100,
-//             isDead: false,
-//             deathHandled: false,
-//             isPlayingHurtAudio: false,
-//             isPlayingWalkAudio: false,
-//             isSleepingState: false,
-//             otherDirection: false
-//         },
-//         world: {
-//             cameraX: 0,
-//             throwableObjects: [],
-//             collectedBottles: 0,
-//             isGameEnding: false,
-//             gameRestarted: false
-//         },
-//         endboss: {
-//             energy: 100,
-//             isDead: false,
-//             deathHandled: false
-//         },
-//         globals: {
-//             gamePaused: false,
-//             keyboardEnabled: true,
-//             EndBossClose: false,
-//             gameRestarted: false
-//         }
-//     };
-//     localStorage.setItem('elPolloLocoInitialState', JSON.stringify(initialState));
-// }
 
+/**
+ * Preloads all audio files used in the game.
+ */
 async function preloadAudio() {
   await Promise.all([
     audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3"),
@@ -194,41 +156,45 @@ async function preloadAudio() {
   ]);
 }
 
-
+/**
+ * 
+ * @returns #{Promise} A promise that resolves when all images are preloaded.
+ */
 async function preloadImages() {
-  await fastPreload();
-
   return Promise.all(
     imagePaths.map((entry) => {
       let path = typeof entry === "string" ? entry : entry.src;
-
       return new Promise((resolve, reject) => {
         let IMG = new Image();
         IMG.src = path;
-
         IMG.onload = () => {
-          resolve({ path, IMG });
+          imgCache[path] = IMG;
+          resolve();
         };
-
         IMG.onerror = () => {
           console.error(`Fehler beim Laden des Bildes: ${path}`);
           reject(new Error(`Bild konnte nicht geladen werden: ${path}`));
-        };
-      });
-    })
-  );
+        };}); }));
 }
 
-
+/**
+ * Pauses the Game Sound and stopps the ambient sounds.
+ */
 function pauseGameSounds() {
   audioManager.setMuted(true);
   allAmbientSounds();
 }
 
+/**
+ * Reactivates the Sound
+ */
 function resumeGameSounds() {
   audioManager.setMuted(false);
 }
 
+/**
+ * Starts the Ambient Sound of the Game
+ */
 function playAmbient() {
   audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3");
   audioManager.playAudio("pepe_ambient", { play: true, volume: 0.1 });
@@ -236,13 +202,16 @@ function playAmbient() {
   let duration =
     audioManager.buffers && audioManager.buffers["pepe_ambient"]
       ? audioManager.buffers["pepe_ambient"].duration * 1000
-      : 10000; // Fallback: 10 Sekunden
+      : 10000;
 
   setTimeout(() => {
-    setTimeout(playAmbient, 5000); // 5 Sekunden Pause nach dem Ende
+    setTimeout(playAmbient, 10000);
   }, duration);
 }
 
+/**
+ * Reacts to the sound status stored in the localstorage and applies it to the corresponding buttons.
+ */
 function applySoundStatus(isOn) {
   let soundIcon = document.getElementById("on-off");
   if (isOn) {
@@ -257,17 +226,28 @@ function applySoundStatus(isOn) {
   }
 }
 
+/**
+ * Toggles the sound status between on and off, updates the local storage, and applies the new status to the UI.
+ */
 function toggleSound() {
   let isOn = !getSoundStatus();
   setSoundStatus(isOn);
   applySoundStatus(isOn);
 }
 
+/**
+ * Restores the sound status from local storage and applies it to the UI.
+ */
 function restoreSoundStatus() {
   let isOn = getSoundStatus();
   applySoundStatus(isOn);
 }
 
+/**
+ * 
+ * @param {*} toggleSource Defines the source of the toggle action, e.g., "content" or "play".
+ * @param {*} value The value adds a condition to the toggle source to distinguish between play source with the value true or false
+ */
 function togglePlay(toggleSource, value) {
   let playDiv = document.getElementById("play");
   let playIcon = document.getElementById("switch");
@@ -290,16 +270,27 @@ function togglePlay(toggleSource, value) {
   }
 }
 
+/**
+ * 
+ * @param {*} isOn Saves the sound status in the local storage.
+ */
 function setSoundStatus(isOn) {
   localStorage.setItem("soundOn", isOn ? "true" : "false");
 }
 
+/**
+ * 
+ * @returns {boolean} Returns the sound status from local storage. If no value is set, it defaults to true.
+ */
 function getSoundStatus() {
   const value = localStorage.getItem("soundOn");
   if (value === null) return true;
   return value === "true";
 }
 
+/**
+ * An Ambient Sound is a sound that plays during a time that does not stop by itself.
+ */
 function allAmbientSounds() {
   playAmbient();
 
@@ -312,6 +303,9 @@ function allAmbientSounds() {
   }
 }
 
+/**
+ * When the Start Game Button is shown, the Loader will be hidden
+ */
 function hideLoaderAndShowPlayButton() {
   const loaderContainer = document.getElementById("loader");
 
@@ -328,6 +322,9 @@ function hideLoaderAndShowPlayButton() {
   letsPlay();
 }
 
+/**
+ * Gives the Loading Visual a nice effect by animating the letters of the text "LOADING ...".
+ */
 function LoadingVisual() {
   const loaderText = "LOADING ...";
   const loaderContainer = document.getElementById("loader");
@@ -338,7 +335,7 @@ function LoadingVisual() {
   chars.forEach((char, index) => {
     const span = document.createElement("span");
     span.textContent = char;
-    span.style.animationDelay = `${index * 0.2}s`; // Verzögerung für jedes Zeichen
+    span.style.animationDelay = `${index * 0.2}s`;
     loaderContainer.appendChild(span);
 
     setTimeout(() => {
@@ -347,10 +344,12 @@ function LoadingVisual() {
   });
 }
 
+/**
+ * Defines the functionality how to start the game by pressing the Enter-key or clicking the Play-Button
+ */
 function letsPlay() {
   let startGame = document.getElementById("startGame");
   document.addEventListener("keydown", (e) => {
-    // console.log(e);
     if (e.code == "Enter") {
       keyboard.ENTER = true;
       playConditions("initial");
@@ -362,17 +361,17 @@ function letsPlay() {
   });
 }
 
+/**
+ * 
+ * @param {*} origin Prepares all conditions that are needed to start the game, e.g. activate the canvas, starts the world, initializes the level, activates the audio context, etc.
+ */
 async function playConditions(origin) {
-  // gameRestarted = false;
   if (origin !== "initial") {
     document.getElementById("gameOverScreen").classList.add("displayNone");
   }
-  document.getElementById("startScreen").style.display = "none";
-  document.getElementById("subText").classList.add("displayNone");
-  document.getElementById("stayHeadline").classList.add("headline");
-document.getElementById("play").style.display = "";
+  prepareStylesForPlayConditions();
 
-  await initLevel();
+  // await initLevel();
   canvas = document.getElementById("canvas");
   canvas.focus();
 
@@ -380,219 +379,30 @@ document.getElementById("play").style.display = "";
     console.error("Fehler: Level01 ist nicht initialisiert!");
   } else {
     window.world = new World(canvas, Level01);
-    //  saveInitialState();
-    //  gameRestarted = false;
-    // }
     togglePlay("play", true);
-    // audio.activateAudioContext();
 
     if (!audioManager.audioContext) {
       activateAudioContext();
-      // console.log("AudioContext gestartet:", audioManager.audioContext.state);
     }
   }
 }
 
+/**
+ * Help function for playCondition() to prepare the styles.
+ */
+function prepareStylesForPlayConditions() {
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("subText").classList.add("displayNone");
+  document.getElementById("stayHeadline").classList.add("headline");
+  document.getElementById("play").style.display = "";
+}
 
-// function reset() {
-//     // Reset game state
-//     gamePaused = false;
-//     keyboardEnabled = true;
-//     gameRestarted = true;
-//     EndBossClose = false;
-
-//     if (window.world && window.world.character) {
-//         // Stop ALL audio first
-//         Object.keys(audioPlaying).forEach(sound => {
-//             audioManager.controlAudio(sound, { 
-//                 pause: true, 
-//                 currentTime: 0 
-//             });
-//             audioPlaying[sound] = false;
-//         });
-        
-//         // Reset audio system
-//         audioManager.stopAllSounds();
-        
-//         // Reset character audio states
-//         window.world.character.isPlayingHurtAudio = false;
-//         window.world.character.isPlayingWalkAudio = false; // If this exists
-        
-//         // Reset character states
-//         window.world.character.isDead = false;
-//         window.world.character.deathHandled = false;
-//         window.world.character.energy = 100;
-//         window.world.character.isSleepingState = false;
-        
-//         console.log('Audio states after reset:', {
-//             audioPlaying,
-//             isHurt: window.world.character.isPlayingHurtAudio,
-//             isSleeping: window.world.character.isSleepingState
-//         });
-//     }
-// }
-
-// async function restoreInitialState() {
-//     const savedState = JSON.parse(localStorage.getItem('elPolloLocoInitialState'));
-    
-//     if (!savedState) {
-//         console.error('No saved state found');
-//         return false;
-//     }
-
-//     return new Promise((resolve) => {
-//         const maxAttempts = 10;
-//         let attempts = 0;
-        
-//         const tryRestore = () => {
-//             if (window.world && window.world.character) {
-//                 try {
-//                     // Restore character state
-//                     world.character.x = savedState.character.x;
-//                     world.character.y = savedState.character.y;
-//                     world.character.energy = savedState.character.energy;
-//                     world.character.isDead = savedState.character.isDead;
-//                     world.character.deathHandled = savedState.character.deathHandled;
-//                     world.character.isPlayingHurtAudio = savedState.character.isPlayingHurtAudio;
-//                     world.character.isPlayingWalkAudio = savedState.character.isPlayingWalkAudio;
-//                     world.character.isSleepingState = savedState.character.isSleepingState;
-//                     world.character.otherDirection = savedState.character.otherDirection;
-                    
-//                     // Restore world state
-//                     world.cameraX = savedState.world.cameraX;
-//                     world.throwableObjects = [];
-//                     world.isGameEnding = savedState.world.isGameEnding;
-                    
-//                     // Restore global states
-//                     gamePaused = savedState.globals.gamePaused;
-//                     keyboardEnabled = savedState.globals.keyboardEnabled;
-//                     EndBossClose = savedState.globals.EndBossClose;
-//                     gameRestarted = savedState.globals.gameRestarted;
-                    
-//                     console.log('Game state restored successfully');
-//                     resolve(true);
-//                 } catch (error) {
-//                     console.error('Error in state restoration:', error);
-//                     resolve(false);
-//                 }
-//             } else if (attempts < maxAttempts) {
-//                 attempts++;
-//                 console.log(`Waiting for character to initialize (attempt ${attempts})`);
-//                 setTimeout(tryRestore, 100);
-//             } else {
-//                 console.error('Character not initialized after maximum attempts');
-//                 resolve(false);
-//             }
-//         };
-        
-//         tryRestore();
-//     });
-// }
-
-// async function restartGame() {
-
-//   reset();
-//   // window.world.character.isDead = false;
-//   // window.world.character.deathHandled = false;
-//   // window.world.endboss.isDead = false;
-//   // window.world.endboss.deathHandled = false;
-//   // console.log("Starting restart, gameRestarted:", gameRestarted);
-//   // gameRestarted = true;
-//   // console.log("Set gameRestarted to true");
-//   // EndBossClose = false;
-
-//   Level01 = null;
-//   level = null;
-
-//   canvas = document.getElementById("canvas");
-//   canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-//   canvas.focus();
-//   keyboardEnabled = true;
-
-//   // Reset audio
-//   audioManager.setMuted(false);
-//   audioManager.activateAudioContext();
-
-//   keyboard = new Keyboard();
-
-//   await playConditions("replay");
-// }
-
-
-// async function restartGame() {
-//     // Clear current world
-//     if (world) {
-//         world.stopAllIntervals();
-//         world = null;
-//     }
-    
-//     Level01 = null;
-//     level = null;
-    
-//     // Clear canvas and reset controls
-//     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-//     keyboard = new Keyboard();
-    
-//     try {
-//         // Start new game with fresh objects
-//         await playConditions("replay");
-        
-//         // Wait for world initialization
-//         const waitForWorld = async () => {
-//             return new Promise((resolve) => {
-//                 const checkWorld = () => {
-//                     if (window.world?.character && window.world?.enemies && window.world?.endbossOfEnemies) {
-//                         // Initialize all game objects like first start
-//                         world.enemies.forEach(enemy => {
-//                             enemy.initialize(); // Dies würde alle Startmethoden aufrufen
-//                         });
-//                         world.endbossOfEnemies.initialize();
-//                         world.character.initialize();
-                        
-//                         // Enable controls
-//                         keyboardEnabled = true;
-//                         gameRestarted = false;
-//                         resolve(true);
-//                     } else {
-//                         setTimeout(checkWorld, 100);
-//                     }
-//                 };
-//                 checkWorld();
-//             });
-//         };
-
-//         const worldInitialized = await waitForWorld();
-//         if (worldInitialized) {
-//             await restoreInitialState();
-//             console.log('Game restarted and initialized successfully');
-//         }
-//     } catch (error) {
-//         console.error('Error during game restart:', error);
-//     }
-// }
-
-
-//
+/**
+ * Defines the Button on the keyboard that are used to control the game.
+ */
 document.addEventListener("keydown", (e) => {
   if (gamePaused) return;
-  if (!keyboardEnabled) return; // Ignorieren, wenn die Steuerung deaktiviert ist
-
-  // if (!window.world.character.isDead) {
-
-  //   if (
-  //     [
-  //       "Space",
-  //       "ArrowRight",
-  //       "ArrowLeft",
-  //       "ArrowUp",
-  //       "ArrowDown",
-  //       "KeyD",
-  //     ].includes(e.code)
-  //   ) {
-  //     // gameRestarted = false;
-  //     console.log("Reset gameRestarted to false by key:", e.code);
-  //   }
-  // }
+  if (!keyboardEnabled) return;
 
   if (e.code == "Space") {
     keyboard.SPACE = true;
@@ -613,7 +423,6 @@ document.addEventListener("keydown", (e) => {
     if (!throwKeyDownTime) {
       throwKeyDownTime = Date.now();
     }
-    // console.log("KeyD pressed");
   }
 });
 
@@ -642,7 +451,7 @@ document.addEventListener("keyup", (e) => {
       throwKeyUpTime = Date.now();
       throwDuration = throwKeyUpTime - throwKeyDownTime;
       throwKeyDownTime = null;
-      keyboard.THROW = true; // Löst den Wurf aus
+      keyboard.THROW = true;
     }
   }
 });

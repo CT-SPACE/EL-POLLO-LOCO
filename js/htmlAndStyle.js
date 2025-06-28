@@ -1,0 +1,378 @@
+/**
+ * 
+ * @param {*} content Creates the Content-panel that shows all information about the game: How to play, the story of Pepe and the legal information.
+ * @returns 
+ */
+function createButtonContent(content) {
+  let contentType = document.getElementById(content);
+  let contentScreen = document.getElementById("buttonContent");
+
+  if (contentScreen.classList.contains("open") && contentScreen.dataset.active === content) {
+    closeContent(contentScreen);
+    return;
+  }
+
+  if (contentScreen.classList.contains("open")) {
+    closeContent(contentScreen, () =>
+      openContent(content, contentType, contentScreen)
+    );
+  } else {
+    openContent(content, contentType, contentScreen);
+  }
+}
+
+/**
+ * Opens the content panel and defines the behavior of the panel itself and other elements
+ * @param {*} content 
+ * @param {*} contentType 
+ * @param {*} contentScreen 
+ */
+function openContent(content, contentType, contentScreen) {
+  let headline = document.getElementById("stayHeadline");
+  gamePaused = true;
+  togglePlay("content", true);
+  resetOutClasses();
+  addStylesForOpenContent(contentType, contentScreen, headline);
+
+  setTimeout(() => {
+    switchContentForOpenContent(content, contentScreen);
+  }, 50);
+  createOverlayDiv();
+  includeCloseButton(contentScreen);
+}
+
+/**
+ * The various information units are called up here
+ * @param {*} content 
+ * @param {*} contentScreen 
+ */
+function switchContentForOpenContent(content, contentScreen) {
+  contentScreen.classList.add("open");
+  contentScreen.dataset.active = content;
+  switch (content) {
+    case "story":
+      contentScreen.innerHTML += getStoryHtml();
+      break;
+    case "impressum":
+      contentScreen.innerHTML += getImpressumHtml();
+      break;
+    case "howto":
+      contentScreen.innerHTML += getHowToHtml();
+      break;
+  }
+}
+
+/**
+ * Changes the style for elements on the screen like h1, the active Button and the contentscreen
+ * @param {*} contentType 
+ * @param {*} contentScreen 
+ * @param {*} headline 
+ */
+function addStylesForOpenContent(contentType, contentScreen, headline) {
+  contentType.classList.add("Out");
+  contentScreen.classList.remove("displayNone", "close");
+  contentScreen.offsetHeight;
+  contentScreen.classList.add("open");
+  if (!headline.classList.contains("headline")) {
+    headline.classList.add("h1topPosition");
+  }
+}
+
+/**
+ * Close the content panel
+ * @param {*} contentScreen 
+ * @param {*} callback 
+ */
+function closeContent(contentScreen, callback) {
+  let headline = document.getElementById("stayHeadline");
+  gamePaused = false;
+
+  resetOutClasses();
+  togglePlay();
+
+  contentScreen.classList.remove("open");
+  contentScreen.classList.add("close");
+
+  contentScreen.addEventListener("transitionend", function handler() {
+    contentScreen.removeEventListener("transitionend", handler);
+    finishClosing(contentScreen, callback);
+  });  
+  headline.classList.remove("h1topPosition");
+}
+
+/**
+ * Handles the reset of all Styles and hides the contentscreen
+ * @param {*} contentScreen 
+ * @param {*} callback 
+ */
+function finishClosing(contentScreen, callback) {
+  contentScreen.innerHTML = "";
+  contentScreen.dataset.active = "";
+  contentScreen.classList.add("displayNone");
+  removeOverlay();
+
+  if (callback) callback();
+}
+
+/**
+ * 
+ * @param {*} contentScreen 
+ */
+function prepareAnimation(contentScreen) {
+  contentScreen.classList.remove("displayNone");
+  contentScreen.offsetHeight; // Force reflow
+  requestAnimationFrame(() => {
+    contentScreen.classList.remove("close");
+    requestAnimationFrame(() => {
+      contentScreen.classList.add("open");
+    });
+  });
+}
+
+// function mutePerSoundStatus() {
+//   if (getSoundStatus()) {
+//     audioManager.setMuted(false);
+//     allAmbientSounds();
+//   } else {
+//     audioManager.setMuted(true);
+//   }
+// }
+
+// /**
+//  * 
+//  * @param {*} contentScreen 
+//  */
+// function ToggleClasses(contentScreen) {
+//   contentScreen.classList.add("displayNone");
+//   gamePaused = false;
+//   removeOverlay();
+// }
+
+/**
+ * The Overlay of the content panel will be removed from the contentScreen
+ */
+function removeOverlay() {
+  let overlay = document.getElementById("overlayDiv");
+  if (overlay) overlay.remove();
+}
+
+
+/**
+ * Resets all Content Buttons
+ * @returns 
+ */
+function resetOutClasses() {
+  try {
+    document.getElementById("story").classList.remove("Out");
+    document.getElementById("impressum").classList.remove("Out");
+    document.getElementById("howto").classList.remove("Out");
+  } catch {
+    return;
+  }
+}
+
+/**
+ * Returns the Content for "Story" on the contentscreen
+ * @returns 
+ */
+function getStoryHtml() {
+  return /*html*/ `        
+    <div class="fixedContentHead">
+        <h3>Story</h3>
+        <hr class="contentLine">
+        </div>
+    <div class="content">
+
+        <p></p>
+        Pepe, el Peligroso, hat Hunger! <br>Er ist verrückt nach Hühnchen mit scharfer Soße. Sein Hunger ist so groß, dass die kleinen Hühner ihm gestohlen bleiben können. Ein Pollo asado gigante con Salsa picante muss her. 
+        Er braucht etwas Großes. <p></p>Dieses Mega-Huhn, von dem er träumt, kann man aber nicht so einfach wie die kleinen Hühner durch Draufhüpfen zermatschen - außerdem will er dieses Geflügel ja auch noch essen. 
+        Das Einzige, was wirkt, ist seine scharfe Soße, die leider in der mexikanischen Wüste verstreut ist.<p></p>Wichtig ist, mit der Salsa die Augen des Mega-Huhns zu treffen, dann stirbt es gewürzt und servierfertig.<br>
+        Kannst du Pepe helfen?
+        <p></p>
+        Nebenbei findet Pepe noch jede Menge Münzen - wenn er nicht so hungrig wäre, würde er sich darüber freuen.<br>
+    </div>
+    `;
+}
+
+/**
+ * Returns the Content for the legal notes panel
+ * @returns 
+ */
+function getImpressumHtml() {
+  return /*html*/ `
+     <div class="fixedContentHead">
+        <h3>Impressum</h3>
+        <hr class="contentLine">
+        </div>
+    <div class="content">
+
+        <p>Angaben gemäß § 5 TMG</p>
+        Dieses Spiel entstand im Rahmen des Kurses "Web-Developer" an der <br>
+        <bold>Developer Akademie GmbH</bold><br>
+        Tassiloplatz 25,<br>
+        81541 München<br>
+        <p>
+        E-Mail an: <a href="mailto:Christina@troitzsch.de">Christina Troitzsch</a>
+        </p>
+    </div>
+    `;
+}
+
+/**
+ * Returns the HTML for the HowToPlay-Sheet.
+ * @returns 
+ */
+function getHowToHtml() {
+  return /*html*/ ` 
+    
+    <div class="fixedContentHead">
+        <h3>How to Play</h3>
+        <hr class="contentLine">
+        </div>
+    <div class="content">
+
+        <div class="table">
+<div class="row "><div class="cell rightAlign">SPACEBAR or&nbsp;<img src="./img/buttons/button-up_white.svg" alt="Spacebar or Key Up Arrow" class="key"></div><div class="cell">Pepe jumps</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-right_white.svg" alt="Key Right Arrow" class="key"></div><div class="cell">Pepe runs right</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-left_white.svg" alt="Key Left Arrow" class="key"></div><div class="cell">Pepe runs left</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-D_white.svg" alt="Key D" class="key"></div><div class="cell">Pepe throws bottle</div></div>
+        </div>
+     <div class="table">
+<div class="row "><div class="cell rightAlign"><img src="./img/icon_minichicken.svg" alt="Mini-Chicken" class="key"></div><div class="cell">A collision reduces Pepe's health score by 1% per second. These chickens cannot be killed. But you can jump on them without taking damage. They turn back at the edge of the playing field.</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/icon_chicken.svg" alt="Chicken Enemies" class="key"></div><div class="cell">Reduces Pepe's health score by 10% per second. You can jump on them to kill them. They only run in one direction.</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/icon_endboss.svg" alt="Endboss Chicken Mum" class="key"></div><div class="cell">A collision with the Endboss reduces Pepe's health by 30% per second. You must throw 10 bottles to kill him. This enemy only runs in one direction. But he gets angry if you throw bottles at him.<br>Take Care and Good Luck!</div></div>
+
+<div class="row"><div class="cell rightAlign"><img src="./img/icon_coin.svg" alt="Coin" class="key"></div><div class="cell">Collectable Item</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/6_salsa_bottle/1_salsa_bottle_on_ground.png" alt="Salsa" class="key"></div><div class="cell">Collectable and needed for the fight against the Endboss.  It does not work against other chickens.</div></div>
+        </div>
+    </div>
+    `;
+}
+
+/**
+ * Creates the elements for the Overlay and returns "darkLayer"
+ * @returns 
+ */
+function createOverlayDiv() {
+  let overlayScreen = document.getElementById("overflowHidden");
+  let existing = document.getElementById("overlayDiv");
+  if (existing) {
+    existing.remove();
+  }
+  const darkLayer = document.createElement("div");
+  darkLayer.id = "overlayDiv";
+  darkLayer.className = "darkLayer";
+  overlayScreen.appendChild(darkLayer);
+  return darkLayer;
+}
+
+/**
+ * Includes the close-Button to the information panel on the contentscreen
+ * @param {*} contentScreen 
+ */
+function includeCloseButton(contentScreen) {
+  let closeButton = document.createElement("div");
+  closeButton.id = "closeButton";
+  contentScreen.appendChild(closeButton);
+
+  setTimeout(() => {
+    let closeButton = document.getElementById("closeButton");
+
+    closeButton.addEventListener("click", () => {
+      closeContent(document.getElementById("buttonContent"));
+    });
+  }, 500);
+}
+
+/**
+ * Makes the GameOverScreen visible and returns which Screen will be shown - Winning Pepe or Winning Endboss 
+ * @param {*} somebodyIsDead 
+ * @returns 
+ */
+function showGameOverScreen(somebodyIsDead) {
+  let gameOverScreen = document.getElementById("gameOverScreen");
+  prepareGameOverScreen(gameOverScreen);
+
+  document.querySelectorAll(".control, .button").forEach((element) => {
+    element.classList.add("visibilityHidden");
+  });
+
+  if (somebodyIsDead === "Pepe") {
+    handleWinningEndboss(gameOverScreen);
+  } else if (somebodyIsDead === "Endboss") {
+    handleWinningPepe(gameOverScreen);
+  } else return;
+}
+
+/**
+ * Handles the Classes for other Elements on the Screen during GameOver-Session
+ * @param {*} gameOverScreen 
+ */
+function prepareGameOverScreen(gameOverScreen) {
+  let stayHeadline = document.getElementById("stayHeadline");
+  stayHeadline.classList.remove("headline");
+  gameOverScreen.classList.remove("displayNone");
+  gameOverScreen.classList.add("winningGameOverBG");
+
+  let canvas = document.getElementById("canvas");
+  canvas.classList.add("displayNone");
+}
+
+/**
+ * Creates the container for the Loosing Message and starts the replay-Button
+ * @param {*} gameOverScreen 
+ */
+function handleWinningEndboss(gameOverScreen) {
+  audioManager.playAudio("pepe_loses", { play: true, volume: 0.2 });
+  gameOverScreen.innerHTML = "";
+  gameOverScreen.classList.add("backdrop");
+  let pepeGrave = document.createElement("div");
+  pepeGrave.id = "grave";
+  pepeGrave.className = "pepeGrave";
+  pepeGrave.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
+
+  const gameOverText = document.createElement("div");
+  gameOverText.className = "gameOverText";
+  gameOverText.innerHTML = `<h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!`;
+
+  includeReplayButton(gameOverScreen, "lose");
+
+  gameOverScreen.appendChild(gameOverText);
+  gameOverScreen.appendChild(pepeGrave);
+}
+
+
+/**
+ * Creates the container for the winning Message and starts the replay Button
+ * @param {*} gameOverScreen 
+ */
+function handleWinningPepe(gameOverScreen) {
+  audioManager.playAudio("pepe_wins", { play: true, volume: 0.2 });
+
+  gameOverScreen.innerHTML += ` <div class="gameOverText"><h3>YOU WON!</h3> ¡Que Aproveches! </div>`;
+
+  let rueda = document.createElement("div");
+  rueda.classList.add("winningBG");
+  gameOverScreen.appendChild(rueda);
+
+  setTimeout(() => {
+    rueda.classList.add("big");
+    includeReplayButton(gameOverScreen, "win");
+  }, 10);
+}
+
+/**
+ * Adds the ReplayButton to the GameOverScreen
+ * @param {*} gameOverScreen 
+ * @param {*} status 
+ */
+function includeReplayButton(gameOverScreen, status) {
+  let replay = document.createElement("div");
+  replay.id = "retry";
+  replay.classList.add("replayButton", status === "lose" ? "lose" : "win");
+  replay.addEventListener("click", () => {
+    location.reload();
+  });
+
+  gameOverScreen.appendChild(replay);
+}
