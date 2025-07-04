@@ -16,11 +16,16 @@ let EndBossClose = false;
 let throwKeyDownTime;
 let throwKeyUpTime;
 let throwDuration;
+let contentOpen;
 let gamePaused = true;
+let gamePausedByUser = false;
 let activeIndex = 0;
 let startScreen;
 let imgCache = {};
 let letters = Array.from(document.querySelectorAll("#loader span"));
+let aspectRatio = 800 / 480;
+let newWidth, newHeight;
+
 
 let IMAGES_FASTLOAD = [
   "./img/fondo_cactus.png",
@@ -97,87 +102,6 @@ function showStartScreen() {
 }
 
 /**
- * 
- * @returns {Promise} A promise that resolves when all fast-loading images are preloaded.
- */
-async function fastPreload() {
-  return Promise.all(
-    IMAGES_FASTLOAD.map((entry) =>
-      new Promise((resolve, reject) => {
-        const path = typeof entry === "string" ? entry : entry.src;
-
-        const IMG = new Image();
-        IMG.onload = () => {
-          imgCache[path] = IMG;         // Cache speichern
-          resolve({ path, IMG });       // Promise auflösen
-        };
-        IMG.onerror = reject;
-        IMG.src = path;
-      })
-    )
-  );
-}
-
-
-/**
- * Preloads all audio files used in the game.
- */
-async function preloadAudio() {
-  await Promise.all([
-    audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3"),
-
-    audioManager.loadAudio("pepe_hurt", "./audio/pepe_grunts_2.mp3"),
-    audioManager.loadAudio("pepe_pollo", "./audio/pepe_pollo_funny.mp3"),
-    audioManager.loadAudio("pepe_snore", "./audio/pepe_snore.mp3"),
-
-    audioManager.loadAudio("chicken_run", "./audio/chicken_group.mp3"),
-    audioManager.loadAudio("chicken_splat", "./audio/chicken_splat.mp3"),
-
-    audioManager.loadAudio("mini_run_0", "./audio/mini_chicken_run.mp3"),
-    audioManager.loadAudio("mini_run_1", "./audio/mini_chicken_run.mp3"),
-    audioManager.loadAudio("mini_run_2", "./audio/mini_chicken_run.mp3"),
-    audioManager.loadAudio("mini_run_3", "./audio/mini_chicken_run.mp3"),
-    audioManager.loadAudio("mini_run_4", "./audio/mini_chicken_run.mp3"),
-    audioManager.loadAudio("mini_bounce", "./audio/mini_chicken_squeeze_1.mp3"),
-
-    audioManager.loadAudio("endbossBackground", "./audio/endboss_thunder.mp3"),
-    audioManager.loadAudio("endboss_attack", "./audio/endboss_attack.mp3"),
-
-    audioManager.loadAudio("bottleCollecting", "./audio/bottle_collect.mp3"),
-    audioManager.loadAudio(
-      "WorldBottleCollecting",
-      "./audio/bottle_collect.mp3"
-    ),
-    audioManager.loadAudio("coinCollecting", "./audio/coin_success.mp3"),
-    audioManager.loadAudio("WorldCoinCollecting", "./audio/coin_success.mp3"),
-
-    audioManager.loadAudio("pepe_wins", "./audio/winning_whoppi.mp3"),
-    audioManager.loadAudio("pepe_loses", "./audio/failed_drum.mp3"),
-  ]);
-}
-
-/**
- * 
- * @returns #{Promise} A promise that resolves when all images are preloaded.
- */
-async function preloadImages() {
-  return Promise.all(
-    imagePaths.map((entry) => {
-      let path = typeof entry === "string" ? entry : entry.src;
-      return new Promise((resolve, reject) => {
-        let IMG = new Image();
-        IMG.src = path;
-        IMG.onload = () => {
-          imgCache[path] = IMG;
-          resolve();
-        };
-        IMG.onerror = () => {
-          console.error(`Fehler beim Laden des Bildes: ${path}`);
-          reject(new Error(`Bild konnte nicht geladen werden: ${path}`));
-        };}); }));
-}
-
-/**
  * Pauses the Game Sound and stopps the ambient sounds.
  */
 function pauseGameSounds() {
@@ -251,21 +175,23 @@ function restoreSoundStatus() {
 function togglePlay(toggleSource, value) {
   let playDiv = document.getElementById("play");
   let playIcon = document.getElementById("switch");
-
-  if (toggleSource === "content" && value === true) {
+console.log(toggleSource, value, gamePaused);
+  if (toggleSource === "content" && value === true) { // Pause-Icon and Disabled
     playIcon.classList.remove("play");
     playIcon.classList.add("pause");
     playDiv.classList.add("disabled");
     gamePaused = true;
-  } else if (playIcon.classList.contains("play") && value !== true) {
+  } else if ((toggleSource === "play" || (toggleSource === "button" && playIcon.classList.contains("play"))) && value !== true ) {//Pause-Icon not Disabled
     playIcon.classList.remove("play");
     playIcon.classList.add("pause");
     playDiv.classList.remove("disabled");
     gamePaused = true;
-  } else {
+  } 
+  else { // Play-Icon not Disabled
     playIcon.classList.remove("pause");
     playIcon.classList.add("play");
     playDiv.classList.remove("disabled");
+      if(startScreen) return;
     gamePaused = false;
   }
 }
@@ -308,7 +234,7 @@ function allAmbientSounds() {
  */
 function hideLoaderAndShowPlayButton() {
   const loaderContainer = document.getElementById("loader");
-
+  document.getElementById("sound").style.display = "";
   loaderContainer.innerHTML = "";
   keyboardEnabled = true;
   let startGame = document.createElement("div");
@@ -323,68 +249,48 @@ function hideLoaderAndShowPlayButton() {
 }
 
 /**
- * Gives the Loading Visual a nice effect by animating the letters of the text "LOADING ...".
- */
-function LoadingVisual() {
-  const loaderText = "LOADING ...";
-  const loaderContainer = document.getElementById("loader");
-
-  loaderContainer.innerHTML = "";
-  const chars = loaderText.split("");
-
-  chars.forEach((char, index) => {
-    const span = document.createElement("span");
-    span.textContent = char;
-    span.style.animationDelay = `${index * 0.2}s`;
-    loaderContainer.appendChild(span);
-
-    setTimeout(() => {
-      span.style.opacity = 1;
-    }, index * 1000);
-  });
-}
-
-/**
  * Defines the functionality how to start the game by pressing the Enter-key or clicking the Play-Button
  */
 function letsPlay() {
   let startGame = document.getElementById("startGame");
+  
   document.addEventListener("keydown", (e) => {
+  
     if (e.code == "Enter") {
+      if(contentOpen) return;
       keyboard.ENTER = true;
       playConditions("initial");
     }
   });
-
   startGame.addEventListener("click", () => {
+    if(contentOpen) return;
     playConditions("initial");
   });
 }
 
 /**
- * 
- * @param {*} origin Prepares all conditions that are needed to start the game, e.g. activate the canvas, starts the world, initializes the level, activates the audio context, etc.
+ * Prepares all conditions that are needed to start the game, e.g. activate the canvas, starts the world, initializes the level, activates the audio context, etc.
+ * @param {*} origin 
  */
 async function playConditions(origin) {
+  startScreen = false;
   if (origin !== "initial") {
     document.getElementById("gameOverScreen").classList.add("displayNone");
   }
   prepareStylesForPlayConditions();
 
-  // await initLevel();
   canvas = document.getElementById("canvas");
   canvas.focus();
+  // if (!Level01) {
 
-  if (!Level01) {
-    console.error("Fehler: Level01 ist nicht initialisiert!");
-  } else {
+  // } else {
     window.world = new World(canvas, Level01);
     togglePlay("play", true);
 
     if (!audioManager.audioContext) {
       activateAudioContext();
     }
-  }
+  // }
 }
 
 /**
@@ -395,63 +301,33 @@ function prepareStylesForPlayConditions() {
   document.getElementById("subText").classList.add("displayNone");
   document.getElementById("stayHeadline").classList.add("headline");
   document.getElementById("play").style.display = "";
+  
+  let reload = document.getElementById("gohome")
+  reload.style.display = "";
+  reload.addEventListener("click", () => {
+  location.reload();
+});
 }
 
-/**
- * Defines the Button on the keyboard that are used to control the game.
- */
-document.addEventListener("keydown", (e) => {
-  if (gamePaused) return;
-  if (!keyboardEnabled) return;
 
-  if (e.code == "Space") {
-    keyboard.SPACE = true;
+  function isPortrait() {
+    return window.innerHeight > window.innerWidth && window.innerWidth <= 860;
   }
-  if (e.code == "ArrowRight") {
-    keyboard.RIGHT = true;
-  }
-  if (e.code == "ArrowLeft") {
-    keyboard.LEFT = true;
-  }
-  if (e.code == "ArrowUp") {
-    keyboard.UP = true;
-  }
-  if (e.code == "ArrowDown") {
-    keyboard.DOWN = true;
-  }
-  if (e.code == "KeyD") {
-    if (!throwKeyDownTime) {
-      throwKeyDownTime = Date.now();
+
+window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('resize', function() {
+      let turnDevice = document.getElementById("turnToLandscape");
+      let contentbox = document.getElementById("contentbox");
+      if (isPortrait()) {
+        turnDevice.classList.remove("displayNone");
+        contentbox.style.display = "none";
+    } else {
+        turnDevice.classList.add("displayNone");
+        contentbox.style.display = '';
+	      //showMobileButtons();
     }
   }
-});
+)})
 
-document.addEventListener("keyup", (e) => {
-  if (e.code == "Enter") {
-    keyboard.ENTER = false;
-  }
-  if (e.code == "Space") {
-    keyboard.SPACE = false;
-  }
-  if (e.code == "ArrowRight") {
-    keyboard.RIGHT = false;
-    audioPlaying["pepe_pollo"] = false;
-  }
-  if (e.code == "ArrowLeft") {
-    keyboard.LEFT = false;
-  }
-  if (e.code == "ArrowUp") {
-    keyboard.UP = false;
-  }
-  if (e.code == "ArrowDown") {
-    keyboard.DOWN = false;
-  }
-  if (e.code == "KeyD") {
-    if (throwKeyDownTime) {
-      throwKeyUpTime = Date.now();
-      throwDuration = throwKeyUpTime - throwKeyDownTime;
-      throwKeyDownTime = null;
-      keyboard.THROW = true;
-    }
-  }
-});
+
+

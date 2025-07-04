@@ -1,7 +1,7 @@
 class Clouds extends MovableObject {
   y = 50;
   x = 0;
-  speed = 0.2 + Math.random() * 0.5; // Zufällige Geschwindigkeit zwischen 0.15 und 0.65
+  speed = 0.2 + Math.random() * 0.5; // Zufällige Geschwindigkeit zwischen 0.2 und 0.5
   offset = {
     left: 0,
     right: 0,
@@ -22,7 +22,7 @@ class Clouds extends MovableObject {
 
     this.animateX();
   }
-  
+
   animateX() {
     setInterval(() => {
       this.moveLeft(this.speed);

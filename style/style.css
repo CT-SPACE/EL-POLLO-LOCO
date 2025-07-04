@@ -13,6 +13,9 @@
   src: url(../fonts/Ojuju/Ojuju-VariableFont_wght.ttf);
 }
 
+:root {
+  --calc-ratio-buttonContent: calc(100vh * (100vh / 100vw));
+}
 
 body {
   font-family: Ojuju;
@@ -28,14 +31,12 @@ body {
   position: relative;
   overflow: visible;
   border: 0;
-  width: 800px;
-  height: 480px;
   border-radius: 20px;
 }
 
 .start {
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
   position: absolute;
   top: 3px;
   left: 3px;
@@ -59,10 +60,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* top: -320px; */
   z-index: 16;
 }
-
 
 @keyframes fadeDot {
   0%,
@@ -133,10 +132,14 @@ body {
 
 .overflowHidden {
   display: block;
+  position: relative;
   border-radius: 20px;
   overflow: hidden;
+  border: 2px solid white;
+  box-shadow: 3px 3px 4px 0px black;
   width: 800px;
   height: 480px;
+  z-index: 10;
 }
 
 .startText {
@@ -252,29 +255,29 @@ h4 {
   top: -75px;
 }
 
-.h1topPosition{
-    top:-150px;
+.h1topPosition {
+  top: -120px;
 }
 
 #playScreen {
-  width: 806px;
-  height: 486px;
+  width: 100%;
+  height: 480px;
   display: flex;
   overflow: hidden;
   top: 0;
-  border: 3px solid white;
+  /* border: 3px solid white; */
   z-index: 10;
   position: absolute;
   border-radius: 20px;
-  box-shadow: 3px 3px 4px 0px black;
+  /* box-shadow: 3px 3px 4px 0px black; */
   justify-content: center;
-  box-sizing:border-box;
+  box-sizing: border-box;
 }
 
 #gameOverScreen {
   z-index: 20;
-  height: 100%;
-  width: 100%;
+  height: calc(100% - 6px);
+  width: calc(100% - 6px);
   top: 3px;
   left: 3px;
   font-family: "Ojuju";
@@ -357,7 +360,7 @@ canvas {
   z-index: 9;
   width: 100%;
   position: relative;
-  bottom: 10px;
+  bottom: 30px;
   display: flex;
   align-items: end;
   justify-content: center;
@@ -370,11 +373,68 @@ canvas {
   /* transition: top 1s cubic-bezier(.09,.99,.9,.36); */
 }
 
+#playControl {
+  z-index: 9;
+  width: 100vw;
+  position: absolute;
+  bottom: -70px;
+  left: calc((100vw - 800px) / (-2));
+  display: flex;
+  /* align-items: end; */
+  justify-content: center;
+  /* transition: top 1s cubic-bezier(0.09, 0.99, 0.9, 0.36); */
+}
+
+.playButtons {
+  display: flex;
+  position: fixed;
+  height: 200px;
+  /* top: -130px; */
+  z-index: 20;
+  width: 80px;
+}
+
+#playButtonsLeft {
+  position: fixed;
+  /* width: 100px; */
+  left: 10px;
+  bottom: 0;
+}
+
+#playButtonsRight {
+  /* flex-direction: column; */
+  position: fixed;
+  right: 30px;
+  bottom: 0px;
+}
+
+.sizeBTN {
+  width: 60px;
+  height: 60px;
+  margin: 4px;
+}
+
+.alignLeft {
+  width: 60px;
+  position: relative;
+  /* left: 2px; */
+}
+
+.alignRight {
+  width: 60px;
+  position: relative;
+  display: flex;
+  right: -20px;
+}
+
 .button {
   padding: 16px 20px 6px 20px;
   box-sizing: border-box;
   margin: 0 5px;
-  width: 150px;
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
   text-align: center;
   font-family: "Ojuju";
   font-size: 1.2em;
@@ -391,13 +451,48 @@ canvas {
   bottom: -8px;
   transition: bottom 0.2s ease;
 }
+
 .button:active {
   transform: scale(0.98);
   transition: all 0.2s ease-in-out;
 }
+
 .Out {
   bottom: -8px;
   font-weight: 700;
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
+  position: relative;
+  top: 6px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#story .icon {
+  background-image: url("../img/buttons/story_icon_hi.svg");
+}
+
+#impressum .icon {
+  background-image: url("../img/buttons/impressum_icon_hi.svg");
+}
+
+#howto .icon {
+  background-image: url("../img/buttons/howtoplay_icon_hi.svg");
+}
+
+#story.button:hover .icon {
+  background-image: url("../img/buttons/story_icon_lo.svg");
+}
+
+#impressum.button:hover .icon {
+  background-image: url("../img/buttons/impressum_icon_lo.svg");
+}
+
+#howto.button:hover .icon {
+  background-image: url("../img/buttons/howtoplay_icon_lo.svg");
 }
 
 #closeButton {
@@ -462,10 +557,11 @@ p {
   bottom: 0;
   z-index: 18;
   transition: bottom 0.5s ease-in;
+  padding: 80px 15vw 64px 22vw;
 }
 #buttonContent.close {
   bottom: -100%;
-    z-index: 18;
+  z-index: 18;
   transition: bottom 0.5s ease-in-out;
 }
 
@@ -474,8 +570,8 @@ p {
   border-radius: 20px;
   top: 3px;
   left: 3px;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 17;
 }
@@ -490,6 +586,13 @@ p {
   width: 100%;
 }
 
+#retryPosition {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: right;
+}
+
 .replayButton {
   overflow: hidden;
   background-image: url("../img/buttons/replay.svg");
@@ -500,12 +603,12 @@ p {
   background-color: white;
   padding: 5px;
   box-sizing: border-box;
-  margin: 0 5px;
+  /* margin: 0 5px; */
   top: 160px;
-  right: -360px;
+  /* right: -360px; */
   width: 80px;
-  border-radius: 14px 0 0 14px;
   height: 80px;
+  border-radius: 14px 0 0 14px;
   border: 1px solid black;
   position: relative;
   z-index: 20;
@@ -544,7 +647,8 @@ p {
 }
 
 #sound,
-#play {
+#play,
+#gohome {
   display: flex;
   padding: 5px 5px 5px 25px;
   box-sizing: border-box;
@@ -558,7 +662,8 @@ p {
 }
 
 #sound:hover,
-#play:hover {
+#play:hover,
+#gohome:hover {
   margin-right: -8px;
   transition: margin-left 0.2s ease-in-out;
 }
@@ -578,7 +683,8 @@ p {
     opacity: 0.5;
 } */
 
-#play.disabled {
+#play.disabled,
+#gohome.disabled {
   background-color: lightgrey;
   cursor: unset;
   opacity: 0.5;
@@ -586,7 +692,8 @@ p {
   margin-right: 0;
 }
 
-#play.disabled:hover {
+#play.disabled:hover,
+#gohome.disabled:hover {
   margin-right: 0;
   transition: none;
 }
@@ -605,6 +712,10 @@ p {
 
 .pause {
   background-image: url("../img/buttons/play.svg");
+}
+
+.goback {
+  background-image: url("../img/buttons/replay.svg");
 }
 
 .table {
@@ -649,7 +760,7 @@ p {
 }
 
 .fondo {
-  height: calc((90vh / 2) + (480px / 2) - 120px);
+  height: calc((90vh / 2) + (480px / 2) - 150px);
   z-index: 0;
   width: 100vw;
   position: absolute;
@@ -662,6 +773,29 @@ p {
   outline-offset: -1px;
 }
 
+.notLandscape {
+  width: 100vw;
+  overflow: hidden;
+  z-index: 100;
+  padding: 0 5%;
+  background-image: url("../img/icon_turn_device.svg");
+  background-size: 25%;
+  background-position-y: 40vh;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  background-color: #fdf08f;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.notLandscape h2 {
+  font-size: 1.6rem !important;
+  margin: 0;
+}
+
 .visibilityHidden {
   visibility: hidden;
 }
@@ -669,33 +803,256 @@ p {
 .displayNone {
   display: none;
 }
+@media (orientation: landscape) {
+  @media (max-height: 820px) and (min-width: 960px) {
+    section {
+      height: 100vh;
+    }
+    .menu {
+      z-index: 30;
+      position: fixed;
+      bottom: -20px;
+    }
+    .button {
+      border-radius: 10px 10px 0 0;
 
-@media (max-height:840px) and (min-width: 960px) {
-section{
-    height:100vh;
-}
-.h1_animation{
-    font-size: 4.6rem;
-    top:20px;
-}
-.h1topPosition{
-    top:-60px;
-    font-size:3.6rem;
-}
+      padding: 0px 20px 8px 20px;
+    }
+    .Out {
+      bottom: 8px;
+    }
+    #closeButton {
+      top: 80px;
+      right: 188px;
+    }
 
-.headline{
-    font-size:3.6rem;
-}
-.subText{
-    top:-16px;
-}
+    .h1_animation {
+      /* font-size: 4.6rem; */
+      top: 10px;
+    }
+    .h1topPosition {
+      top: -60px;
+    }
 
-@media (max-width: 959px){
-    .menu{
+    .headline {
+      font-size: 2.6rem;
+    }
+    .subText {
+      top: -16px;
+    }
+  }
+  @media (max-width: 959px) {
+    .menu {
+      z-index: 30;
+      position: fixed;
+      bottom: -20px;
+    }
+
+    .headline {
+      font-size: 2.6rem;
+    }
+
+    #buttonContent.open {
+      bottom: 0;
+      z-index: 18;
+      transition: bottom 0.5s ease-in;
+      /* width: calc(100vh * (800 / 480));
+   padding: 80px 15vw 64px 22vw; */
+    }
+
+    #playControl {
+      z-index: 20;
+    }
+
+    #playButtonsLeft {
+      position: fixed;
+      left: 10px;
+      bottom: 0px;
+    }
+
+    .button:hover {
+      bottom: 8px;
+    }
+  }
+
+    @media (max-height: 600px) and (min-width: 600px) {
+      section,
+      .allScreens,
+      .darkLayer {
+        height: 100vh !important;
+        /* width: calc(100vh * (800/480)) !important; */
+        width: 100vw !important;
+        top: 0;
+        left: 0;
+      }
+
+      #playScreen {
+        height: 100vh !important;
+        width: calc(100vh * (800 / 480)) !important;
+        border: 2px solid white;
+        box-shadow: 0 0 4px 2px black;
+      }
+
+      .overflowHidden {
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+        justify-content: center;
+        border: none;
+        box-shadow: none;
+      }
+
+      .gameOverScreen {
+        width: 100vw;
+      }
+
+      .gameOverText h3 {
+        margin-top: 0;
+      }
+
+      canvas {
+        height: 100vh !important;
+        width: calc(100vh * (800 / 480)) !important;
+      }
+
+      .start {
+        top: unset;
+        left: unset;
+        background-position-x: unset;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      .allScreens {
+        overflow: hidden;
+      }
+
+      #retryPosition {
+        display: flex;
+        right: 0;
+        bottom: 50px;
+        justify-content: right;
+      }
+
+      .replayButton {
+        top: unset;
+        right: unset;
+      }
+
+      #stayHeadline {
+        font-size: 1.2rem;
+
+        text-align: left;
+        top: 0;
+        width: max-content;
+        border-radius: 20px 0 20px 0;
+        padding: 4px 20px;
+        background-color: #811800;
+        /* border-top: 3px solid white;
+            border-left: 3px solid white; */
+      }
+
+      .subText {
+        top: -20px;
+        height: unset;
+      }
+      .left40 {
+        align-self: normal;
+        left: 30px;
+        top: -220px;
+      }
+
+      /* .menu{
+    bottom: 30px;
+  } */
+
+      #playControl {
+        left: unset;
         z-index: 30;
+      }
+
+      .button {
+        padding: 0px 18px 6px 16px;
+        width: 60px;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .button:hover {
+        bottom: unset;
+      }
+
+      .button:active {
+        transform: scale(0.96);
+      }
+
+      #closeButton {
+        position:relative;
+        top: 0;
+        left: 80vh;
+      }
+      #buttonContent.open {
+        /* padding: 80px 55vh 64px 75vh; */
+        display:flex;
+        justify-content:center;
+      }
+
+      #contentContainer{
+        position:relative;
+        width: 80vh;
+        top:20px;
+
+      }
+
+      .icon {
+        height: 40px;
+        width: 40px;
+        top: 3px;
+      }
+
+      .Out {
+        bottom: 10px;
+      }
+
+      .clearButton {
+        display: none;
+      }
+
+      .fixedContentHead {
+        height: 40px;
+        left: 0px;
+        width: calc(100% - 30px);
+      }
+      .control {
+        /* width: calc(100vw - (100vh * (800 / 480)) / 2 + (100vh * (800 / 480))); */
+        width: 100vw;
+        align-items: end;
+        z-index: 20;
+      }
+      #sound,
+      #play,
+      #gohome {
+        padding: 5px 25px 5px 5px;
+        border: 1px solid gray;
+        box-shadow: 2px 2px 2px 0 #00000080;
+        border-radius: 10px 0 0 10px;
+        right: 0;
+      }
+
+      .controlButton {
+        width: 32px;
+        height: 32px;
+      }
+
+      @media (max-height: 400px) and (max-width: 700px) {
+        #stayHeadline {
+          font-size: 0.8rem;
+        }
+
+        #buttonContent.open {
+          padding: 80px 40vh 74px 55vh;
+        }
+      }
     }
-    .button{
-          border-radius: 10px 10px 0 0;
-    }
-}
-}
+  }
+

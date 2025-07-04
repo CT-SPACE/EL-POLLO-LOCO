@@ -10,7 +10,6 @@ class MovableObject extends DrawableObject {
   energy = 1;
   offset;
   gravityInterval;
-  gamePaused = false;
   currentImage = 0;
   isDead = false;
 

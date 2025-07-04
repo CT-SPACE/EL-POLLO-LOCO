@@ -1,3 +1,5 @@
+
+
 /**
  * 
  * @param {*} content Creates the Content-panel that shows all information about the game: How to play, the story of Pepe and the legal information.
@@ -29,8 +31,11 @@ function createButtonContent(content) {
  */
 function openContent(content, contentType, contentScreen) {
   let headline = document.getElementById("stayHeadline");
-  gamePaused = true;
-  togglePlay("content", true);
+  gamePausedByUser = gamePaused;
+  contentOpen = true;
+  
+    togglePlay("content", true);
+  
   resetOutClasses();
   addStylesForOpenContent(contentType, contentScreen, headline);
 
@@ -70,6 +75,7 @@ function switchContentForOpenContent(content, contentScreen) {
  */
 function addStylesForOpenContent(contentType, contentScreen, headline) {
   contentType.classList.add("Out");
+  document.getElementById("subText").style.display = "none";
   contentScreen.classList.remove("displayNone", "close");
   contentScreen.offsetHeight;
   contentScreen.classList.add("open");
@@ -84,12 +90,16 @@ function addStylesForOpenContent(contentType, contentScreen, headline) {
  * @param {*} callback 
  */
 function closeContent(contentScreen, callback) {
+  contentOpen = false;
   let headline = document.getElementById("stayHeadline");
-  gamePaused = false;
-
   resetOutClasses();
-  togglePlay();
-
+  console.log("gamePaused:",gamePaused);
+  if(!gamePausedByUser){
+      togglePlay("play", true);
+} else {
+  togglePlay("play", false);
+}
+  
   contentScreen.classList.remove("open");
   contentScreen.classList.add("close");
 
@@ -106,6 +116,7 @@ function closeContent(contentScreen, callback) {
  * @param {*} callback 
  */
 function finishClosing(contentScreen, callback) {
+  document.getElementById("subText").style.display = "";
   contentScreen.innerHTML = "";
   contentScreen.dataset.active = "";
   contentScreen.classList.add("displayNone");
@@ -128,25 +139,6 @@ function prepareAnimation(contentScreen) {
     });
   });
 }
-
-// function mutePerSoundStatus() {
-//   if (getSoundStatus()) {
-//     audioManager.setMuted(false);
-//     allAmbientSounds();
-//   } else {
-//     audioManager.setMuted(true);
-//   }
-// }
-
-// /**
-//  * 
-//  * @param {*} contentScreen 
-//  */
-// function ToggleClasses(contentScreen) {
-//   contentScreen.classList.add("displayNone");
-//   gamePaused = false;
-//   removeOverlay();
-// }
 
 /**
  * The Overlay of the content panel will be removed from the contentScreen
@@ -176,7 +168,8 @@ function resetOutClasses() {
  * @returns 
  */
 function getStoryHtml() {
-  return /*html*/ `        
+  return /*html*/ `   
+  <div id="contentContainer">     
     <div class="fixedContentHead">
         <h3>Story</h3>
         <hr class="contentLine">
@@ -191,6 +184,7 @@ function getStoryHtml() {
         <p></p>
         Nebenbei findet Pepe noch jede Menge Münzen - wenn er nicht so hungrig wäre, würde er sich darüber freuen.<br>
     </div>
+</div>
     `;
 }
 
@@ -200,6 +194,7 @@ function getStoryHtml() {
  */
 function getImpressumHtml() {
   return /*html*/ `
+    <div id="contentContainer">   
      <div class="fixedContentHead">
         <h3>Impressum</h3>
         <hr class="contentLine">
@@ -215,6 +210,7 @@ function getImpressumHtml() {
         E-Mail an: <a href="mailto:Christina@troitzsch.de">Christina Troitzsch</a>
         </p>
     </div>
+</div>
     `;
 }
 
@@ -224,6 +220,7 @@ function getImpressumHtml() {
  */
 function getHowToHtml() {
   return /*html*/ ` 
+    <div id="contentContainer">   
     
     <div class="fixedContentHead">
         <h3>How to Play</h3>
@@ -246,6 +243,7 @@ function getHowToHtml() {
 <div class="row"><div class="cell rightAlign"><img src="./img/6_salsa_bottle/1_salsa_bottle_on_ground.png" alt="Salsa" class="key"></div><div class="cell">Collectable and needed for the fight against the Endboss.  It does not work against other chickens.</div></div>
         </div>
     </div>
+</div>
     `;
 }
 
@@ -313,7 +311,10 @@ function prepareGameOverScreen(gameOverScreen) {
   stayHeadline.classList.remove("headline");
   gameOverScreen.classList.remove("displayNone");
   gameOverScreen.classList.add("winningGameOverBG");
-
+  document.getElementById("playControl").style.display = "none";
+  let playScreen = document.getElementById("playScreen")
+  playScreen.style.border = "unset";
+  playScreen.style.boxShadow = "unset";
   let canvas = document.getElementById("canvas");
   canvas.classList.add("displayNone");
 }
@@ -367,6 +368,8 @@ function handleWinningPepe(gameOverScreen) {
  * @param {*} status 
  */
 function includeReplayButton(gameOverScreen, status) {
+  let replayPosition = document.createElement("div");
+  replayPosition.id = "retryPosition";
   let replay = document.createElement("div");
   replay.id = "retry";
   replay.classList.add("replayButton", status === "lose" ? "lose" : "win");
@@ -374,5 +377,13 @@ function includeReplayButton(gameOverScreen, status) {
     location.reload();
   });
 
-  gameOverScreen.appendChild(replay);
+  replayPosition.appendChild(replay);   
+  gameOverScreen.appendChild(replayPosition);
+}
+
+function prepareTurnOrientation(){
+   let turnText = document.getElementById("turnToLandscape");
+   turnText.innerHTML = `
+
+   `;
 }

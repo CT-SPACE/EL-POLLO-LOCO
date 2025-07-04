@@ -56,7 +56,7 @@ class Pepe extends MovableObject {
   lastKeyPressTime = Date.now();
   isSleepingState = false;
   isDead = false;
-  deathHandled = false; // Flag to check if death animation has been handled
+  deathHandled = false;
   animateWalkInterval;
   animateDeathInterval;
   timeToSleep = 20000;
@@ -82,7 +82,6 @@ class Pepe extends MovableObject {
     this.loadImages(Pepe.IMAGES_HURT);
     this.loadImages(Pepe.IMAGES_SLEEPING);
     this.audio = audioManager;
-    // this.currentImage = 0;
     this.animateWalk();
     this.applyGravity();
     this.listenForKeyPress(this.lastKeyPressTime);
@@ -92,7 +91,6 @@ class Pepe extends MovableObject {
 
   animateWalk() {
     this.x = 100;
-
     this.animateWalkInterval = setInterval(() => {
       if (this.energy <= 0) return;
       if (keyboard.RIGHT && this.x < this.world.level.level_endX) {
@@ -112,7 +110,6 @@ class Pepe extends MovableObject {
     this.lastKeyPressTime = lastKeyPressTime;
     document.addEventListener("keydown", () => {
       this.lastKeyPressTime = Date.now();
-      // console.log("Key pressed at:", this.lastKeyPressTime);
       if (this.isSleepingState) {
         this.stopSleepAnimation();
       }
@@ -122,7 +119,6 @@ class Pepe extends MovableObject {
   handleRightMovement() {
     this.stopSleepAnimation();
     this.playAnimation(Pepe.IMAGES_WALKING);
-    // this.otherDirection = false;
     this.moveRight();
     if (!this.audio.audioPlaying["pepe_pollo"]) {
       this.audio.playAudio("pepe_pollo", { loop: false, volume: 0.4 });
@@ -138,7 +134,6 @@ class Pepe extends MovableObject {
 
   stopSleepAnimation() {
     this.isSleepingState = false;
-
     this.audio.controlAudio("pepe_snore", {
       play: false,
       pause: true,

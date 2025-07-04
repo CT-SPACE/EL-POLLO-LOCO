@@ -70,27 +70,10 @@ class ThrowableObject extends MovableObject {
 
     this.splashInterval = setInterval(() => {
       this.intervalSettingForBottleSplash();
-      // this.width = 180 + this.bottleSplashIndex * 10;
-      // this.height = 180 + this.bottleSplashIndex * 10;
-
-      // let path = ThrowableObject.IMAGES_BOTTLE_SPLASH[this.bottleSplashIndex];
-      // this.img = imgCache[path];
-
-      // this.bottleSplashIndex++;
-
-      // if (
-      //   this.bottleSplashIndex >= ThrowableObject.IMAGES_BOTTLE_SPLASH.length
-      // ) {
-      //   clearInterval(this.splashInterval);
-      //   this.toBeRemoved = true;
-      //   this.width = this._originalWidth;
-      //   this.height = this._originalHeight;
-      // }
     }, 200);
   }
 
 intervalSettingForBottleSplash(){
-
   this.width = 180 + this.bottleSplashIndex * 10;
   this.height = 180 + this.bottleSplashIndex * 10;
   let path = ThrowableObject.IMAGES_BOTTLE_SPLASH[this.bottleSplashIndex];

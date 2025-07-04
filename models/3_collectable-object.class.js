@@ -36,7 +36,7 @@ class CollectableObject extends DrawableObject {
     this.y = y;
     this.height = height;
     this.width = width;
-    this.animateBasedOnKind(); // Animation starten
+    this.animateBasedOnKind(); 
   }
 
   kindofCollectableObject(kindof){

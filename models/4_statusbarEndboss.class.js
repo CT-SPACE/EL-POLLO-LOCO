@@ -3,8 +3,6 @@ class StatusBarEndboss extends StaticObject {
     y = 0;
 
     energy = 1;
-    //world;
-    //cameraX;
     percentage = 1;
     height;
     width;

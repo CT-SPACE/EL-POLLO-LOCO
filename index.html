@@ -14,9 +14,9 @@
 
 
     <script src="./models/2_drawable-object.class.js"></script>
-    <script src="./models/0_level.class.js"></script> <!-- Level zuerst! -->
-    <script src="./levels/level01.js"></script> <!-- Dann Level01 -->
-    <script src="./models/1_world.class.js"></script> <!-- Danach World -->
+    <script src="./models/0_level.class.js"></script> 
+    <script src="./levels/level01.js"></script>
+    <script src="./models/1_world.class.js"></script> 
 
 
     <script src="./models/0_audiomanager.class.js"></script>
@@ -39,25 +39,36 @@
     <script src="./models/4_throwable-object.class.js"></script>
     <script src="./models/4_collidable-object.class.js"></script>
     <script src="./models/0_keyboard.class.js"></script>
-
+    <script src="./js/preload.js"></script>
+    <script src="./js/keyboardEvents.js"></script>
     <script src="./js/game.js" defer></script>
     <script src="./js/htmlAndStyle.js"></script>
 
-<body>
+<body style="background-color: #fdf08f">
+<div id="turnToLandscape" class="notLandscape displayNone">
+      <h2>The game works best in landscape mode.<br>
+Please turn your device horizontally to play.
+</h2>
+<p></p>
+<h2>
+El juego no funciona en manera vertical.<br>
+Por favor, gira tu dispositivo horizontalmente para jugar.
+</h2>
 
+</div>
     <div id="fondo" class="fondo"></div>
 
     <section id="contentbox">
         <div class="allScreens">
-
+            
             <h1 id="stayHeadline" class="h1_animation">EL POLLO LOCO</h1>
             <div id="subText" class="subText displayNone">
-                <h2>Click PLAY-Button or Press ENTER to start</h2>
+                <h2>Click PLAY-Button to start!</h2>
                 <div class="left40">En verdad, Pepe es el loco - sólo digo.<br></div>
             </div>
             <div id="overflowHidden" class="overflowHidden">
                 <div id="playScreen">
-                    <canvas id="canvas" width="800" height="480" tabindex="0"></canvas>
+                    <canvas id="canvas" tabindex="0" width="800" height="480"></canvas>
 
                 </div>
 
@@ -65,30 +76,36 @@
                     <div id="loader" class="loader"></div>
                 </div>
                 <div id="gameOverScreen" class="gameOver displayNone">
-                  
-                    <!-- <div class="winningBG">
-                    </div> -->
-                  
+                 
                 </div>
                 <div id="buttonContent" class="displayNone close"></div>
             </div>
-
-            <div id="buttons" class="menu">
-                <div id="story" alt="Story of Pepe" class="button" onclick="createButtonContent('story')">Story</div>
-                <div id="impressum" alt="Impressum" class="button" onclick="createButtonContent('impressum')">Impressum
-                </div>
-                <div id="howto" class="button" alt="How to Play" onclick="createButtonContent('howto')">How to Play
-                </div>
-               
+        <div id="playControl"  class="playButtons">
+            <div id="playButtonsLeft" >
+                <img src="./img/buttons/button-D_white.svg" title="THROW!" id="leftTop" class="sizeBTN alignLeft ">
+                <img src="./img/buttons/button-up_white.svg" title="JUMP!" id="leftBottom" class="sizeBTN alignRight">
             </div>
+            <div id="buttons" class="menu">
+                <div id="story" alt="Story of Pepe" class="button" onclick="createButtonContent('story')"><span class="clearButton">Story </span><div title="Story of Pepe" class="icon"></div></div>
+                <div id="impressum" alt="Impressum" class="button" onclick="createButtonContent('impressum')"><span class="clearButton">Impressum </span><div title="Impressum" class="icon"></div></div>
+                <div id="howto" class="button" alt="How to Play" onclick="createButtonContent('howto')"><span class="clearButton">How to Play </span><div title="How to Play" class="icon"></div></div>
+            </div>
+            <div id="playButtonsRight">
+                <img src="./img/buttons/button-left_white.svg" title="GO LEFT!" id="rightTop" class="sizeBTN alignRight">
+                <img src="./img/buttons/button-right_white.svg" title="GO RIGHT" id="rightBottom" class="sizeBTN alignLeft">
+            </div>
+        </div>  
             <div class="control">
-                <div id="sound" onclick="toggleSound()" title="Sound On/Off">
+                <div id="sound" onclick="toggleSound()" title="Sound On/Off" style="display:none">
                     <div id="on-off" class="controlButton soundON"></div>
                 </div>
-                <div id="play" onclick="togglePlay()" title="Play/Pause" style="display:none">
+                <div id="play" onclick="togglePlay('button')" title="Play/Pause" style="display:none">
                     <div id="switch" class="controlButton play"></div>
                 </div>
-            </div>
+                 <div id="gohome" onlick="location.reload()" title="Reload" style="display:none">
+                    <div id="goback" class="controlButton goback"></div>
+                </div>
+        </div>
         </div>
     </section>
     <div class="stimmungsbild">

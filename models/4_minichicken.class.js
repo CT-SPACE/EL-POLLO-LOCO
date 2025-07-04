@@ -9,7 +9,6 @@ class MiniChicken extends MovableObject {
   playingBounceAudio = false;
   animateBounceActive = false;
   visible_width = 800;
-  // camera_x = this.world.cameraX; ;
 
   static IMAGES_WALKING = [
     "./img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
@@ -58,10 +57,10 @@ class MiniChicken extends MovableObject {
     this.animateXInterval = setInterval(() => {
       if (this.x <= 40 && !movingRight) {
         movingRight = true;
-        this.otherDirection = true; // Bild spiegeln für Rechtslauf
+        this.otherDirection = true;
       } else if (this.x >= 5800 && movingRight) {
         movingRight = false;
-        this.otherDirection = false; // Bild normal für Linkslauf
+        this.otherDirection = false;
       }
       movingRight ? this.moveRightMini(this.speed) : this.moveLeft(this.speed);
     }, 1000 / 60);
@@ -69,7 +68,7 @@ class MiniChicken extends MovableObject {
 
   animateWalk() {
     this.animateWalkInterval = setInterval(() => {
-      this.playAnimation(MiniChicken.IMAGES_WALKING); // Animation aktiv halten
+      this.playAnimation(MiniChicken.IMAGES_WALKING); 
     }, this.animationSpeed);
   }
   
