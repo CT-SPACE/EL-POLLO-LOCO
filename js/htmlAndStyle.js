@@ -9,6 +9,13 @@ function createButtonContent(content) {
   let contentType = document.getElementById(content);
   let contentScreen = document.getElementById("buttonContent");
 
+  if (window.innerHeight < 600){
+    contentScreen.classList.add("displayNone");
+    contentScreen = document.getElementById("buttonContentMobile");
+    contentScreen.innerHTML = "";
+
+  }
+
   if (contentScreen.classList.contains("open") && contentScreen.dataset.active === content) {
     closeContent(contentScreen);
     return;
@@ -38,7 +45,7 @@ function openContent(content, contentType, contentScreen) {
   
   resetOutClasses();
   addStylesForOpenContent(contentType, contentScreen, headline);
-
+console.log(contentScreen);
   setTimeout(() => {
     switchContentForOpenContent(content, contentScreen);
   }, 50);
@@ -276,9 +283,10 @@ function includeCloseButton(contentScreen) {
   setTimeout(() => {
     let closeButton = document.getElementById("closeButton");
 
-    closeButton.addEventListener("click", () => {
-      closeContent(document.getElementById("buttonContent"));
-    });
+closeButton.addEventListener("click", () => {
+  closeContent(document.getElementById("closeButton")?.closest("#buttonContent, #buttonContentMobile"));
+});
+
   }, 500);
 }
 

@@ -57,3 +57,36 @@ document.addEventListener("keyup", (e) => {
     }
   }
 });
+
+function goControl(BTN, value, event) {
+   if (event && event.cancelable) {
+  event.preventDefault();
+}
+  if (gamePaused || !keyboardEnabled) return;
+
+  switch (BTN) {
+    case "RIGHT":
+      keyboard.RIGHT = value;
+      break;
+    case "LEFT":
+      keyboard.LEFT = value;
+      break;
+    case "JUMP":
+      keyboard.UP = value;
+      break;
+    case "THROW":
+      if (value) {
+        if (!throwKeyDownTime) {
+          throwKeyDownTime = Date.now();
+        }
+      } else {
+        if (throwKeyDownTime) {
+          throwKeyUpTime = Date.now();
+          throwDuration = throwKeyUpTime - throwKeyDownTime;
+          throwKeyDownTime = null;
+          keyboard.THROW = true;
+        }
+      }
+      break;
+  }
+}

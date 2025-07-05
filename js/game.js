@@ -25,7 +25,26 @@ let imgCache = {};
 let letters = Array.from(document.querySelectorAll("#loader span"));
 let aspectRatio = 800 / 480;
 let newWidth, newHeight;
+let touchSetupDone = false;
 
+  function isPortrait() {
+    return window.innerHeight > window.innerWidth && window.innerWidth <= 960;
+  }
+
+window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('resize', function() {
+      let turnDevice = document.getElementById("turnToLandscape");
+      let contentbox = document.getElementById("contentbox");
+      if (isPortrait()) {
+        turnDevice.classList.remove("displayNone");
+        contentbox.style.display = "none";
+    } else {
+        turnDevice.classList.add("displayNone");
+        contentbox.style.display = '';
+	      //showMobileButtons();
+    }
+  }
+)})
 
 let IMAGES_FASTLOAD = [
   "./img/fondo_cactus.png",
@@ -74,6 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
  * Initialises the game by loading assets and showing the start screen.
  */
 async function init() {
+ 
   await loadGameAssets();
   showStartScreen();
 }
@@ -273,17 +293,19 @@ function letsPlay() {
  * @param {*} origin 
  */
 async function playConditions(origin) {
+
   startScreen = false;
   if (origin !== "initial") {
     document.getElementById("gameOverScreen").classList.add("displayNone");
   }
   prepareStylesForPlayConditions();
 
+  document.getElementById("playButtonsLeft").style.display = "unset";
+  document.getElementById("playButtonsRight").style.display = "unset";
+  
   canvas = document.getElementById("canvas");
   canvas.focus();
-  // if (!Level01) {
 
-  // } else {
     window.world = new World(canvas, Level01);
     togglePlay("play", true);
 
@@ -309,25 +331,30 @@ function prepareStylesForPlayConditions() {
 });
 }
 
+function setupTouchControlsOnce() {
+  if (touchSetupDone) return;
+  setupTouchControls();
+  touchSetupDone = true;
+}
 
-  function isPortrait() {
-    return window.innerHeight > window.innerWidth && window.innerWidth <= 860;
-  }
+//   function isPortrait() {
+//     return window.innerHeight > window.innerWidth && window.innerWidth <= 960;
+//   }
 
-window.addEventListener('DOMContentLoaded', function() {
-window.addEventListener('resize', function() {
-      let turnDevice = document.getElementById("turnToLandscape");
-      let contentbox = document.getElementById("contentbox");
-      if (isPortrait()) {
-        turnDevice.classList.remove("displayNone");
-        contentbox.style.display = "none";
-    } else {
-        turnDevice.classList.add("displayNone");
-        contentbox.style.display = '';
-	      //showMobileButtons();
-    }
-  }
-)})
+// window.addEventListener('DOMContentLoaded', function() {
+// window.addEventListener('resize', function() {
+//       let turnDevice = document.getElementById("turnToLandscape");
+//       let contentbox = document.getElementById("contentbox");
+//       if (isPortrait()) {
+//         turnDevice.classList.remove("displayNone");
+//         contentbox.style.display = "none";
+//     } else {
+//         turnDevice.classList.add("displayNone");
+//         contentbox.style.display = '';
+// 	      //showMobileButtons();
+//     }
+//   }
+// )})
 
 
 

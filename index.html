@@ -3,10 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
     <title>Jose Luis Ignacio Vincente "Pepe" el Peligroso</title>
     <link rel="icon" href="polloloco.ico" />
     <link href="./style/style.css" rel="stylesheet">
+    <link href="./style/mobile.css" rel="stylesheet">
     <link rel="preload" href="./fonts/Ojuju/Ojuju-VariableFont_wght.ttf" as="font" type="font/ttf"
         crossorigin="anonymous">
     <link rel="preload" href="./fonts/Matemasie/Matemasie-Regular.ttf" as="font" type="font/ttf"
@@ -40,9 +43,10 @@
     <script src="./models/4_collidable-object.class.js"></script>
     <script src="./models/0_keyboard.class.js"></script>
     <script src="./js/preload.js"></script>
-    <script src="./js/keyboardEvents.js"></script>
+
     <script src="./js/game.js" defer></script>
-    <script src="./js/htmlAndStyle.js"></script>
+    <script src="./js/htmlAndStyle.js"></script>    
+    <script src="./js/keyboardEvents.js"></script>
 
 <body style="background-color: #fdf08f">
 <div id="turnToLandscape" class="notLandscape displayNone">
@@ -80,10 +84,17 @@ Por favor, gira tu dispositivo horizontalmente para jugar.
                 </div>
                 <div id="buttonContent" class="displayNone close"></div>
             </div>
-        <div id="playControl"  class="playButtons">
-            <div id="playButtonsLeft" >
-                <img src="./img/buttons/button-D_white.svg" title="THROW!" id="leftTop" class="sizeBTN alignLeft ">
-                <img src="./img/buttons/button-up_white.svg" title="JUMP!" id="leftBottom" class="sizeBTN alignRight">
+
+            <div id="buttonContentMobile" class="displayNone close"></div>
+
+        <div id="playControl"  class="playButtons" >
+            <div id="playButtonsLeft">
+                <div  id="leftTop" title="THROW!" onmousedown="goControl('THROW', true, event)" onmouseup="goControl('THROW', false, event)" onmouseout="goControl('THROW', false, event)"  ontouchstart="goControl('THROW', true, event)"  ontouchend="goControl('THROW', false, event)" class="sizeBTN alignLeft">
+                <!-- <img src="./img/buttons/button-D_white.svg" > -->
+                </div>
+                <div  id="leftBottom"title="JUMP!" onmousedown="goControl('JUMP', true, event)" onmouseup="goControl('JUMP', false, event)" onmouseout="goControl('JUMP', false, event)"  ontouchstart="goControl('JUMP', true, event)" ontouchend="goControl('JUMP', false,event)" class="sizeBTN alignRight">
+                <!-- <img src="./img/buttons/button-up_white.svg" > -->
+                </div>
             </div>
             <div id="buttons" class="menu">
                 <div id="story" alt="Story of Pepe" class="button" onclick="createButtonContent('story')"><span class="clearButton">Story </span><div title="Story of Pepe" class="icon"></div></div>
@@ -91,8 +102,12 @@ Por favor, gira tu dispositivo horizontalmente para jugar.
                 <div id="howto" class="button" alt="How to Play" onclick="createButtonContent('howto')"><span class="clearButton">How to Play </span><div title="How to Play" class="icon"></div></div>
             </div>
             <div id="playButtonsRight">
-                <img src="./img/buttons/button-left_white.svg" title="GO LEFT!" id="rightTop" class="sizeBTN alignRight">
-                <img src="./img/buttons/button-right_white.svg" title="GO RIGHT" id="rightBottom" class="sizeBTN alignLeft">
+                <div  id="rightTop" title="GO LEFT!" onmousedown="goControl('LEFT', true, event)" onmouseup="goControl('LEFT', false, event)" onmouseout="goControl('LEFT', false, event)"  ontouchstart="goControl('LEFT', true, event)"  ontouchend="goControl('LEFT', false, event)" class="sizeBTN alignRight">
+                <!-- <img src="./img/buttons/button-left_white.svg" > -->
+                </div>
+                <div  id="rightBottom" title="GO RIGHT" onmousedown="goControl('RIGHT', true, event)" onmouseup="goControl('RIGHT', false, event)" onmouseout="goControl('RIGHT', false, event)"  ontouchstart="goControl('RIGHT', true, event)"  ontouchend="goControl('RIGHT', false, event)" class="sizeBTN alignLeft">
+                <!-- <img src="./img/buttons/button-right_white.svg" > -->
+                </div>
             </div>
         </div>  
             <div class="control">

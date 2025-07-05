@@ -13,10 +13,6 @@
   src: url(../fonts/Ojuju/Ojuju-VariableFont_wght.ttf);
 }
 
-:root {
-  --calc-ratio-buttonContent: calc(100vh * (100vh / 100vw));
-}
-
 body {
   font-family: Ojuju;
   display: flex;
@@ -25,6 +21,29 @@ body {
   background-color: #fdf08f;
   color: white;
   height: 100vh;
+}
+
+.notLandscape {
+  width: 100vw;
+  overflow: hidden;
+  z-index: 100;
+  padding: 0 5%;
+  background-image: url("../img/icon_turn_device.svg");
+  background-size: 25%;
+  background-position-y: 40vh;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  background-color: #fdf08f;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.notLandscape h2 {
+  font-size: 1.6rem !important;
+  margin: 0;
 }
 
 .allScreens {
@@ -411,7 +430,60 @@ canvas {
 .sizeBTN {
   width: 60px;
   height: 60px;
-  margin: 4px;
+  margin: 10px;
+  border-radius: 15px;
+  box-shadow: 2px 2px 4px 0 black;
+    background-size:contain;
+  background-repeat:no-repeat;
+  
+}
+
+.sizeBTN:hover, .sizeBTN:active, .sizeBTN:focus{
+  width:80px;
+  height:80px;
+  box-shadow: none;
+  margin:0;
+}
+
+#rightTop{
+  background-image: url("../img/buttons/button-left_white.svg");
+      background-size:contain;
+  background-repeat:no-repeat;
+
+}
+
+#rightBottom{
+ background-image: url("../img/buttons/button-right_white.svg");
+     background-size:contain;
+  background-repeat:no-repeat;
+}
+
+#leftTop{
+  background-image: url("../img/buttons/button-D_white.svg");
+      background-size:contain;
+  background-repeat:no-repeat;
+}
+
+#leftBottom{
+  background-image: url("../img/buttons/button-up_white.svg");
+      background-size:contain;
+  background-repeat:no-repeat;
+}
+
+#rightTop:hover, #rightTop:active, #rightTop:focus{
+  background-image: url("../img/buttons/button-left_green.svg");
+}
+
+#rightBottom:hover, #rightBottom:active, #rightBottom:focus{
+ background-image: url("../img/buttons/button-right_green.svg");
+}
+
+#leftTop:hover, #leftTop:active, #leftTop:focus{
+  background-image: url("../img/buttons/button-D_green.svg");
+}
+
+#leftBottom:hover, #leftBottom:active, #leftBottom:focus{
+  background-image: url("../img/buttons/button-up_green.svg");
 }
 
 .alignLeft {
@@ -557,12 +629,16 @@ p {
   bottom: 0;
   z-index: 18;
   transition: bottom 0.5s ease-in;
-  padding: 80px 15vw 64px 22vw;
+  /* padding: 80px 15vw 64px 22vw; */
 }
 #buttonContent.close {
   bottom: -100%;
   z-index: 18;
   transition: bottom 0.5s ease-in-out;
+}
+
+#contentContainer{
+  height:320px;
 }
 
 .darkLayer {
@@ -585,6 +661,10 @@ p {
   /* right: -140px; */
   width: 100%;
 }
+
+#playButtonsLeft, #playButtonsRight{
+        display: none;
+    }
 
 #retryPosition {
   width: 100%;
@@ -617,9 +697,9 @@ p {
   overflow: unset;
   cursor: pointer;
   /* background-size: 70px; */
-  box-shadow: 1px 1px -2px 0px black;
+  box-shadow: 1px 1px 2px 0px black;
   width: 200px;
-  right: -300px;
+  right: 0px;
 }
 
 .replayButton:active {
@@ -773,28 +853,7 @@ p {
   outline-offset: -1px;
 }
 
-.notLandscape {
-  width: 100vw;
-  overflow: hidden;
-  z-index: 100;
-  padding: 0 5%;
-  background-image: url("../img/icon_turn_device.svg");
-  background-size: 25%;
-  background-position-y: 40vh;
-  background-position-x: center;
-  background-repeat: no-repeat;
-  background-color: #fdf08f;
-  color: black;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-}
 
-.notLandscape h2 {
-  font-size: 1.6rem !important;
-  margin: 0;
-}
 
 .visibilityHidden {
   visibility: hidden;
@@ -803,256 +862,3 @@ p {
 .displayNone {
   display: none;
 }
-@media (orientation: landscape) {
-  @media (max-height: 820px) and (min-width: 960px) {
-    section {
-      height: 100vh;
-    }
-    .menu {
-      z-index: 30;
-      position: fixed;
-      bottom: -20px;
-    }
-    .button {
-      border-radius: 10px 10px 0 0;
-
-      padding: 0px 20px 8px 20px;
-    }
-    .Out {
-      bottom: 8px;
-    }
-    #closeButton {
-      top: 80px;
-      right: 188px;
-    }
-
-    .h1_animation {
-      /* font-size: 4.6rem; */
-      top: 10px;
-    }
-    .h1topPosition {
-      top: -60px;
-    }
-
-    .headline {
-      font-size: 2.6rem;
-    }
-    .subText {
-      top: -16px;
-    }
-  }
-  @media (max-width: 959px) {
-    .menu {
-      z-index: 30;
-      position: fixed;
-      bottom: -20px;
-    }
-
-    .headline {
-      font-size: 2.6rem;
-    }
-
-    #buttonContent.open {
-      bottom: 0;
-      z-index: 18;
-      transition: bottom 0.5s ease-in;
-      /* width: calc(100vh * (800 / 480));
-   padding: 80px 15vw 64px 22vw; */
-    }
-
-    #playControl {
-      z-index: 20;
-    }
-
-    #playButtonsLeft {
-      position: fixed;
-      left: 10px;
-      bottom: 0px;
-    }
-
-    .button:hover {
-      bottom: 8px;
-    }
-  }
-
-    @media (max-height: 600px) and (min-width: 600px) {
-      section,
-      .allScreens,
-      .darkLayer {
-        height: 100vh !important;
-        /* width: calc(100vh * (800/480)) !important; */
-        width: 100vw !important;
-        top: 0;
-        left: 0;
-      }
-
-      #playScreen {
-        height: 100vh !important;
-        width: calc(100vh * (800 / 480)) !important;
-        border: 2px solid white;
-        box-shadow: 0 0 4px 2px black;
-      }
-
-      .overflowHidden {
-        display: flex;
-        height: 100vh;
-        width: 100vw;
-        justify-content: center;
-        border: none;
-        box-shadow: none;
-      }
-
-      .gameOverScreen {
-        width: 100vw;
-      }
-
-      .gameOverText h3 {
-        margin-top: 0;
-      }
-
-      canvas {
-        height: 100vh !important;
-        width: calc(100vh * (800 / 480)) !important;
-      }
-
-      .start {
-        top: unset;
-        left: unset;
-        background-position-x: unset;
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
-      }
-
-      .allScreens {
-        overflow: hidden;
-      }
-
-      #retryPosition {
-        display: flex;
-        right: 0;
-        bottom: 50px;
-        justify-content: right;
-      }
-
-      .replayButton {
-        top: unset;
-        right: unset;
-      }
-
-      #stayHeadline {
-        font-size: 1.2rem;
-
-        text-align: left;
-        top: 0;
-        width: max-content;
-        border-radius: 20px 0 20px 0;
-        padding: 4px 20px;
-        background-color: #811800;
-        /* border-top: 3px solid white;
-            border-left: 3px solid white; */
-      }
-
-      .subText {
-        top: -20px;
-        height: unset;
-      }
-      .left40 {
-        align-self: normal;
-        left: 30px;
-        top: -220px;
-      }
-
-      /* .menu{
-    bottom: 30px;
-  } */
-
-      #playControl {
-        left: unset;
-        z-index: 30;
-      }
-
-      .button {
-        padding: 0px 18px 6px 16px;
-        width: 60px;
-        border-radius: 10px 10px 0 0;
-      }
-
-      .button:hover {
-        bottom: unset;
-      }
-
-      .button:active {
-        transform: scale(0.96);
-      }
-
-      #closeButton {
-        position:relative;
-        top: 0;
-        left: 80vh;
-      }
-      #buttonContent.open {
-        /* padding: 80px 55vh 64px 75vh; */
-        display:flex;
-        justify-content:center;
-      }
-
-      #contentContainer{
-        position:relative;
-        width: 80vh;
-        top:20px;
-
-      }
-
-      .icon {
-        height: 40px;
-        width: 40px;
-        top: 3px;
-      }
-
-      .Out {
-        bottom: 10px;
-      }
-
-      .clearButton {
-        display: none;
-      }
-
-      .fixedContentHead {
-        height: 40px;
-        left: 0px;
-        width: calc(100% - 30px);
-      }
-      .control {
-        /* width: calc(100vw - (100vh * (800 / 480)) / 2 + (100vh * (800 / 480))); */
-        width: 100vw;
-        align-items: end;
-        z-index: 20;
-      }
-      #sound,
-      #play,
-      #gohome {
-        padding: 5px 25px 5px 5px;
-        border: 1px solid gray;
-        box-shadow: 2px 2px 2px 0 #00000080;
-        border-radius: 10px 0 0 10px;
-        right: 0;
-      }
-
-      .controlButton {
-        width: 32px;
-        height: 32px;
-      }
-
-      @media (max-height: 400px) and (max-width: 700px) {
-        #stayHeadline {
-          font-size: 0.8rem;
-        }
-
-        #buttonContent.open {
-          padding: 80px 40vh 74px 55vh;
-        }
-      }
-    }
-  }
-
