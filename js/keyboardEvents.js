@@ -58,6 +58,14 @@ document.addEventListener("keyup", (e) => {
   }
 });
 
+
+/**
+ * Defines the Touch buttons for mobile Devices
+ * @param {string} BTN 
+ * @param {boolean} value 
+ * @param {Event} event 
+ * @returns 
+ */
 function goControl(BTN, value, event) {
    if (event && event.cancelable) {
   event.preventDefault();

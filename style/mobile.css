@@ -89,17 +89,13 @@
       transition: bottom 0.5s ease-in;
     }
 
-    /* #playButtonsLeft, #playButtonsRight{
-        display: unset;
-    } */
-
     #playControl {
       z-index: 20;
     }
 
     #playButtonsLeft {
       position: fixed;
-      left: 10px;
+      left: 0px;
       bottom: 0px;
     }
 
@@ -168,7 +164,7 @@
       }
 
       .replayButton {
-        top: unset;
+        /* top: unset; */
         right: unset;
       }
 

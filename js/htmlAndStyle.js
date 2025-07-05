@@ -2,8 +2,8 @@
 
 /**
  * 
- * @param {*} content Creates the Content-panel that shows all information about the game: How to play, the story of Pepe and the legal information.
- * @returns 
+ * @param {string} content Creates the Content-panel that shows all information about the game: How to play, the story of Pepe and the legal information.
+ * @returns  Double Click provokes closing of the open Content and stopps the function.
  */
 function createButtonContent(content) {
   let contentType = document.getElementById(content);
@@ -32,9 +32,9 @@ function createButtonContent(content) {
 
 /**
  * Opens the content panel and defines the behavior of the panel itself and other elements
- * @param {*} content 
- * @param {*} contentType 
- * @param {*} contentScreen 
+ * @param {string} content 
+ * @param {string} contentType 
+ * @param {string} contentScreen 
  */
 function openContent(content, contentType, contentScreen) {
   let headline = document.getElementById("stayHeadline");
@@ -55,8 +55,8 @@ console.log(contentScreen);
 
 /**
  * The various information units are called up here
- * @param {*} content 
- * @param {*} contentScreen 
+ * @param {string} content 
+ * @param {HTMLElement} contentScreen 
  */
 function switchContentForOpenContent(content, contentScreen) {
   contentScreen.classList.add("open");
@@ -76,9 +76,9 @@ function switchContentForOpenContent(content, contentScreen) {
 
 /**
  * Changes the style for elements on the screen like h1, the active Button and the contentscreen
- * @param {*} contentType 
- * @param {*} contentScreen 
- * @param {*} headline 
+ * @param {HTMLElement} contentType 
+ * @param {HTMLElement} contentScreen 
+ * @param {HTMLElement} headline 
  */
 function addStylesForOpenContent(contentType, contentScreen, headline) {
   contentType.classList.add("Out");
@@ -93,8 +93,8 @@ function addStylesForOpenContent(contentType, contentScreen, headline) {
 
 /**
  * Close the content panel
- * @param {*} contentScreen 
- * @param {*} callback 
+ * @param {HTMLElement} contentScreen 
+ * @param {() => void} callback 
  */
 function closeContent(contentScreen, callback) {
   contentOpen = false;
@@ -119,8 +119,8 @@ function closeContent(contentScreen, callback) {
 
 /**
  * Handles the reset of all Styles and hides the contentscreen
- * @param {*} contentScreen 
- * @param {*} callback 
+ * @param {HTMLElement} contentScreen 
+ * @param {() => void} callback 
  */
 function finishClosing(contentScreen, callback) {
   document.getElementById("subText").style.display = "";
@@ -134,7 +134,7 @@ function finishClosing(contentScreen, callback) {
 
 /**
  * 
- * @param {*} contentScreen 
+ * @param {HTMLElement} contentScreen 
  */
 function prepareAnimation(contentScreen) {
   contentScreen.classList.remove("displayNone");
@@ -158,7 +158,7 @@ function removeOverlay() {
 
 /**
  * Resets all Content Buttons
- * @returns 
+ * @returns only in Case the try-part fails
  */
 function resetOutClasses() {
   try {
@@ -172,7 +172,7 @@ function resetOutClasses() {
 
 /**
  * Returns the Content for "Story" on the contentscreen
- * @returns 
+ * @returns HTML construction of "story"
  */
 function getStoryHtml() {
   return /*html*/ `   
@@ -239,7 +239,8 @@ function getHowToHtml() {
 <div class="row "><div class="cell rightAlign">SPACEBAR or&nbsp;<img src="./img/buttons/button-up_white.svg" alt="Spacebar or Key Up Arrow" class="key"></div><div class="cell">Pepe jumps</div></div>
 <div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-right_white.svg" alt="Key Right Arrow" class="key"></div><div class="cell">Pepe runs right</div></div>
 <div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-left_white.svg" alt="Key Left Arrow" class="key"></div><div class="cell">Pepe runs left</div></div>
-<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-D_white.svg" alt="Key D" class="key"></div><div class="cell">Pepe throws bottle</div></div>
+<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-D_white.svg" alt="Key D" class="key"></div><div class="cell">Pepe throws bottle<br>
+<small style="line-height:1">Long button press for<br>long throw range</small></div></div>
         </div>
      <div class="table">
 <div class="row "><div class="cell rightAlign"><img src="./img/icon_minichicken.svg" alt="Mini-Chicken" class="key"></div><div class="cell">A collision reduces Pepe's health score by 1% per second. These chickens cannot be killed. But you can jump on them without taking damage. They turn back at the edge of the playing field.</div></div>
@@ -273,7 +274,7 @@ function createOverlayDiv() {
 
 /**
  * Includes the close-Button to the information panel on the contentscreen
- * @param {*} contentScreen 
+ * @param {HTMLElement} contentScreen 
  */
 function includeCloseButton(contentScreen) {
   let closeButton = document.createElement("div");
@@ -292,7 +293,7 @@ closeButton.addEventListener("click", () => {
 
 /**
  * Makes the GameOverScreen visible and returns which Screen will be shown - Winning Pepe or Winning Endboss 
- * @param {*} somebodyIsDead 
+ * @param {string} somebodyIsDead 
  * @returns 
  */
 function showGameOverScreen(somebodyIsDead) {
@@ -312,7 +313,7 @@ function showGameOverScreen(somebodyIsDead) {
 
 /**
  * Handles the Classes for other Elements on the Screen during GameOver-Session
- * @param {*} gameOverScreen 
+ * @param {HTMLElement} gameOverScreen 
  */
 function prepareGameOverScreen(gameOverScreen) {
   let stayHeadline = document.getElementById("stayHeadline");
@@ -329,7 +330,7 @@ function prepareGameOverScreen(gameOverScreen) {
 
 /**
  * Creates the container for the Loosing Message and starts the replay-Button
- * @param {*} gameOverScreen 
+ * @param {HTMLElement} gameOverScreen 
  */
 function handleWinningEndboss(gameOverScreen) {
   audioManager.playAudio("pepe_loses", { play: true, volume: 0.2 });
@@ -353,7 +354,7 @@ function handleWinningEndboss(gameOverScreen) {
 
 /**
  * Creates the container for the winning Message and starts the replay Button
- * @param {*} gameOverScreen 
+ * @param {HTMLElement} gameOverScreen 
  */
 function handleWinningPepe(gameOverScreen) {
   audioManager.playAudio("pepe_wins", { play: true, volume: 0.2 });
@@ -372,8 +373,8 @@ function handleWinningPepe(gameOverScreen) {
 
 /**
  * Adds the ReplayButton to the GameOverScreen
- * @param {*} gameOverScreen 
- * @param {*} status 
+ * @param {HTMLElement} gameOverScreen 
+ * @param {boolean} status 
  */
 function includeReplayButton(gameOverScreen, status) {
   let replayPosition = document.createElement("div");
@@ -387,11 +388,4 @@ function includeReplayButton(gameOverScreen, status) {
 
   replayPosition.appendChild(replay);   
   gameOverScreen.appendChild(replayPosition);
-}
-
-function prepareTurnOrientation(){
-   let turnText = document.getElementById("turnToLandscape");
-   turnText.innerHTML = `
-
-   `;
 }

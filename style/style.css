@@ -64,6 +64,7 @@ body {
   border-radius: 20px;
   text-align: center;
   background-size: cover;
+  background-position-y:center;
   background-position-x: -28px;
   align-items: center;
   z-index: 15;
@@ -408,29 +409,28 @@ canvas {
   display: flex;
   position: fixed;
   height: 200px;
-  /* top: -130px; */
   z-index: 20;
   width: 80px;
 }
 
 #playButtonsLeft {
   position: fixed;
-  /* width: 100px; */
-  left: 10px;
+
+  left: 0px;
   bottom: 0;
 }
 
 #playButtonsRight {
   /* flex-direction: column; */
   position: fixed;
-  right: 30px;
+  right: 0px;
   bottom: 0px;
 }
 
 .sizeBTN {
   width: 60px;
   height: 60px;
-  margin: 10px;
+  margin: 20px;
   border-radius: 15px;
   box-shadow: 2px 2px 4px 0 black;
     background-size:contain;
@@ -439,8 +439,8 @@ canvas {
 }
 
 .sizeBTN:hover, .sizeBTN:active, .sizeBTN:focus{
-  width:80px;
-  height:80px;
+  width:70px;
+  height:70px;
   box-shadow: none;
   margin:0;
 }
@@ -489,14 +489,12 @@ canvas {
 .alignLeft {
   width: 60px;
   position: relative;
-  /* left: 2px; */
 }
 
 .alignRight {
   width: 60px;
   position: relative;
   display: flex;
-  right: -20px;
 }
 
 .button {
@@ -853,7 +851,9 @@ p {
   outline-offset: -1px;
 }
 
-
+small{
+  line-height:1;
+}
 
 .visibilityHidden {
   visibility: hidden;

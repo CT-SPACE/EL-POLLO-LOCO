@@ -59,7 +59,7 @@ class Pepe extends MovableObject {
   deathHandled = false;
   animateWalkInterval;
   animateDeathInterval;
-  timeToSleep = 20000;
+  timeToSleep = 200000;
   keyboard;
   cameraX;
   speed = 20;

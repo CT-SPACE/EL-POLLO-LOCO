@@ -27,24 +27,6 @@ let aspectRatio = 800 / 480;
 let newWidth, newHeight;
 let touchSetupDone = false;
 
-  function isPortrait() {
-    return window.innerHeight > window.innerWidth && window.innerWidth <= 960;
-  }
-
-window.addEventListener('DOMContentLoaded', function() {
-window.addEventListener('resize', function() {
-      let turnDevice = document.getElementById("turnToLandscape");
-      let contentbox = document.getElementById("contentbox");
-      if (isPortrait()) {
-        turnDevice.classList.remove("displayNone");
-        contentbox.style.display = "none";
-    } else {
-        turnDevice.classList.add("displayNone");
-        contentbox.style.display = '';
-	      //showMobileButtons();
-    }
-  }
-)})
 
 let IMAGES_FASTLOAD = [
   "./img/fondo_cactus.png",
@@ -81,6 +63,34 @@ let imagePaths = [
   ...Endboss.IMAGES_HURT,
   ...Endboss.IMAGES_DEAD,
 ];
+
+
+/**
+ * Prepares the "turn your Device"-Screen
+ * @returns {boolean} 
+ */
+  function isPortrait() {
+    return window.innerHeight > window.innerWidth && window.innerWidth <= 960;
+  }
+
+/**
+ * Eventlistener for device format detection
+ */
+
+window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('resize', function() {
+      let turnDevice = document.getElementById("turnToLandscape");
+      let contentbox = document.getElementById("contentbox");
+      if (isPortrait()) {
+        turnDevice.classList.remove("displayNone");
+        contentbox.style.display = "none";
+    } else {
+        turnDevice.classList.add("displayNone");
+        contentbox.style.display = '';
+    }
+  }
+)})
+
 
 /**
  * Starts the Init-Function after the DOM is fully loaded.
@@ -290,14 +300,14 @@ function letsPlay() {
 
 /**
  * Prepares all conditions that are needed to start the game, e.g. activate the canvas, starts the world, initializes the level, activates the audio context, etc.
- * @param {*} origin 
+ * @param {string} origin 
  */
 async function playConditions(origin) {
 
   startScreen = false;
-  if (origin !== "initial") {
-    document.getElementById("gameOverScreen").classList.add("displayNone");
-  }
+  // if (origin !== "initial") {
+  //   document.getElementById("gameOverScreen").classList.add("displayNone");
+  // }
   prepareStylesForPlayConditions();
 
   document.getElementById("playButtonsLeft").style.display = "unset";
@@ -309,9 +319,9 @@ async function playConditions(origin) {
     window.world = new World(canvas, Level01);
     togglePlay("play", true);
 
-    if (!audioManager.audioContext) {
-      activateAudioContext();
-    }
+if (audioManager.audioContext && audioManager.audioContext.state === "suspended") {
+  audioManager.activateAudioContext();
+}
   // }
 }
 
@@ -331,30 +341,6 @@ function prepareStylesForPlayConditions() {
 });
 }
 
-function setupTouchControlsOnce() {
-  if (touchSetupDone) return;
-  setupTouchControls();
-  touchSetupDone = true;
-}
-
-//   function isPortrait() {
-//     return window.innerHeight > window.innerWidth && window.innerWidth <= 960;
-//   }
-
-// window.addEventListener('DOMContentLoaded', function() {
-// window.addEventListener('resize', function() {
-//       let turnDevice = document.getElementById("turnToLandscape");
-//       let contentbox = document.getElementById("contentbox");
-//       if (isPortrait()) {
-//         turnDevice.classList.remove("displayNone");
-//         contentbox.style.display = "none";
-//     } else {
-//         turnDevice.classList.add("displayNone");
-//         contentbox.style.display = '';
-// 	      //showMobileButtons();
-//     }
-//   }
-// )})
 
 
 

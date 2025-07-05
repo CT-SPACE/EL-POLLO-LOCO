@@ -12,7 +12,12 @@ class AudioManager {
     this.buffers = {};
     this.playingSources = {};
   }
-
+/**
+ * Loads all Audio-Files 
+ * @param {string} name 
+ * @param {string} url 
+ * @returns 
+ */
   async loadAudio(name, url) {
     try {
       let response = await fetch(url);
@@ -28,6 +33,10 @@ class AudioManager {
     }
   }
 
+  /**
+   * Sets all running Audios down to mute
+   * @param {boolean} mute 
+   */
   setMuted(mute) {
     this.muted = mute;
     if (mute) {
@@ -37,7 +46,12 @@ class AudioManager {
     }
   }
 
-
+/**
+ * Starts the needed audio 
+ * @param {string} name 
+ * @param {Objects} options 
+ * @returns 
+ */
   playAudio(name, options = {}) {
     if (this.shouldNotPlay(name)) return;
     if (!this.buffers[name] || this.audioPlaying[name]) return;
@@ -60,10 +74,21 @@ class AudioManager {
     }
   }
 
+  /**
+   * Returns, if all sounds are muted - excepting the GameOver-Sounds
+   * @param {string} name 
+   * @returns 
+   */
   shouldNotPlay(name) {
     return this.muted && name !== "pepe_loses" && name !== "pepe_wins";
   }
 
+  /**
+   * Helper function for playAudio()
+   * @param {string} name 
+   * @param {Object} options 
+   * @returns 
+   */
   createSource(name, options) {
     const source = this.audioContext.createBufferSource();
     source.buffer = this.buffers[name];
@@ -71,12 +96,22 @@ class AudioManager {
     return source;
   }
 
+  /**
+   * Helper function for playAudio() to manage the volume
+   * @param {number} volume 
+   * @returns 
+   */
   createGainNode(volume) {
     const gainNode = this.audioContext.createGain();
     gainNode.gain.value = volume ?? 0.6;
     return gainNode;
   }
 
+
+/**
+ * Helper function for playAudio() to reset active audios.
+ * @param {string} name 
+ */
   resetAudioState(name) {
     this.audioPlaying[name] = false;
     this.pausedAt[name] = 0;
@@ -84,6 +119,12 @@ class AudioManager {
   }
 
 
+  /**
+   * Function to change settings of playing audios e
+   * @param {string} name 
+   * @param {Object} options 
+   * @returns 
+   */
   controlAudio(name, options = {}) {
     let audio = this.playingSources[name];
     if (!audio) return;
@@ -102,10 +143,20 @@ class AudioManager {
     }
   }
 
+  /**
+   * Helper function for controlAudio() to manage volume
+   * @param {string} audio 
+   * @param {number} volume 
+   */
   setAudioVolume(audio, volume) {
     audio.gainNode.gain.value = volume;
   }
 
+  /**
+   * Helper function for controlAudio to manage pause
+   * @param {string} name 
+   * @param {string} audio 
+   */
   pauseAudio(name, audio) {
     if (this.audioPlaying[name]) {
       let elapsed = this.audioContext.currentTime - (this.startedAt[name] || 0);
@@ -116,12 +167,22 @@ class AudioManager {
     this.audioPlaying[name] = false;
   }
 
+  /**
+   * Helper function for controlAudio to start playing the audio again
+   * @param {string} name 
+   * @param {Object} options 
+   */
   resumeAudio(name, options) {
     if (this.pausedAt[name]) {
       this.playAudio(name, options);
     }
   }
 
+  /**
+   * Helper function for controlAudio to stop the audio
+   * @param {*} name 
+   * @param {*} audio 
+   */
   stopAudio(name, audio) {
     audio.source.stop();
     delete this.playingSources[name];
@@ -141,6 +202,12 @@ class AudioManager {
     }
   }
 
+/**
+ * For Short Sounds to start
+ * @param {string} name 
+ * @param {Object} options 
+ * @returns 
+ */
   playEffect(name, options = {}) {
     if (this.muted) return;
     if (!this.buffers[name]) return;

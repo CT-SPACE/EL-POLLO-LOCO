@@ -261,7 +261,7 @@ throwBottle() {
 
   /**
    * Gives Pepe more speed when jumping on a minichicken
-   * @param {*} enemy 
+   * @param {Object} enemy 
    */
   jumpOnMiniChicken(enemy) {
     enemy.animateBounce();
@@ -272,7 +272,7 @@ throwBottle() {
 
   /**
    * The brown standard chicken can be killed by jumping on them.
-   * @param {*} enemy 
+   * @param {Object} enemy 
    */
   jumpOnStandardChicken(enemy) {
     enemy.animateDeath();
@@ -282,7 +282,7 @@ throwBottle() {
 
   /**
    * Prepares the Energy for the statusbar of Pepe
-   * @param {*} enemy 
+   * @param {Object} enemy 
    * @returns 
    */
   collidesEnemiesOnEnergyLevel(enemy){
@@ -374,7 +374,7 @@ throwBottle() {
 
 /**
  * Handle all behaviors when the enboss is hit like Energie, Hurt-Animatioen, Death-animation and Splash of the Bottle 
- * @param {*} bottle 
+ * @param {Object} bottle 
  * @returns 
  */
   handleEndbossHit(bottle) {
@@ -396,7 +396,7 @@ throwBottle() {
 
 /**
  * Helper function for calculation of endboss energy
- * @param {*} amount 
+ * @param {number} amount 
  */
   reduceEndbossEnergy(amount) {
     this.endbossOfEnemies.energy = Math.max(0, this.endbossOfEnemies.energy - amount);
@@ -438,7 +438,7 @@ throwBottle() {
 
  /**
   * Handle game over sequence depending on who dies.
-  * @param {*} deathCandidate 
+  * @param {string} deathCandidate 
   * @returns 
   */
   handleGameOver(deathCandidate) {
@@ -479,7 +479,7 @@ throwBottle() {
 
 /**
  * Handles each image of an array to draw it on the canvas
- * @param {} Obj 
+ * @param {Object} Obj 
  */
   addToMap(Obj) {
     if (Obj.otherDirection) {
@@ -496,7 +496,7 @@ throwBottle() {
 
 /**
  * If otherDirection ist true flipImage works for Pepe and bottle throw
- * @param {*} Obj 
+ * @param {Object} Obj 
  */
   flipImage(Obj) {
     this.ctx.save();
