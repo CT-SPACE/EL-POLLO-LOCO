@@ -125,7 +125,6 @@ class World {
     if (this.character.x > 3100 || this.EndBossVisible === true) {
       this.EndBossVisible = true;
       this.addToMap(this.statusBarEndboss); 
-      // this.animateEndbossAlert();
     }
     if (this.isPepeNearEndboss() < 700) {
       this.endbossOfEnemies.EndBossClose = true;
@@ -277,7 +276,7 @@ throwBottle() {
    */
   jumpOnStandardChicken(enemy) {
     enemy.animateDeath();
-    this.character.speedY = 20; // Standard-Sprunghöhe
+    this.character.speedY = 20; 
     this.character.speed = 20;
   }
 
@@ -328,16 +327,16 @@ throwBottle() {
    */
   checkCollisionsCoins() {
     let collected = 0;
-    const totalCoins = 50; // Ursprüngliche Anzahl der Coins
+    const totalCoins = 50; 
 
     this.level.coins = this.level.coins.filter((coin) => {
       if (this.character.isColliding(coin)) {
         collected++;
         audioManager.loadAudio("WorldCoinCollecting","./audio/coin_success.mp3");
         audioManager.playEffect("WorldCoinCollecting", {loop: false, volume: 0.2, currentTime: 0, });
-        return false; // Coin wird entfernt
+        return false;
       }
-      return true; // Coin bleibt
+      return true;
     });
     if (collected > 0) {
       this.statusBarCoin.setPercentage(totalCoins - this.level.coins.length);
@@ -427,15 +426,6 @@ throwBottle() {
         this.endbossOfEnemies.animateHurt();
     }
 }
-
-/**Helper function in case Pepe is near by Endboss
- * 
- */
-// animateEndbossAlert(){
-//       if (typeof this.endbossOfEnemies.animateAlert === "function") {
-//         this.endbossOfEnemies.animateAlert();
-//     }
-// }
 
 /**
  * Helper function to start the endboss attack mode

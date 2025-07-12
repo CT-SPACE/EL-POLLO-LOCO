@@ -142,7 +142,7 @@ function finishClosing(contentScreen, callback) {
  */
 function prepareAnimation(contentScreen) {
   contentScreen.classList.remove("displayNone");
-  contentScreen.offsetHeight; // Force reflow
+  contentScreen.offsetHeight;
   requestAnimationFrame(() => {
     contentScreen.classList.remove("close");
     requestAnimationFrame(() => {

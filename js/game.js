@@ -181,18 +181,18 @@ function restoreSoundStatus() {
 function togglePlay(toggleSource, value) {
   let playDiv = document.getElementById("play");
   let playIcon = document.getElementById("switch");
-  if (toggleSource === "content" && value === true) { // Pause-Icon and Disabled
+  if (toggleSource === "content" && value === true) { 
     playIcon.classList.remove("play");
     playIcon.classList.add("pause");
     playDiv.classList.add("disabled");
     gamePaused = true;
-  } else if ((toggleSource === "play" || (toggleSource === "button" && playIcon.classList.contains("play"))) && value !== true ) {//Pause-Icon not Disabled
+  } else if ((toggleSource === "play" || (toggleSource === "button" && playIcon.classList.contains("play"))) && value !== true ) {
     playIcon.classList.remove("play");
     playIcon.classList.add("pause");
     playDiv.classList.remove("disabled");
     gamePaused = true;
   } 
-  else { // Play-Icon not Disabled
+  else {
     playIcon.classList.remove("pause");
     playIcon.classList.add("play");
     playDiv.classList.remove("disabled");

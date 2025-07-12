@@ -42,7 +42,7 @@ class MiniChicken extends MovableObject {
     this.soundName = `mini_run_${this.chickId}`;
     this.x += 300 + Math.random() * 1600;
     this.speed = 3.2 + Math.random() * 1.0; 
-    this.animationSpeed = 50 + Math.random() * 100; // Zufällige Animationsgeschwindigkeit
+    this.animationSpeed = 50 + Math.random() * 100;
     this.type = "minichicken";
     this.visible_width = 800;
     this.animateX();

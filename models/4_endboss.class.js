@@ -100,7 +100,6 @@ class Endboss extends MovableObject {
   animateAlert() {
     clearInterval(this.animateAttackInterval);
     clearInterval(this.animateWalkInterval);
-    // if (this.animateAlertInterval) clearInterval(this.animateAlertInterval);
      if (gamePaused) return;
     this.animateAlertInterval = setInterval(() => {
       this.speed = 0;

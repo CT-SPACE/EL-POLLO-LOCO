@@ -87,36 +87,6 @@ startAudioPlayback(name, options = {}) {
 
     source.onended = () => this.resetAudioState(name);
 }
-  // playAudio(name, options = {}) {
-  //    if  (this.shouldNotPlay()) return;
-  //   if (!this.buffers[name] || this.audioPlaying[name]) return;
-
-  //   try {
-  //     const offset = this.pausedAt[name] || 0;
-  //     const source = this.createSource(name, options);
-  //     const gainNode = this.createGainNode(options.volume);
-
-  //     source.connect(gainNode);
-  //     gainNode.connect(this.audioContext.destination);
-
-  //     source.start(0, offset);
-  //     this.playingSources[name] = { source, gainNode };
-  //     this.audioPlaying[name] = true;
-  //     this.startedAt[name] = this.audioContext.currentTime - offset;
-
-  //     source.onended = () => this.resetAudioState(name);
-  //   } catch (error) {
-  //   }
-  // }
-
-  // /**
-  //  * Returns, if all sounds are muted - excepting the GameOver-Sounds
-  //  * @param {string} name 
-  //  * @returns 
-  //  */
-  // shouldNotPlay(name) {
-  //   return this.muted && name !== "pepe_loses" && name !== "pepe_wins";
-  // }
 
   /**
    * Helper function for playAudio()

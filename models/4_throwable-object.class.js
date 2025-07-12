@@ -57,8 +57,7 @@ class ThrowableObject extends MovableObject {
   }
 
   bottleSplash() {
-    if (this.splashed) return; // Doppelte Animation verhindern
-
+    if (this.splashed) return; 
     if (this.throwInterval) clearInterval(this.throwInterval);
     if (this.rotationInterval) clearInterval(this.rotationInterval);
     this.speedX = 0;
@@ -67,7 +66,6 @@ class ThrowableObject extends MovableObject {
     this._originalHeight = this.height;
     this.splashed = true;
     this.bottleSplashIndex = 0;
-
     this.splashInterval = setInterval(() => {
       this.intervalSettingForBottleSplash();
     }, 200);

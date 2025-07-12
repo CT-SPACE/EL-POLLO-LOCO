@@ -123,7 +123,6 @@ class MovableObject extends DrawableObject {
     clearInterval(this.animateHurtInterval);
     clearInterval(this.animateSleepInterval);
     clearInterval(this.animateAttackInterval);
-    // clearInterval(this.animateAlertInterval)
     clearInterval(this.animateWalkInterval);
     clearInterval(this.animateXInterval);
     clearInterval(this.gravityInterval);
