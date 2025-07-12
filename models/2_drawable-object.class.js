@@ -1,9 +1,10 @@
-class DrawableObject {
+class DrawableObject{
   x;
   y;
   height;
   width;
   world;
+  drawDebug = false;
   otherDirection = false;
   img;
   audioCache = {};
@@ -48,7 +49,6 @@ class DrawableObject {
 
   drawOffset(ctx) {
     if (this.drawDebug) {
-      // Nur wenn Debug-Modus aktiv ist
       if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject || this instanceof Endboss || this instanceof MiniChicken
       ) {
         ctx.beginPath();

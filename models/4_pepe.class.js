@@ -45,6 +45,19 @@ class Pepe extends MovableObject {
     "./img/2_character_pepe/1_idle/long_idle/I-20.png",
   ];
 
+  static IMAGES_IDLE = [
+    "./img/2_character_pepe/1_idle/idle/I-1.png",
+    "./img/2_character_pepe/1_idle/idle/I-2.png",
+    "./img/2_character_pepe/1_idle/idle/I-3.png",
+    "./img/2_character_pepe/1_idle/idle/I-4.png",
+    "./img/2_character_pepe/1_idle/idle/I-5.png",
+    "./img/2_character_pepe/1_idle/idle/I-6.png",
+    "./img/2_character_pepe/1_idle/idle/I-7.png",
+    "./img/2_character_pepe/1_idle/idle/I-8.png",
+    "./img/2_character_pepe/1_idle/idle/I-9.png",
+    "./img/2_character_pepe/1_idle/idle/I-10.png",
+  ];
+
   isPlayingHurtAudio = false;
 
   x = 0;
@@ -60,13 +73,14 @@ class Pepe extends MovableObject {
   animateWalkInterval;
   animateDeathInterval;
   timeToSleep = 200000;
+  timeToIdle = 2000;
   keyboard;
   cameraX;
   speed = 20;
   speedY = 0;
   frameIndex = 0;
   offset = {
-    left: 30,
+    left: 40,
     right: 40,
     top: 130,
     bottom: 20,
@@ -80,6 +94,7 @@ class Pepe extends MovableObject {
     this.loadImages(Pepe.IMAGES_JUMPING);
     this.loadImages(Pepe.IMAGES_DYING);
     this.loadImages(Pepe.IMAGES_HURT);
+    this.loadImages(Pepe.IMAGES_IDLE);
     this.loadImages(Pepe.IMAGES_SLEEPING);
     this.audio = audioManager;
     this.animateWalk();
@@ -154,10 +169,12 @@ class Pepe extends MovableObject {
       } else if (Date.now() - this.lastKeyPressTime >= this.timeToSleep) {
         this.isSleepingState = true;
         this.animateSleep();
+      } else if (Date.now() - this.lastKeyPressTime >= this.timeToIdle) {
+        this.playAnimation(Pepe.IMAGES_IDLE);
       } else {
         this.stopSleepAnimation();
       }
-    }, 500);
+    }, 200);
   }
 
   animateSleep() {

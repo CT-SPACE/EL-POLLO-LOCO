@@ -47,7 +47,6 @@ class MovableObject extends DrawableObject {
         bottom: 12,
       };
     }
-
     return (
       this.x + this.width - this.offset.right > Obj.x + Obj.offset.left &&
       this.y + this.height - this.offset.bottom > Obj.y + Obj.offset.top &&
@@ -91,10 +90,10 @@ class MovableObject extends DrawableObject {
 
   hit(attacker) {
     if (gamePaused) return; 
-    let damage = 0.0001; // Standard-Schaden, sehr klein, da pro Intervall-Durchlauf vervielfacht wird.
+    let damage = 0.0001; 
 
     if (attacker instanceof Endboss) {
-      damage *= 150; // der Schaden muss so hoch sein, dass ein Durchlaufen durch den Endboss immer zum Tode führt.
+      damage *= 150; 
     }
     if (attacker instanceof MiniChicken) {
       damage *= 0.2;
@@ -104,7 +103,7 @@ class MovableObject extends DrawableObject {
     if (this.energy < 0) {
       this.energy = 0;
     } else {
-      this.lastHit = new Date().getTime(); // Zeit des letzten Treffers speichern
+      this.lastHit = new Date().getTime(); 
     }
   }
 
@@ -118,21 +117,13 @@ class MovableObject extends DrawableObject {
     this.currentImage++;
   }
 
-  playAnimation(images) {
-    this.images = images;
-
-    let i = this.currentImage % this.images.length;
-    let frame = this.images[i];
-
-    let path = typeof frame === "string" ? frame : frame.src;
-
-    this.img = imgCache[path];
-
-    this.currentImage++;
-  }
-
   stopAllIntervals() {
     clearInterval(this.animateInterval);
+    clearInterval(this.animateJumpInterval);
+    clearInterval(this.animateHurtInterval);
+    clearInterval(this.animateSleepInterval);
+    clearInterval(this.animateAttackInterval);
+    // clearInterval(this.animateAlertInterval)
     clearInterval(this.animateWalkInterval);
     clearInterval(this.animateXInterval);
     clearInterval(this.gravityInterval);

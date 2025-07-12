@@ -28,41 +28,6 @@ let newWidth, newHeight;
 let touchSetupDone = false;
 
 
-let IMAGES_FASTLOAD = [
-  "./img/fondo_cactus.png",
-  "./img/Desierto-portada_con_pepe.jpg",
-  "./img/paper-bg.png",
-  "./img/5_background/layers/air.png",
-  "./img/skelett_gallina.png",
-  "./img/lightning.png",
-  "./img/2_character_pepe/1_idle/idle/I-1.png"
-];
-
-let imagePaths = [
-  ...movingBackground.IMAGES_MOVING,
-  ...ThrowableObject.IMAGES_BOTTLE_ONGROUND,
-  ...Chicken.IMAGES_WALKING,
-  ...MiniChicken.IMAGES_WALKING,
-  ...Pepe.IMAGES_WALKING,
-  ...Pepe.IMAGES_JUMPING,
-  ...Pepe.IMAGES_DYING,
-  ...Pepe.IMAGES_HURT,
-  ...Pepe.IMAGES_SLEEPING,
-  ...StatusBarPepe.IMAGES_SALUD_PEPE,
-  ...StatusBarCoin.IMAGES_COIN,
-  ...StatusBarChilli.IMAGES_CHILLI,
-  ...Clouds.IMAGES_MOVING,
-  ...ThrowableObject.IMAGES_BOTTLE_ROTATE,
-  ...ThrowableObject.IMAGES_BOTTLE_SPLASH,
-  ...MiniChicken.IMAGES_HIT,
-
-  ...StatusBarEndboss.IMAGES_SALUD_ENDBOSS,
-  ...Endboss.IMAGES_ALERT,
-  ...Endboss.IMAGES_WALK,
-  ...Endboss.IMAGES_ATTACK,
-  ...Endboss.IMAGES_HURT,
-  ...Endboss.IMAGES_DEAD,
-];
 
 
 /**
@@ -91,7 +56,6 @@ window.addEventListener('resize', function() {
   }
 )})
 
-
 /**
  * Starts the Init-Function after the DOM is fully loaded.
  */
@@ -103,9 +67,16 @@ document.addEventListener("DOMContentLoaded", async () => {
  * Initialises the game by loading assets and showing the start screen.
  */
 async function init() {
- 
   await loadGameAssets();
+  restoreSoundStatus();
+  document.getElementById("sound").style.display = "";
+ if (localStorage.getItem("autostart") === "true") {
+
+  playConditions();
+}else {
+
   showStartScreen();
+}
 }
 
 /**
@@ -117,14 +88,12 @@ async function loadGameAssets() {
   await preloadImages();
   await preloadAudio();
   await initLevel();
-
 }
 
 /**
  * Prepares the game by introducing the start screen, the audio and needed Buttons
  */
 function showStartScreen() {
-  restoreSoundStatus();
   startScreen = true;
   allAmbientSounds();
   hideLoaderAndShowPlayButton();
@@ -153,14 +122,21 @@ function playAmbient() {
   audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3");
   audioManager.playAudio("pepe_ambient", { play: true, volume: 0.1 });
 
-  let duration =
-    audioManager.buffers && audioManager.buffers["pepe_ambient"]
-      ? audioManager.buffers["pepe_ambient"].duration * 1000
-      : 10000;
+  let duration = audioDuration();
+
 
   setTimeout(() => {
     setTimeout(playAmbient, 10000);
   }, duration);
+}
+
+/**
+ * Helper function to get the duration of the ambient sound.
+ */
+function audioDuration() {
+      return audioManager.buffers && audioManager.buffers["pepe_ambient"]
+      ? audioManager.buffers["pepe_ambient"].duration * 1000
+      : 10000;
 }
 
 /**
@@ -205,7 +181,6 @@ function restoreSoundStatus() {
 function togglePlay(toggleSource, value) {
   let playDiv = document.getElementById("play");
   let playIcon = document.getElementById("switch");
-console.log(toggleSource, value, gamePaused);
   if (toggleSource === "content" && value === true) { // Pause-Icon and Disabled
     playIcon.classList.remove("play");
     playIcon.classList.add("pause");
@@ -264,7 +239,6 @@ function allAmbientSounds() {
  */
 function hideLoaderAndShowPlayButton() {
   const loaderContainer = document.getElementById("loader");
-  document.getElementById("sound").style.display = "";
   loaderContainer.innerHTML = "";
   keyboardEnabled = true;
   let startGame = document.createElement("div");
@@ -289,12 +263,12 @@ function letsPlay() {
     if (e.code == "Enter") {
       if(contentOpen) return;
       keyboard.ENTER = true;
-      playConditions("initial");
+      playConditions();
     }
   });
   startGame.addEventListener("click", () => {
     if(contentOpen) return;
-    playConditions("initial");
+    playConditions();
   });
 }
 
@@ -302,12 +276,9 @@ function letsPlay() {
  * Prepares all conditions that are needed to start the game, e.g. activate the canvas, starts the world, initializes the level, activates the audio context, etc.
  * @param {string} origin 
  */
-async function playConditions(origin) {
-
+async function playConditions() {
+  localStorage.removeItem("autostart");
   startScreen = false;
-  // if (origin !== "initial") {
-  //   document.getElementById("gameOverScreen").classList.add("displayNone");
-  // }
   prepareStylesForPlayConditions();
 
   document.getElementById("playButtonsLeft").style.display = "unset";
@@ -322,7 +293,6 @@ async function playConditions(origin) {
 if (audioManager.audioContext && audioManager.audioContext.state === "suspended") {
   audioManager.activateAudioContext();
 }
-  // }
 }
 
 /**
@@ -334,13 +304,23 @@ function prepareStylesForPlayConditions() {
   document.getElementById("stayHeadline").classList.add("headline");
   document.getElementById("play").style.display = "";
   
-  let reload = document.getElementById("gohome")
+  let reload = document.getElementById("restart")
   reload.style.display = "";
   reload.addEventListener("click", () => {
   location.reload();
 });
 }
 
+
+/**
+ * Restarts the game directly and ready to play.
+ * This function is called when the user clicks the "Restart" button. 
+ */
+function reStart() {
+
+  localStorage.setItem("autostart", true);
+location.reload();
+}
 
 
 

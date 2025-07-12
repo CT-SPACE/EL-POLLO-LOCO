@@ -1,26 +1,20 @@
 
 
 /**
- * 
- * @param {string} content Creates the Content-panel that shows all information about the game: How to play, the story of Pepe and the legal information.
+ * Creates the Content-panel that shows all information about the game: How to play, the story of Pepe and the legal information.
+ * @param {string} content 
  * @returns  Double Click provokes closing of the open Content and stopps the function.
  */
 function createButtonContent(content) {
   let contentType = document.getElementById(content);
   let contentScreen = document.getElementById("buttonContent");
-
   if (window.innerHeight < 600){
-    contentScreen.classList.add("displayNone");
-    contentScreen = document.getElementById("buttonContentMobile");
-    contentScreen.innerHTML = "";
-
+    createButtonContentMobile(contentScreen) 
   }
-
   if (contentScreen.classList.contains("open") && contentScreen.dataset.active === content) {
     closeContent(contentScreen);
     return;
   }
-
   if (contentScreen.classList.contains("open")) {
     closeContent(contentScreen, () =>
       openContent(content, contentType, contentScreen)
@@ -28,6 +22,18 @@ function createButtonContent(content) {
   } else {
     openContent(content, contentType, contentScreen);
   }
+}
+
+/**
+ * Helper function to create the content panel for mobile devices and browser widths smaller than 600px.
+ * @param {HTMLElement} contentScreen 
+ * @description This function is called when the screen width is smaller than 600px. It creates a content panel for mobile devices.
+ * @returns {void}
+ */
+function createButtonContentMobile(contentScreen) {
+    contentScreen.classList.add("displayNone");
+    contentScreen = document.getElementById("buttonContentMobile");
+    contentScreen.innerHTML = "";
 }
 
 /**
@@ -40,12 +46,11 @@ function openContent(content, contentType, contentScreen) {
   let headline = document.getElementById("stayHeadline");
   gamePausedByUser = gamePaused;
   contentOpen = true;
-  
-    togglePlay("content", true);
-  
+
+  togglePlay("content", true);
+
   resetOutClasses();
   addStylesForOpenContent(contentType, contentScreen, headline);
-console.log(contentScreen);
   setTimeout(() => {
     switchContentForOpenContent(content, contentScreen);
   }, 50);
@@ -100,7 +105,6 @@ function closeContent(contentScreen, callback) {
   contentOpen = false;
   let headline = document.getElementById("stayHeadline");
   resetOutClasses();
-  console.log("gamePaused:",gamePaused);
   if(!gamePausedByUser){
       togglePlay("play", true);
 } else {
@@ -176,22 +180,24 @@ function resetOutClasses() {
  */
 function getStoryHtml() {
   return /*html*/ `   
-  <div id="contentContainer">     
+  <div id="contentContainer">
     <div class="fixedContentHead">
-        <h3>Story</h3>
-        <hr class="contentLine">
-        </div>
-    <div class="content">
-
-        <p></p>
-        Pepe, el Peligroso, hat Hunger! <br>Er ist verrückt nach Hühnchen mit scharfer Soße. Sein Hunger ist so groß, dass die kleinen Hühner ihm gestohlen bleiben können. Ein Pollo asado gigante con Salsa picante muss her. 
-        Er braucht etwas Großes. <p></p>Dieses Mega-Huhn, von dem er träumt, kann man aber nicht so einfach wie die kleinen Hühner durch Draufhüpfen zermatschen - außerdem will er dieses Geflügel ja auch noch essen. 
-        Das Einzige, was wirkt, ist seine scharfe Soße, die leider in der mexikanischen Wüste verstreut ist.<p></p>Wichtig ist, mit der Salsa die Augen des Mega-Huhns zu treffen, dann stirbt es gewürzt und servierfertig.<br>
-        Kannst du Pepe helfen?
-        <p></p>
-        Nebenbei findet Pepe noch jede Menge Münzen - wenn er nicht so hungrig wäre, würde er sich darüber freuen.<br>
+      <h3>Story</h3>
+      <hr class="contentLine">
     </div>
-</div>
+    <div class="content">
+      <p></p>
+      Pepe, el Peligroso, hat Hunger! <br>Er ist verrückt nach Hühnchen mit scharfer Soße. Sein Hunger ist so groß, dass
+      die kleinen Hühner ihm gestohlen bleiben können. Ein Pollo asado gigante con Salsa picante muss her.
+      Er braucht etwas Großes. <p></p>Dieses Mega-Huhn, von dem er träumt, kann man aber nicht so einfach wie die
+      kleinen Hühner durch Draufhüpfen zermatschen - außerdem will er dieses Geflügel ja auch noch essen.
+      Das Einzige, was wirkt, ist seine scharfe Soße, die leider in der mexikanischen Wüste verstreut ist.<p></p>Wichtig
+      ist, mit der Salsa die Augen des Mega-Huhns zu treffen, dann stirbt es gewürzt und servierfertig.<br>
+      Kannst du Pepe helfen?
+      <p></p>
+      Nebenbei findet Pepe noch jede Menge Münzen - wenn er nicht so hungrig wäre, würde er sich darüber freuen.<br>
+    </div>
+  </div>
     `;
 }
 
@@ -201,23 +207,22 @@ function getStoryHtml() {
  */
 function getImpressumHtml() {
   return /*html*/ `
-    <div id="contentContainer">   
-     <div class="fixedContentHead">
+    <div id="contentContainer">
+      <div class="fixedContentHead">
         <h3>Impressum</h3>
         <hr class="contentLine">
-        </div>
-    <div class="content">
-
+      </div>
+      <div class="content">
         <p>Angaben gemäß § 5 TMG</p>
         Dieses Spiel entstand im Rahmen des Kurses "Web-Developer" an der <br>
         <bold>Developer Akademie GmbH</bold><br>
         Tassiloplatz 25,<br>
         81541 München<br>
         <p>
-        E-Mail an: <a href="mailto:Christina@troitzsch.de">Christina Troitzsch</a>
+          E-Mail an: <a href="mailto:Christina@troitzsch.de">Christina Troitzsch</a>
         </p>
+      </div>
     </div>
-</div>
     `;
 }
 
@@ -227,31 +232,65 @@ function getImpressumHtml() {
  */
 function getHowToHtml() {
   return /*html*/ ` 
-    <div id="contentContainer">   
-    
-    <div class="fixedContentHead">
+    <div id="contentContainer">
+
+      <div class="fixedContentHead">
         <h3>How to Play</h3>
         <hr class="contentLine">
-        </div>
-    <div class="content">
-
+      </div>
+      <div class="content">
         <div class="table">
-<div class="row "><div class="cell rightAlign">SPACEBAR or&nbsp;<img src="./img/buttons/button-up_white.svg" alt="Spacebar or Key Up Arrow" class="key"></div><div class="cell">Pepe jumps</div></div>
-<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-right_white.svg" alt="Key Right Arrow" class="key"></div><div class="cell">Pepe runs right</div></div>
-<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-left_white.svg" alt="Key Left Arrow" class="key"></div><div class="cell">Pepe runs left</div></div>
-<div class="row"><div class="cell rightAlign"><img src="./img/buttons/button-D_white.svg" alt="Key D" class="key"></div><div class="cell">Pepe throws bottle<br>
-<small style="line-height:1">Long button press for<br>long throw range</small></div></div>
+          <div class="row ">
+            <div class="cell rightAlign">SPACEBAR or&nbsp;<img src="./img/buttons/button-up_white.svg"
+                alt="Spacebar or Key Up Arrow" class="key"></div>
+            <div class="cell">Pepe jumps</div>
+          </div>
+          <div class="row">
+            <div class="cell rightAlign"><img src="./img/buttons/button-right_white.svg" alt="Key Right Arrow"
+                class="key"></div>
+            <div class="cell">Pepe runs right</div>
+          </div>
+          <div class="row">
+            <div class="cell rightAlign"><img src="./img/buttons/button-left_white.svg" alt="Key Left Arrow"
+                class="key"></div>
+            <div class="cell">Pepe runs left</div>
+          </div>
+          <div class="row">
+            <div class="cell rightAlign"><img src="./img/buttons/button-D_white.svg" alt="Key D" class="key"></div>
+            <div class="cell">Pepe throws bottle<br>
+              <small style="line-height:1">Long button press for<br>long throw range</small></div>
+          </div>
         </div>
-     <div class="table">
-<div class="row "><div class="cell rightAlign"><img src="./img/icon_minichicken.svg" alt="Mini-Chicken" class="key"></div><div class="cell">A collision reduces Pepe's health score by 1% per second. These chickens cannot be killed. But you can jump on them without taking damage. They turn back at the edge of the playing field.</div></div>
-<div class="row"><div class="cell rightAlign"><img src="./img/icon_chicken.svg" alt="Chicken Enemies" class="key"></div><div class="cell">Reduces Pepe's health score by 10% per second. You can jump on them to kill them. They only run in one direction.</div></div>
-<div class="row"><div class="cell rightAlign"><img src="./img/icon_endboss.svg" alt="Endboss Chicken Mum" class="key"></div><div class="cell">A collision with the Endboss reduces Pepe's health by 30% per second. You must throw 10 bottles to kill him. This enemy only runs in one direction. But he gets angry if you throw bottles at him.<br>Take Care and Good Luck!</div></div>
-
-<div class="row"><div class="cell rightAlign"><img src="./img/icon_coin.svg" alt="Coin" class="key"></div><div class="cell">Collectable Item</div></div>
-<div class="row"><div class="cell rightAlign"><img src="./img/6_salsa_bottle/1_salsa_bottle_on_ground.png" alt="Salsa" class="key"></div><div class="cell">Collectable and needed for the fight against the Endboss.  It does not work against other chickens.</div></div>
+        <div class="table">
+          <div class="row ">
+            <div class="cell rightAlign"><img src="./img/icon_minichicken.svg" alt="Mini-Chicken" class="key"></div>
+            <div class="cell">A collision reduces Pepe's health score by 1% per second. These chickens cannot be killed.
+              But you can jump on them without taking damage. They turn back at the edge of the playing field.</div>
+          </div>
+          <div class="row">
+            <div class="cell rightAlign"><img src="./img/icon_chicken.svg" alt="Chicken Enemies" class="key"></div>
+            <div class="cell">Reduces Pepe's health score by 10% per second. You can jump on them to kill them. They
+              only run in one direction.</div>
+          </div>
+          <div class="row">
+            <div class="cell rightAlign"><img src="./img/icon_endboss.svg" alt="Endboss Chicken Mum" class="key"></div>
+            <div class="cell">A collision with the Endboss reduces Pepe's health by 30% per second. You must throw 10
+              bottles to kill him. This enemy only runs in one direction. But he gets angry if you throw bottles at
+              him.<br>Take Care and Good Luck!</div>
+          </div>
+          <div class="row">
+            <div class="cell rightAlign"><img src="./img/icon_coin.svg" alt="Coin" class="key"></div>
+            <div class="cell">Collectable Item</div>
+          </div>
+          <div class="row">
+            <div class="cell rightAlign"><img src="./img/6_salsa_bottle/1_salsa_bottle_on_ground.png" alt="Salsa"
+                class="key"></div>
+            <div class="cell">Collectable and needed for the fight against the Endboss. It does not work against other
+              chickens.</div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
     `;
 }
 
@@ -333,22 +372,41 @@ function prepareGameOverScreen(gameOverScreen) {
  * @param {HTMLElement} gameOverScreen 
  */
 function handleWinningEndboss(gameOverScreen) {
-  audioManager.playAudio("pepe_loses", { play: true, volume: 0.2 });
+  audioManager.playAudio("pepe_loses", { play: true, volume: 0.3 });
   gameOverScreen.innerHTML = "";
   gameOverScreen.classList.add("backdrop");
+
+  includeReplayButton(gameOverScreen, "lose");
+
+  gameOverScreen.appendChild(gameOverText());
+  gameOverScreen.appendChild(pepeGrave());
+}
+
+/**
+ * Helper function to create the GameOverText für handleWinningEndboss()
+ * @description Creates the GameOverText and returns it as a div element. 
+ * @returns gameOverText
+
+ */
+function gameOverText(){
+  
+  let gameOverText = document.createElement("div");
+  gameOverText.className = "gameOverText";
+  gameOverText.innerHTML = `<h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!`;
+  return gameOverText;
+}
+
+/**
+ * Helper function to create the Pepe's Grave for handleWinningEndboss()
+ * @description Creates a div element with the id "grave" and class "pepeGrave", which contains an image of Pepe's grave. 
+ * @returns pepeGrave;
+ */
+function pepeGrave(){
   let pepeGrave = document.createElement("div");
   pepeGrave.id = "grave";
   pepeGrave.className = "pepeGrave";
   pepeGrave.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
-
-  const gameOverText = document.createElement("div");
-  gameOverText.className = "gameOverText";
-  gameOverText.innerHTML = `<h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!`;
-
-  includeReplayButton(gameOverScreen, "lose");
-
-  gameOverScreen.appendChild(gameOverText);
-  gameOverScreen.appendChild(pepeGrave);
+  return pepeGrave;
 }
 
 
@@ -357,8 +415,7 @@ function handleWinningEndboss(gameOverScreen) {
  * @param {HTMLElement} gameOverScreen 
  */
 function handleWinningPepe(gameOverScreen) {
-  audioManager.playAudio("pepe_wins", { play: true, volume: 0.2 });
-
+  audioManager.playAudio("pepe_wins", { play: true, volume: 0.3 });
   gameOverScreen.innerHTML += ` <div class="gameOverText"><h3>YOU WON!</h3> ¡Que Aproveches! </div>`;
 
   let rueda = document.createElement("div");
@@ -379,6 +436,7 @@ function handleWinningPepe(gameOverScreen) {
 function includeReplayButton(gameOverScreen, status) {
   let replayPosition = document.createElement("div");
   replayPosition.id = "retryPosition";
+  localStorage.setItem("autostart", "1");
   let replay = document.createElement("div");
   replay.id = "retry";
   replay.classList.add("replayButton", status === "lose" ? "lose" : "win");

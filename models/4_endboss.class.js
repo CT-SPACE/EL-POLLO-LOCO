@@ -78,7 +78,7 @@ class Endboss extends MovableObject {
     this.audio = audioManager;
 
     this.animateWalk();
-
+    this.y = 12;
     this.x = 3800;
   }
 
@@ -90,27 +90,33 @@ class Endboss extends MovableObject {
       this.speed = 0.8;
       this.playAnimation(Endboss.IMAGES_WALK);
       this.moveLeft(this.speed);
+      if(this.EndBossClose){
+         this.x -= 15;
+         this.jump();
+      }
     }, 6000 / 25);
   }
 
   animateAlert() {
     clearInterval(this.animateAttackInterval);
     clearInterval(this.animateWalkInterval);
+    // if (this.animateAlertInterval) clearInterval(this.animateAlertInterval);
+     if (gamePaused) return;
     this.animateAlertInterval = setInterval(() => {
       this.speed = 0;
       this.moveLeft(this.speed);
       this.playAnimation(Endboss.IMAGES_ALERT);
-    }, 2000 / 25);
+    }, 1000);
   }
 
   animateAttack() {
     clearInterval(this.animateWalkInterval);
     clearInterval(this.animateAlertInterval);
     if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
-
-    let jumpDistance = 40;
+     if (gamePaused) return;
+    
     this.animateAttackInterval = setInterval(() => {
-      if (gamePaused) return;
+     let jumpDistance = 40;
       this.playAnimation(Endboss.IMAGES_ATTACK);
       if (this.currentImage % Endboss.IMAGES_ATTACK.length === 5) {
         this.x -= jumpDistance;

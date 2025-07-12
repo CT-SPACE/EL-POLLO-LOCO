@@ -7,6 +7,7 @@ class World {
   energy;
   keyboard;
   cameraX;
+
   statusBarPepe = new StatusBarPepe();
   statusBarCoin = new StatusBarCoin();
   statusBarChilli = new StatusBarChilli();
@@ -35,14 +36,13 @@ class World {
   
     this.cameraX = 0;
     this.level = level;
-
+ 
     this.canvas = canvas;
     this.endboss.world = this;
     this.EndBossVisible = false;
     this.endbossOfEnemies.EndBossClose = false;
     this.isGameEnding = false;
     this.throwableObjects = [];
-
     this.canThrow = true;
     this.draw();
     this.addObjectsForDraw();
@@ -124,7 +124,8 @@ class World {
   handleEndboss() {
     if (this.character.x > 3100 || this.EndBossVisible === true) {
       this.EndBossVisible = true;
-      this.addToMap(this.statusBarEndboss);
+      this.addToMap(this.statusBarEndboss); 
+      // this.animateEndbossAlert();
     }
     if (this.isPepeNearEndboss() < 700) {
       this.endbossOfEnemies.EndBossClose = true;
@@ -234,7 +235,7 @@ throwBottle() {
     this.canThrow = false;
     setTimeout(() => {
       this.canThrow = true;
-    }, 300);
+    }, 400);
 }
 
 /**
@@ -244,7 +245,7 @@ throwBottle() {
     setInterval(() => {
       this.level.enemies.forEach((enemy) => {
         if (enemy.type === "endboss") return;
-        if (this.character.isColliding(enemy) && this.character.speedY < 0) {
+        if (this.character.isColliding(enemy) && this.character.speedY < 0 && !enemy.isDead) {
           if (enemy.type === "minichicken") {
             this.jumpOnMiniChicken(enemy);
           } else {
@@ -286,7 +287,7 @@ throwBottle() {
    * @returns 
    */
   collidesEnemiesOnEnergyLevel(enemy){
-        if (this.character.isColliding(enemy) && this.character.energy > 0 && !this.character.isAboveGround()) {
+        if (this.character.isColliding(enemy) && this.character.energy > 0 && !this.character.isAboveGround() && !enemy.isDead) {
           this.character.hit(enemy);
           this.statusBarPepe.setPercentage(this.character.energy);
         }
@@ -426,6 +427,15 @@ throwBottle() {
         this.endbossOfEnemies.animateHurt();
     }
 }
+
+/**Helper function in case Pepe is near by Endboss
+ * 
+ */
+// animateEndbossAlert(){
+//       if (typeof this.endbossOfEnemies.animateAlert === "function") {
+//         this.endbossOfEnemies.animateAlert();
+//     }
+// }
 
 /**
  * Helper function to start the endboss attack mode

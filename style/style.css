@@ -726,7 +726,7 @@ p {
 
 #sound,
 #play,
-#gohome {
+#restart {
   display: flex;
   padding: 5px 5px 5px 25px;
   box-sizing: border-box;
@@ -741,7 +741,7 @@ p {
 
 #sound:hover,
 #play:hover,
-#gohome:hover {
+#restart:hover {
   margin-right: -8px;
   transition: margin-left 0.2s ease-in-out;
 }
@@ -762,7 +762,7 @@ p {
 } */
 
 #play.disabled,
-#gohome.disabled {
+#restart.disabled {
   background-color: lightgrey;
   cursor: unset;
   opacity: 0.5;
@@ -771,7 +771,7 @@ p {
 }
 
 #play.disabled:hover,
-#gohome.disabled:hover {
+#restart.disabled:hover {
   margin-right: 0;
   transition: none;
 }
@@ -792,8 +792,8 @@ p {
   background-image: url("../img/buttons/play.svg");
 }
 
-.goback {
-  background-image: url("../img/buttons/replay.svg");
+.goRestart {
+  background-image: url("../img/buttons/retry.svg");
 }
 
 .table {

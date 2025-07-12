@@ -54,23 +54,15 @@ class Chicken extends MovableObject {
   animateDeath() {
     if (this.isDead) return;
     this.isDead = true;
-
     clearInterval(this.animateXInterval);
     clearInterval(this.animateWalkInterval);
-    audioManager.playAudio("chicken_splat", {
-      play: true,
-      loop: false,
-      volume: 0.5,
-    });
+    audioManager.playAudio("chicken_splat", { play: true, loop: false, volume: 0.5 });
 
     this.loadImage(this.img_death);
     this.y = 362;
     setTimeout(() => {
       if (window.world && window.world.level && window.world.level.enemies) {
-        window.world.level.enemies.splice(
-          window.world.level.enemies.indexOf(this),
-          1
-        );
+        window.world.level.enemies.splice(window.world.level.enemies.indexOf(this), 1);
       }
     }, 1000);
   }

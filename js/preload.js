@@ -1,4 +1,40 @@
 
+let IMAGES_FASTLOAD = [
+  "./img/fondo_cactus.png",
+  "./img/Desierto-portada_con_pepe.jpg",
+  "./img/paper-bg.png",
+  "./img/5_background/layers/air.png",
+  "./img/skelett_gallina.png",
+  "./img/lightning.png",
+  "./img/2_character_pepe/1_idle/idle/I-1.png"
+];
+
+let imagePaths = [
+  ...movingBackground.IMAGES_MOVING,
+  ...ThrowableObject.IMAGES_BOTTLE_ONGROUND,
+  ...Chicken.IMAGES_WALKING,
+  ...MiniChicken.IMAGES_WALKING,
+  ...Pepe.IMAGES_WALKING,
+  ...Pepe.IMAGES_JUMPING,
+  ...Pepe.IMAGES_DYING,
+  ...Pepe.IMAGES_HURT,
+  ...Pepe.IMAGES_SLEEPING,
+  ...Pepe.IMAGES_IDLE,
+  ...StatusBarPepe.IMAGES_SALUD_PEPE,
+  ...StatusBarCoin.IMAGES_COIN,
+  ...StatusBarChilli.IMAGES_CHILLI,
+  ...Clouds.IMAGES_MOVING,
+  ...ThrowableObject.IMAGES_BOTTLE_ROTATE,
+  ...ThrowableObject.IMAGES_BOTTLE_SPLASH,
+  ...MiniChicken.IMAGES_HIT,
+
+  ...StatusBarEndboss.IMAGES_SALUD_ENDBOSS,
+  ...Endboss.IMAGES_ALERT,
+  ...Endboss.IMAGES_WALK,
+  ...Endboss.IMAGES_ATTACK,
+  ...Endboss.IMAGES_HURT,
+  ...Endboss.IMAGES_DEAD,
+];
 
 /**
  * Gives the Loading Visual a nice effect by animating the letters of the text "LOADING ...".
@@ -34,8 +70,8 @@ async function fastPreload() {
 
         const IMG = new Image();
         IMG.onload = () => {
-          imgCache[path] = IMG;         // Cache speichern
-          resolve({ path, IMG });       // Promise auflösen
+          imgCache[path] = IMG;   
+          resolve({ path, IMG });  
         };
         IMG.onerror = reject;
         IMG.src = path;
@@ -87,7 +123,6 @@ async function preloadImages() {
           resolve();
         };
         IMG.onerror = () => {
-          console.error(`Fehler beim Laden des Bildes: ${path}`);
           reject(new Error(`Bild konnte nicht geladen werden: ${path}`));
         };}); }));
 }

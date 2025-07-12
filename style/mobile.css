@@ -164,7 +164,6 @@
       }
 
       .replayButton {
-        /* top: unset; */
         right: unset;
       }
 
@@ -264,7 +263,7 @@
       }
       #sound,
       #play,
-      #gohome {
+      #restart {
         padding: 5px 25px 5px 5px;
         border: 1px solid gray;
         box-shadow: 2px 2px 2px 0 #00000080;
@@ -277,10 +276,17 @@
         height: 32px;
       }
 
-      @media (max-height: 400px) and (max-width: 700px) {
+      @media (max-height: 400px)  {
         #stayHeadline {
           font-size: 0.8rem;
         }
+        .control{
+                  top: 10px;
+        }
+        #sound, #play, #restart {
+          margin-bottom: 2px;
+        }
+
 
         /* #buttonContentMobile.open {
           padding: 80px 40vh 74px 55vh;
