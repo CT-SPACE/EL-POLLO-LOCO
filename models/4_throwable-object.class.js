@@ -26,6 +26,12 @@ class ThrowableObject extends MovableObject {
   splashed = false;
   toBeRemoved = false;
 
+  /**
+   * Creates a new ThrowableObject instance, loading the initial image and setting its position and dimensions.
+   * @param {Number} x 
+   * @param {Number} y 
+   * @param {Object} world 
+   */
   constructor(x, y, world) {
     super().loadImage("./img/6_salsa_bottle/1_salsa_bottle_on_ground.png");
     this.loadImages(ThrowableObject.IMAGES_BOTTLE_ONGROUND);
@@ -40,6 +46,12 @@ class ThrowableObject extends MovableObject {
     this.world = world;
   }
 
+  /**
+   * Throws the object by applying a speed in the x and y directions.
+   * It also starts the bottle rotation animation and applies gravity to the object.
+   * The object will fall until it reaches the ground level (y = 450).
+   * If it reaches the ground, it will stop moving and trigger a splash effect.
+   */
   throw() {
     this.rotatingBottle();
     this.throwInterval = setInterval(() => {
@@ -56,6 +68,11 @@ class ThrowableObject extends MovableObject {
     }, 1000 / 25);
   }
 
+  /**
+   * Only in case the bottle hits the Endboss it will trigger the splash effect.
+    * It stops the throw and rotation intervals, sets the speed to zero, and starts the splash animation.
+   * @returns 
+   */
   bottleSplash() {
     if (this.splashed) return; 
     if (this.throwInterval) clearInterval(this.throwInterval);
@@ -71,6 +88,12 @@ class ThrowableObject extends MovableObject {
     }, 200);
   }
 
+  /**
+   * Handles the animation of the bottle splash effect by increasing the size of the bottle
+   * and changing the image to create a splash effect.
+   * It increments the bottleSplashIndex to cycle through the splash images.
+   * If all splash images have been displayed, it clears the interval and marks the object for removal.
+   */
 intervalSettingForBottleSplash(){
   this.width = 180 + this.bottleSplashIndex * 10;
   this.height = 180 + this.bottleSplashIndex * 10;
@@ -86,7 +109,11 @@ intervalSettingForBottleSplash(){
         this.height = this._originalHeight;
       }
   }
-
+/**
+ * Starts the bottle rotation animation by cycling through the images in the IMAGES_BOTTLE_ROTATE array.
+ * It sets the bottleRotateIndex to 0 and updates the img property with the corresponding image from the imgCache.
+ * The rotation interval is cleared if it already exists to prevent multiple intervals from running simultaneously. 
+ */
   rotatingBottle() {
     if (this.rotationInterval) clearInterval(this.rotationInterval);
     if (!this.splashed) {
@@ -103,6 +130,9 @@ intervalSettingForBottleSplash(){
     }
   }
 
+  /**
+   * Stops the bottle rotation and splash animations by clearing the respective intervals.
+   */
   stopBottleAnimation() {
     if (this.rotationInterval) clearInterval(this.rotationInterval);
     if (this.throwInterval) clearInterval(this.throwInterval);

@@ -1,4 +1,7 @@
-
+/**
+ * Initializes the first Level of the game with all its components.
+ * @returns {Promise} A promise that resolves when the level is initialized.
+ */
 async function initLevel() {
     Level01 = new Level(
 

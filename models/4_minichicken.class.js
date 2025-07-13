@@ -33,6 +33,14 @@ class MiniChicken extends MovableObject {
     bottom: 10,
   };
 
+  /**
+   * Defines the properties of the MiniChicken class, including its position, speed, and dimensions.
+   * Loads the walking and hit images, sets up the initial position and speed, and initializes the audio manager.
+   * @param {Object} audioManager - The audio manager for handling sound effects.
+   * @param {Object} world - The world object that contains the game state and environment.
+   * @param {Number} x - The initial x-coordinate of the mini chicken.
+   * @param {Number} y - The initial y-coordinate of the mini chicken.
+   */
   constructor(world) {
     super().loadImage("./img/3_enemies_chicken/chicken_small/1_walk/1_w.png");
     this.loadImages(MiniChicken.IMAGES_WALKING);
@@ -47,11 +55,14 @@ class MiniChicken extends MovableObject {
     this.visible_width = 800;
     this.animateX();
     this.animateWalk();
-    this.setupSoundInterval();
     this.audio = audioManager;
     this.audio.playAudio(this.soundName, { volume: 0, loop: true });
   }
 
+  /**
+   * Animates the mini chicken's movement along the x-axis by moving it left or right based on its current position.
+   * If the mini chicken reaches the left or right boundary, it changes direction.
+   */
   animateX() {
     let movingRight = false;
     this.animateXInterval = setInterval(() => {
@@ -66,33 +77,51 @@ class MiniChicken extends MovableObject {
     }, 1000 / 60);
   }
 
+  /**
+   * Animates the mini chicken's walk movement by playing the walking animation at a defined speed.
+   */
   animateWalk() {
     this.animateWalkInterval = setInterval(() => {
       this.playAnimation(MiniChicken.IMAGES_WALKING); 
     }, this.animationSpeed);
   }
   
+  /**
+   * In case of Pepe jumping on a mini chicken, this function handles the bounce effect.
+   * It plays the bounce animation, stops the walking animation, and resets the speed after a delay.
+   * It also plays a bounce sound effect and controls the audio playback.
+   */
   animateBounce() {
     if (this.animateBounceActive) return;
 
     this.animateBounceActive = true;
     let defaultSpeed = this.speed;
     this.speed = 0;
-
     clearInterval(this.animateWalkInterval);
-
-    this.audio.playEffect("mini_bounce", { volume: 0.3, loop: false });
-    this.audio.controlAudio(this.soundName, { play: false, pause: true });
-
-    this.animateBounceMiniInterval = setInterval(() => {
-      this.playAnimation(MiniChicken.IMAGES_HIT);
-    }, 300);
-
+    this.bounceEffect();
     setTimeout(() => {
         this.clearBounceEffect(defaultSpeed)
     }, 3000);
   }
 
+/**
+ * Handles the bounce effect by playing the bounce animation and sound.
+ * It also stops the audio playback for the mini chicken.
+ */
+bounceEffect(){
+      this.audio.playEffect("mini_bounce", { volume: 0.3, loop: false });
+    this.audio.controlAudio(this.soundName, { play: false, pause: true });
+
+    this.animateBounceMiniInterval = setInterval(() => {
+      this.playAnimation(MiniChicken.IMAGES_HIT);
+    }, 300);
+}
+
+/**
+ * Clears the bounce effect by stopping the bounce animation, resetting the speed, and playing the walking animation again.
+ * It also resumes the audio playback for the mini chicken.
+ * @param {Number} defaultSpeed 
+ */
 clearBounceEffect(defaultSpeed){
      clearInterval(this.animateBounceMiniInterval);
       this.animateBounceMiniInterval = null;
@@ -106,41 +135,4 @@ clearBounceEffect(defaultSpeed){
       this.animateWalk();
 }
 
-
-  setupSoundInterval() {
-    setTimeout(() => {
-      setInterval(() => {
-        if (this.animateBounceActive) return;
-
-        const volume = this.calculateVolume();
-        if (volume > 0) {
-          this.audio.controlAudio(this.soundName, {
-            volume: volume * 0.3,
-            loop: false,
-          });
-        }
-      }, 200); 
-    }, 300); 
-  }
-
-  isVisible() {
-    if (!this.world) return false;
-
-    const camera_x = this.world.cameraX;
-    return (
-      this.x + this.width >= -camera_x &&
-      this.x <= -camera_x + this.visible_width
-    );
-  }
-
-  calculateVolume() {
-    if (!this.isVisible()) return 0;
-
-    const camera_x = this.world.cameraX;
-    const center_x = -camera_x + this.visible_width / 2;
-    const distance = Math.abs(this.x - center_x);
-    const max_distance = this.visible_width / 2;
-
-    return Math.max(0, 1 - distance / max_distance);
-  }
 }

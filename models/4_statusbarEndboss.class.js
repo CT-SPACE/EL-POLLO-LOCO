@@ -18,6 +18,9 @@ class StatusBarEndboss extends StaticObject {
         './img/7_statusbars/2_statusbar_endboss/green/green100.png'
     ];
 
+    /**
+     * Loads the image for the status bar endboss and initializes its position and dimensions.
+     */
     constructor() {
         super().loadImage('./img/7_statusbars/2_statusbar_endboss/green/green100.png');
         this.loadImages(StatusBarEndboss.IMAGES_SALUD_ENDBOSS);
@@ -28,14 +31,23 @@ class StatusBarEndboss extends StaticObject {
         this.height = 34;
 
     }
-
+/** 
+ * This function sets the percentage of the endboss health and updates the image based on the current percentage.
+ * @param {Number}percentage 
+ */
     setPercentage(percentage){
         this.percentage = percentage;
         let path = StatusBarEndboss.IMAGES_SALUD_ENDBOSS[this.resolveImageEndboss(percentage)];
         this.img = imgCache[path];
     }
 
-
+/**
+ * This function represents the logic to resolve which image to use based on the endboss health percentage.
+ * It returns an index based on the percentage, which corresponds to the images in the IMAGES_SALUD_ENDBOSS array.
+ * The images are displayed in a range from 0 to 5, depending on the endboss health percentage.
+ * @param {Number} percentage 
+ * @returns 
+ */
     resolveImageEndboss(percentage){
         if(percentage > 10 && percentage < 30){
             return 1;

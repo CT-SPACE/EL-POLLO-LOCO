@@ -72,7 +72,7 @@ class Pepe extends MovableObject {
   deathHandled = false;
   animateWalkInterval;
   animateDeathInterval;
-  timeToSleep = 200000;
+  timeToSleep = 15000;
   timeToIdle = 2000;
   keyboard;
   cameraX;
@@ -86,6 +86,12 @@ class Pepe extends MovableObject {
     bottom: 20,
   };
 
+  /**
+   * Defines the Pepe character with its properties and animations.
+   * Initializes the character's position, speed, and animations.
+   * @param {Object} keyboard - The keyboard object for handling user input.
+   * @param {Object} world - The world object that contains the game state and environment.
+   */
   constructor(keyboard) {
     super().loadImage("./img/2_character_pepe/2_walk/W-21.png");
 
@@ -104,6 +110,9 @@ class Pepe extends MovableObject {
     this.animateStates();
   }
 
+  /**
+   * 
+   */
   animateWalk() {
     this.x = 100;
     this.animateWalkInterval = setInterval(() => {
@@ -121,6 +130,11 @@ class Pepe extends MovableObject {
     }, 2000 / 25);
   }
 
+  /**
+   * Handles the jump action for the Pepe character.
+   * It sets the speedY to a negative value to simulate jumping and plays the jump animation. 
+   * @param {Number} lastKeyPressTime 
+   */
   listenForKeyPress(lastKeyPressTime) {
     this.lastKeyPressTime = lastKeyPressTime;
     document.addEventListener("keydown", () => {
@@ -131,6 +145,10 @@ class Pepe extends MovableObject {
     });
   }
 
+  /**
+   * In case of right movement, this function stopps the sleep animation, start the walking animation, and moves the character to the right.
+   * It also plays the walking sound effect if not already playing.
+   */
   handleRightMovement() {
     this.stopSleepAnimation();
     this.playAnimation(Pepe.IMAGES_WALKING);
@@ -140,6 +158,10 @@ class Pepe extends MovableObject {
     }
   }
 
+  /**
+   * In case of left movement, this function stopps the sleep animation, start the walking animation, and moves the character to the left.
+  * It sets the otherDirection to true to flip the character's direction.
+  */
   handleLeftMovement() {
     this.stopSleepAnimation();
     this.playAnimation(Pepe.IMAGES_WALKING);
@@ -147,6 +169,11 @@ class Pepe extends MovableObject {
     this.otherDirection = true;
   }
 
+  /**
+   * Stopps the sleep animation and resets the isSleepingState to false.
+   * It also stops the audio playback for the sleeping sound effect.
+   * This function is called when the character is no longer in a sleeping state.
+   */
   stopSleepAnimation() {
     this.isSleepingState = false;
     this.audio.controlAudio("pepe_snore", {
@@ -156,13 +183,16 @@ class Pepe extends MovableObject {
     });
   }
 
+  /**
+   * This function handles all states of Pepe animation, like walking, jumping, sleeping, and dying.
+   */
   animateStates() {
     this.isPlayingHurtAudio = false;
-
     setInterval(() => {
       if (this.isZeroHealthscore()) {
         this.animateDeath();
       } else if (this.isHurt()) {
+        this.lastKeyPressTime = Date.now();
         this.animateHurt();
       } else if (this.isAboveGround()) {
         this.playAnimation(Pepe.IMAGES_JUMPING);
@@ -177,6 +207,11 @@ class Pepe extends MovableObject {
     }, 200);
   }
 
+  /**
+   * Starts the sleeping animation by playing the sleeping images in a loop.
+   * It also plays the snoring sound effect if not already playing.
+   * If the character is already in a sleeping state, it does nothing.
+   */
   animateSleep() {
     this.isSleepingState = true;
     this.playAnimation(Pepe.IMAGES_SLEEPING);
@@ -191,19 +226,27 @@ class Pepe extends MovableObject {
     });
   }
 
+  /**
+   * Handles the death animation of Pepe.
+   * It stops the walking animation, plays the death image, and removes Pepe from the world after a delay.
+   * If Pepe is already dead, it does nothing.
+   */
   animateDeath() {
     if (!this.deathHandled) {
       this.deathHandled = true;
       this.isDead = true;
       this.currentImage = 0;
       gamePaused = true;
-      this.disableKeyboard();
+      keyboardEnabled = false;
       this.animateDeathInterval = setInterval(() => {
         this.intervalSettingForAnimateDeath();
       }, 100);
     }
   }
 
+  /**
+   * Helper function to handle the death animation of Pepe.
+   */
   intervalSettingForAnimateDeath() {
     this.playAnimation(Pepe.IMAGES_DYING);
     if (
@@ -215,15 +258,27 @@ class Pepe extends MovableObject {
     }
   }
 
+  /**
+   * Helper function to calculate the current image index based on the modulo operation.
+   * @param {Array} images 
+   * @returns 
+   */
   moduloCurrentImage(images) {
     let i = this.currentImage % images.length;
     return i;
   }
 
+  /**
+   * Helper function to play the jump animation.
+   */
   animateJump() {
     this.playAnimation(Pepe.IMAGES_JUMPING);
   }
 
+  /**
+   * Helper function calls the playAnimation function for the hurt images.
+   * It also plays the hurt sound effect if not already playing.
+   */
   animateHurt() {
     this.playAnimation(Pepe.IMAGES_HURT);
 

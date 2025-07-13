@@ -7,11 +7,22 @@ class AudioManager {
   startedAt = {};
   muted = false;
 
+
+  /**
+   * Constructor for the AudioManager class.
+   * Initializes the audio context and sets up the audio buffers.
+   * @param {Object} options - Optional parameters for the audio manager.
+   * @param {boolean} options.muted - Whether the audio should be muted initially.
+   * @returns {void}
+   * @throws {Error} If the AudioContext cannot be created.
+   */
   constructor() {
     this.audioContext = new (window.AudioContext ||  window.webkitAudioContext)();
     this.buffers = {};
     this.playingSources = {};
+    this.muted = !getSoundStatus();
   }
+
 /**
  * Loads all Audio-Files 
  * @param {string} name 
@@ -39,7 +50,7 @@ class AudioManager {
    */
   setMuted(mute) {
     this.muted = mute;
-    if (mute) {
+    if (this.muted) {
       Object.keys(this.playingSources).forEach((name) => {
         this.controlAudio(name, { pause: true });
       });
@@ -66,7 +77,6 @@ playAudio(name, options = {}) {
 
   }
 }
-
 
 /**
  * Handles the actual audio playback logic for playAudio()
@@ -112,7 +122,6 @@ startAudioPlayback(name, options = {}) {
     return gainNode;
   }
 
-
 /**
  * Helper function for playAudio() to reset active audios.
  * @param {string} name 
@@ -122,7 +131,6 @@ startAudioPlayback(name, options = {}) {
     this.pausedAt[name] = 0;
     this.startedAt[name] = 0;
   }
-
 
   /**
    * Function to change settings of playing audios e

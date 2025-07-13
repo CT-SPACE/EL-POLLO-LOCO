@@ -1,4 +1,5 @@
 @media (orientation: landscape) {
+
     #buttonContentMobile {
   z-index: 12;
   background-image: url("../img/paper-bg.png");
@@ -286,7 +287,6 @@
         #sound, #play, #restart {
           margin-bottom: 2px;
         }
-
 
         /* #buttonContentMobile.open {
           padding: 80px 40vh 74px 55vh;

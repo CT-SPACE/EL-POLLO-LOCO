@@ -9,16 +9,13 @@ function createButtonContent(content) {
   let contentType = document.getElementById(content);
   let contentScreen = document.getElementById("buttonContent");
   if (window.innerHeight < 600){
-    createButtonContentMobile(contentScreen) 
+   contentScreen = createButtonContentMobile(contentScreen) ;
   }
   if (contentScreen.classList.contains("open") && contentScreen.dataset.active === content) {
-    closeContent(contentScreen);
-    return;
+    closeContent(contentScreen);  return;
   }
   if (contentScreen.classList.contains("open")) {
-    closeContent(contentScreen, () =>
-      openContent(content, contentType, contentScreen)
-    );
+    closeContent(contentScreen, () =>  openContent(content, contentType, contentScreen));
   } else {
     openContent(content, contentType, contentScreen);
   }
@@ -34,6 +31,7 @@ function createButtonContentMobile(contentScreen) {
     contentScreen.classList.add("displayNone");
     contentScreen = document.getElementById("buttonContentMobile");
     contentScreen.innerHTML = "";
+      return contentScreen;
 }
 
 /**
@@ -110,13 +108,24 @@ function closeContent(contentScreen, callback) {
 } else {
   togglePlay("play", false);
 }
-  
-  contentScreen.classList.remove("open");
+contentScreenHandler(contentScreen, headline, callback) 
+}
+
+/**
+ * Helper function for closeContent() to handle the closing of the content screen
+ * @param {HTMLElement} contentScreen 
+ * @param {HTMLElement} headline 
+ * @param {() => void} callback 
+ * @description This function is called when the content screen is closed. It removes the content screen and resets the styles.
+ */
+function contentScreenHandler(contentScreen, headline, callback) {
+    contentScreen.classList.remove("open");
   contentScreen.classList.add("close");
 
   contentScreen.addEventListener("transitionend", function handler() {
     contentScreen.removeEventListener("transitionend", handler);
     finishClosing(contentScreen, callback);
+  
   });  
   headline.classList.remove("h1topPosition");
 }
@@ -137,8 +146,9 @@ function finishClosing(contentScreen, callback) {
 }
 
 /**
- * 
+ * Handles the animation movement of the content panel by closing and opening it
  * @param {HTMLElement} contentScreen 
+ * @description This function is called when the content screen is opened. It adds the "open" class to the content screen and removes the "close" class.
  */
 function prepareAnimation(contentScreen) {
   contentScreen.classList.remove("displayNone");
@@ -338,7 +348,6 @@ closeButton.addEventListener("click", () => {
 function showGameOverScreen(somebodyIsDead) {
   let gameOverScreen = document.getElementById("gameOverScreen");
   prepareGameOverScreen(gameOverScreen);
-
   document.querySelectorAll(".control, .button").forEach((element) => {
     element.classList.add("visibilityHidden");
   });
@@ -368,67 +377,6 @@ function prepareGameOverScreen(gameOverScreen) {
 }
 
 /**
- * Creates the container for the Loosing Message and starts the replay-Button
- * @param {HTMLElement} gameOverScreen 
- */
-function handleWinningEndboss(gameOverScreen) {
-  audioManager.playAudio("pepe_loses", { play: true, volume: 0.3 });
-  gameOverScreen.innerHTML = "";
-  gameOverScreen.classList.add("backdrop");
-
-  includeReplayButton(gameOverScreen, "lose");
-
-  gameOverScreen.appendChild(gameOverText());
-  gameOverScreen.appendChild(pepeGrave());
-}
-
-/**
- * Helper function to create the GameOverText für handleWinningEndboss()
- * @description Creates the GameOverText and returns it as a div element. 
- * @returns gameOverText
-
- */
-function gameOverText(){
-  
-  let gameOverText = document.createElement("div");
-  gameOverText.className = "gameOverText";
-  gameOverText.innerHTML = `<h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!`;
-  return gameOverText;
-}
-
-/**
- * Helper function to create the Pepe's Grave for handleWinningEndboss()
- * @description Creates a div element with the id "grave" and class "pepeGrave", which contains an image of Pepe's grave. 
- * @returns pepeGrave;
- */
-function pepeGrave(){
-  let pepeGrave = document.createElement("div");
-  pepeGrave.id = "grave";
-  pepeGrave.className = "pepeGrave";
-  pepeGrave.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
-  return pepeGrave;
-}
-
-
-/**
- * Creates the container for the winning Message and starts the replay Button
- * @param {HTMLElement} gameOverScreen 
- */
-function handleWinningPepe(gameOverScreen) {
-  audioManager.playAudio("pepe_wins", { play: true, volume: 0.3 });
-  gameOverScreen.innerHTML += ` <div class="gameOverText"><h3>YOU WON!</h3> ¡Que Aproveches! </div>`;
-
-  let rueda = document.createElement("div");
-  rueda.classList.add("winningBG");
-  gameOverScreen.appendChild(rueda);
-
-  setTimeout(() => {
-    rueda.classList.add("big");
-    includeReplayButton(gameOverScreen, "win");
-  }, 10);
-}
-
-/**
  * Adds the ReplayButton to the GameOverScreen
  * @param {HTMLElement} gameOverScreen 
  * @param {boolean} status 
@@ -443,7 +391,6 @@ function includeReplayButton(gameOverScreen, status) {
   replay.addEventListener("click", () => {
     location.reload();
   });
-
   replayPosition.appendChild(replay);   
   gameOverScreen.appendChild(replayPosition);
 }

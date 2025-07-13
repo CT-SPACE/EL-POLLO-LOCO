@@ -23,6 +23,15 @@ class Chicken extends MovableObject {
     bottom: 10,
   };
 
+  /**
+   * Defines the all properties of the Chicken class, including its position, speed, and dimensions.
+   * Loads the walking images and sets up the initial position and speed.
+   * @param {Object} world - The world object that contains the game state and environment.
+   * @param {Object} audioManager - The audio manager for handling sound effects.
+   * @param {Number} x - The initial x-coordinate of the chicken.
+   * @param {Number} y - The initial y-coordinate of the chicken.
+   * @param {Number} speed - The speed of the chicken.
+   */
   constructor(world) {
     super().loadImage("./img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(Chicken.IMAGES_WALKING);
@@ -38,12 +47,18 @@ class Chicken extends MovableObject {
     this.isDead = false;
   }
 
+  /**
+   * Animates the chicken's movement along the x-axis by moving it left at a defined speed.
+   */
   animateX() {
     this.animateXInterval = setInterval(() => {
       this.moveLeft(this.speed);
     }, 1000 / 60);
   }
 
+  /**
+   * Animates the chicken's walk movement.
+   */
   animateWalk() {
     this.x += 1200;
     this.animateWalkInterval = setInterval(() => {
@@ -51,6 +66,10 @@ class Chicken extends MovableObject {
     }, this.animationSpeed);
   }
 
+  /**
+   * @returns Prepares the chicken for death by stopping its animations and playing the death image.
+   * If the chicken is dead, it removes itself from the world.
+   */
   animateDeath() {
     if (this.isDead) return;
     this.isDead = true;
@@ -65,21 +84,5 @@ class Chicken extends MovableObject {
         window.world.level.enemies.splice(window.world.level.enemies.indexOf(this), 1);
       }
     }, 1000);
-  }
-
-  startingChickenSound(pepeX) {
-    if (
-      this.x - pepeX > 700 &&
-      this.x == 0 &&
-      this.audio[chicken_run].playing
-    ) {
-      audioManager.controlAudio("chicken_run", { pause: true, currentTime: 0 });
-    } else {
-      audioManager.playAudio("chicken_run", {
-        play: true,
-        loop: true,
-        volume: 0.05,
-      });
-    }
   }
 }

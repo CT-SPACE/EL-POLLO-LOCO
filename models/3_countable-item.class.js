@@ -4,7 +4,13 @@ class CountableItem extends DrawableObject {
     maxCoins = 20;
     kindof;
     
-  
+  /**
+   * Prepares the countable item based on its type.
+   * @param {String} kindof 
+   * @param {Number} x 
+   * @param {Number} y 
+   * @param {Number} width 
+   */
     constructor(kindof, x, y, width) {
       super();
       this.kindof = kindof;

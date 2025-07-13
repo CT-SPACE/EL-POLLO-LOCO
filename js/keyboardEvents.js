@@ -1,6 +1,6 @@
 
 /**
- * Defines the Button on the keyboard that are used to control the game.
+ * Both eventlistener are defining the Button on the keyboard that are used to control the game.
  */
 document.addEventListener("keydown", (e) => {
   if (gamePaused) return;
@@ -67,11 +67,8 @@ document.addEventListener("keyup", (e) => {
  * @returns 
  */
 function goControl(BTN, value, event) {
-   if (event && event.cancelable) {
-  event.preventDefault();
-}
+   if (event && event.cancelable) { event.preventDefault();}
   if (gamePaused || !keyboardEnabled) return;
-
   switch (BTN) {
     case "RIGHT":
       keyboard.RIGHT = value;
@@ -84,17 +81,22 @@ function goControl(BTN, value, event) {
       break;
     case "THROW":
       if (value) {
-        if (!throwKeyDownTime) {
-          throwKeyDownTime = Date.now();
-        }
+        if (!throwKeyDownTime) {  throwKeyDownTime = Date.now();        }
       } else {
-        if (throwKeyDownTime) {
+        handleThrowKeyTime();
+      }
+      break;
+  }
+}
+
+/**
+ * Helper function for goControl()
+ */
+function handleThrowKeyTime(){
+          if (throwKeyDownTime) {
           throwKeyUpTime = Date.now();
           throwDuration = throwKeyUpTime - throwKeyDownTime;
           throwKeyDownTime = null;
           keyboard.THROW = true;
         }
-      }
-      break;
-  }
 }

@@ -15,6 +15,9 @@ class Clouds extends MovableObject {
     "./img/5_background/layers/4_clouds/2.png",
   ];
 
+  /**
+   * Defines the properties of the Clouds class, including its position, speed, and dimensions.
+   */
   constructor() {
     super().loadImage("./img/5_background/layers/4_clouds/1.png");
     this.loadImages(Clouds.IMAGES_MOVING);
@@ -23,6 +26,9 @@ class Clouds extends MovableObject {
     this.animateX();
   }
 
+  /**
+   * Animates the clouds by moving them to the left at a defined speed.
+   */
   animateX() {
     setInterval(() => {
       this.moveLeft(this.speed);

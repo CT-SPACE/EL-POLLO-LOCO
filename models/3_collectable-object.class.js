@@ -24,14 +24,22 @@ class CollectableObject extends DrawableObject {
   static COINS_BLINKING = ["./img/8_coin/coin_1.png", "./img/8_coin/coin_2.png"];
   offset;
 
+  /**
+   * Initializes all collectable Objects like coins and bottles.
+   * @param {String} kindof 
+   * @param {Number} count 
+   * @param {Number} x 
+   * @param {Number} y 
+   * @param {Number} height 
+   * @param {Number} width 
+   * @param {Number} distanceX 
+   * @param {Number} Row2Probability 
+   */
   constructor(kindof, count, x, y, height, width, distanceX, Row2Probability) {
     super();
-
     this.audio = audioManager;
-
     this.kindof = kindof; 
     this.kindofCollectableObject(this.kindof);
-
     this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
     this.y = y;
     this.height = height;
@@ -39,6 +47,10 @@ class CollectableObject extends DrawableObject {
     this.animateBasedOnKind(); 
   }
 
+  /**
+   * Seperates the logic for loading images based on the type of collectable object.
+   * @param {String} kindof 
+   */
   kindofCollectableObject(kindof){
     if (kindof === "coin") {
       this.loadImages(CollectableObject.COINS_BLINKING);
@@ -51,43 +63,40 @@ class CollectableObject extends DrawableObject {
     }
     }
 
-
-  static createCoins(count, distanceX, Row2Probability) {
-    let coins = [];
-    this.height = 100;
-    this.width = 100;
-    const yRow1 = 280; 
-    const yRow2 = 150;
-    let coinsPerRow = Math.ceil(count); 
-
-    for (let row = 0; row < 2; row++) {
-      for (let i = 0; i < coinsPerRow; i++) {
-        let index = row * coinsPerRow + i;
-        if (index >= count) break; 
-
-        let x = i * distanceX + 110;
-        let y = Math.random() < Row2Probability ? yRow2 : yRow1;
-
-        coins.push(
-          new CollectableObject("coin",count,x,y, this.height, this.width, distanceX, Row2Probability)
-        );
-      }
+/**
+ * Fills an Array with coins and spreads them across the game world.
+ * The coins are placed in two rows with a specified probability for the second row.
+ * @param {Number} count - Total number of coins to create.
+ * @param {Number} distanceX - Horizontal distance between coins.
+ * @param {Number} Row2Probability - Probability of placing a coin in the second row.
+ */
+static createCoins(count, distanceX, Row2Probability) {
+  let coins = [], yRow1 = 280, yRow2 = 150, coinsPerRow = Math.ceil(count);
+  for (let row = 0; row < 2; row++)
+    for (let i = 0; i < coinsPerRow; i++) {
+      let index = row * coinsPerRow + i;
+      if (index >= count) break;
+      let x = i * distanceX + 110;
+      let y = Math.random() < Row2Probability ? yRow2 : yRow1;
+      coins.push(new CollectableObject("coin", count, x, y, 100, 100, distanceX, Row2Probability));
     }
+  return coins;
+}
 
-    return coins;
-  }
-
+/**
+ * Creates bottles and spread them across the game world.
+ * @param {Number} bottlesCount 
+ * @param {Number} distanceX 
+ * @returns bottles
+ */
   static createBottles(bottlesCount, distanceX) {
     let bottles = [];
     this.height = 70;
     this.width = 70;
     let y = 380; 
-
     for (let i = 0; i < bottlesCount; i++) {
       if (i >= bottlesCount) break;
-
       let x = Math.random() * (3400 - 100) + 100; 
-
       bottles.push(
         new CollectableObject("bottle", bottlesCount, x, y, this.height, this.width, distanceX)
       );
@@ -95,6 +104,12 @@ class CollectableObject extends DrawableObject {
     return bottles;
   }
 
+  /**
+   * Checks for collision between Pepe and bottles.
+   * If a collision is detected, the bottle is removed from the array.
+   * @param {Object} character 
+   * @param {Array} bottles 
+   */
   checkForBottleCollisions(character, bottles) {
     this.bottles = bottles;
 
@@ -108,6 +123,13 @@ class CollectableObject extends DrawableObject {
     }, 500);
   }
 
+  /**
+   * Checks for collision between Pepe and coins.
+   * This function is used to remove coins from the game when Pepe collects them.
+   * If a collision is detected, the coin is removed from the array.
+   * @param {Object} character 
+   * @param {Array} coins 
+   */
   checkForCoinCollisions(character, coins) {
     this.character = character;
     setInterval(() => {
@@ -119,7 +141,10 @@ class CollectableObject extends DrawableObject {
     }, 500);
   }
 
-
+/**
+ * Iterate through the images of the collectable object.
+ * @param {String} images 
+ */
   animateThings(images) {
     if (this.kindof === "bottle" || this.kindof === "coin") {
       this.images = images;
@@ -132,6 +157,9 @@ class CollectableObject extends DrawableObject {
     }
   }
 
+  /**
+   * Animates the collectable object based on its kind.
+   */
   animateBasedOnKind() {
     if (this.kindof === "coin") {
       setInterval(() => {

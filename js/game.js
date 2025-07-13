@@ -2,33 +2,19 @@
  * Declaration of global variables and constants
  * This file is responsible for initializing the game, loading assets, and managing the game state.
  */
-
-let canvas;
-let world;
-let Level01;
+let canvas, world, Level01, pepe_ambient, chicken_run, throwKeyDownTime, throwKeyUpTime, throwDuration, contentOpen, startScreen, newWidth, newHeight;
 let keyboard = new Keyboard();
 let audioManager = new AudioManager();
 let audioPlaying = {};
-let pepe_ambient;
-let chicken_run;
 let keyboardEnabled = true;
 let EndBossClose = false;
-let throwKeyDownTime;
-let throwKeyUpTime;
-let throwDuration;
-let contentOpen;
 let gamePaused = true;
 let gamePausedByUser = false;
 let activeIndex = 0;
-let startScreen;
 let imgCache = {};
 let letters = Array.from(document.querySelectorAll("#loader span"));
 let aspectRatio = 800 / 480;
-let newWidth, newHeight;
 let touchSetupDone = false;
-
-
-
 
 /**
  * Prepares the "turn your Device"-Screen
@@ -123,8 +109,6 @@ function playAmbient() {
   audioManager.playAudio("pepe_ambient", { play: true, volume: 0.1 });
 
   let duration = audioDuration();
-
-
   setTimeout(() => {
     setTimeout(playAmbient, 10000);
   }, duration);
@@ -182,23 +166,44 @@ function togglePlay(toggleSource, value) {
   let playDiv = document.getElementById("play");
   let playIcon = document.getElementById("switch");
   if (toggleSource === "content" && value === true) { 
+    controlPauseByContent(playDiv,playIcon);
+  } else if ((toggleSource === "play" || (toggleSource === "button" && playIcon.classList.contains("play"))) && value !== true ) {
+    controlPauseByClick(playDiv,playIcon);
+  } 
+  else {
+    controlPlay(playDiv, playIcon);
+  }
+}
+
+/**
+ * Helper function for togglePlay() in case of open content, which pauses and deactivates the play button.
+ */
+function controlPauseByContent(playDiv, playIcon){
     playIcon.classList.remove("play");
     playIcon.classList.add("pause");
     playDiv.classList.add("disabled");
     gamePaused = true;
-  } else if ((toggleSource === "play" || (toggleSource === "button" && playIcon.classList.contains("play"))) && value !== true ) {
+}
+
+/**
+ * Helper function for togglePlay() in case of closed content and paused the game by Play-button
+ */
+function controlPauseByClick(playDiv, playIcon) {
     playIcon.classList.remove("play");
     playIcon.classList.add("pause");
     playDiv.classList.remove("disabled");
     gamePaused = true;
-  } 
-  else {
-    playIcon.classList.remove("pause");
+}
+
+/**
+ * Helper function for togglePlay() in case of closing content and unpaused the game by Play-button
+ */
+function controlPlay(playDiv, playIcon) {
+      playIcon.classList.remove("pause");
     playIcon.classList.add("play");
     playDiv.classList.remove("disabled");
       if(startScreen) return;
     gamePaused = false;
-  }
 }
 
 /**
@@ -215,6 +220,7 @@ function setSoundStatus(isOn) {
  */
 function getSoundStatus() {
   const value = localStorage.getItem("soundOn");
+  console.log("getSoundStatus", value);
   if (value === null) return true;
   return value === "true";
 }
@@ -283,16 +289,21 @@ async function playConditions() {
 
   document.getElementById("playButtonsLeft").style.display = "unset";
   document.getElementById("playButtonsRight").style.display = "unset";
-  
-  canvas = document.getElementById("canvas");
-  canvas.focus();
-
-    window.world = new World(canvas, Level01);
+  await worldCanvas();
     togglePlay("play", true);
-
 if (audioManager.audioContext && audioManager.audioContext.state === "suspended") {
   audioManager.activateAudioContext();
 }
+}
+
+/**
+ * Start the initialization of the game world and Level.
+ */
+async function worldCanvas(){
+    canvas = document.getElementById("canvas");
+    canvas.focus();
+
+    window.world = new World(canvas, Level01);
 }
 
 /**
@@ -311,7 +322,6 @@ function prepareStylesForPlayConditions() {
 });
 }
 
-
 /**
  * Restarts the game directly and ready to play.
  * This function is called when the user clicks the "Restart" button. 
@@ -321,6 +331,66 @@ function reStart() {
   localStorage.setItem("autostart", true);
 location.reload();
 }
+
+/**
+ * Creates the container for the Loosing Message and starts the replay-Button
+ * @param {HTMLElement} gameOverScreen 
+ */
+function handleWinningEndboss(gameOverScreen) {
+    if(getSoundStatus()){
+      audioManager.playAudio("pepe_loses", { play: true, volume: 0.3 });
+    }
+  gameOverScreen.innerHTML = "";
+  gameOverScreen.classList.add("backdrop");
+  includeReplayButton(gameOverScreen, "lose");
+
+  gameOverScreen.appendChild(gameOverText());
+  gameOverScreen.appendChild(pepeGrave());
+}
+
+/**
+ * Helper function to create the GameOverText für handleWinningEndboss()
+ * @description Creates the GameOverText and returns it as a div element. 
+ * @returns gameOverText
+ */
+function gameOverText(){
+  let gameOverText = document.createElement("div");
+  gameOverText.className = "gameOverText";
+  gameOverText.innerHTML = `<h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!`;
+  return gameOverText;
+}
+
+/**
+ * Helper function to create the Pepe's Grave for handleWinningEndboss()
+ * @description Creates a div element with the id "grave" and class "pepeGrave", which contains an image of Pepe's grave. 
+ * @returns pepeGrave;
+ */
+function pepeGrave(){
+  let pepeGrave = document.createElement("div");
+  pepeGrave.id = "grave";
+  pepeGrave.className = "pepeGrave";
+  pepeGrave.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
+  return pepeGrave;
+}
+
+/**
+ * Creates the container for the winning Message and starts the replay Button
+ * @param {HTMLElement} gameOverScreen 
+ */
+function handleWinningPepe(gameOverScreen) {
+  if(getSoundStatus()){
+  audioManager.playAudio("pepe_wins", { play: true, volume: 0.3 });
+  }
+  gameOverScreen.innerHTML += ` <div class="gameOverText"><h3>YOU WON!</h3> ¡Que Aproveches! </div>`;
+  let rueda = document.createElement("div");
+  rueda.classList.add("winningBG");
+  gameOverScreen.appendChild(rueda);
+  setTimeout(() => {
+    rueda.classList.add("big");
+    includeReplayButton(gameOverScreen, "win");
+  }, 10);
+}
+
 
 
 

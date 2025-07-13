@@ -31,6 +31,11 @@ class World {
   canThrow;
   isGameEnding;
 
+  /**
+   * Initializes the World class components, sets up the game enviroment and gets the game ready to play.
+   * @param {HTMLCanvasElement} canvas 
+   * @param {Level} level 
+   */
   constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
   
@@ -44,8 +49,8 @@ class World {
     this.isGameEnding = false;
     this.throwableObjects = [];
     this.canThrow = true;
-    this.draw();
-    this.addObjectsForDraw();
+    DrawableObject.draw(this);
+    DrawableObject.addObjectsForDraw(this);
     this.setWorld();
     this.run();
 
@@ -62,47 +67,6 @@ class World {
     this.endbossOfEnemies.world = this;
     this.endboss.world = this;
     this.statusBarPepe.world = this.statusBar;
-  }
-
-  /**
-   * All Elements of the Game will be drawed on the canvas by this function
-   */
-  draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.translate(this.cameraX, 0);
-    this.handleEndbossCloseEffect();
-    this.throwableObjects = this.throwableObjects.filter(
-      (bottle) => !bottle.toBeRemoved
-    );
-    this.addObjectsForDraw();
-
-    this.handleEndboss();
-
-    self = this;
-    requestAnimationFrame(() => self.draw());
-  }
-
-/**
- * Helper function to place the Objects on the canvas.
- */
-  addObjectsForDraw() {
-    this.addToMap(this.background_static);
-    this.ctx.filter = "none";
-    this.addObjects(this.level.clouds);
-    this.addObjects(this.level.background_moving);
-    this.addObjects(this.level.enemies);
-
-    this.addObjects(this.throwableObjects);
-    this.addObjects(this.level.coins);
-    this.addObjects(this.level.bottles);
-
-    this.addToMap(this.character);
-
-    this.ctx.translate(-this.cameraX, 0);
-
-    this.addToMap(this.statusBarPepe);
-    this.addToMap(this.statusBarCoin);
-    this.addToMap(this.statusBarChilli);
   }
 
   /**
@@ -124,11 +88,11 @@ class World {
   handleEndboss() {
     if (this.character.x > 3100 || this.EndBossVisible === true) {
       this.EndBossVisible = true;
-      this.addToMap(this.statusBarEndboss); 
+      DrawableObject.addToMap(this.statusBarEndboss,this.ctx);
     }
     if (this.isPepeNearEndboss() < 700) {
       this.endbossOfEnemies.EndBossClose = true;
-      this.addToMap(this.statusBarEndboss);
+      DrawableObject.addToMap(this.statusBarEndboss,this.ctx);
       this.EndBossVisible = true;
       this.endbossOfEnemies.status = true;
     } else {
@@ -380,17 +344,32 @@ throwBottle() {
   handleEndbossHit(bottle) {
     this.reduceEndbossEnergy(10);
     this.updateEndbossStatusBar();
+    this.hitEndbossZero();
+    this.hitEndbossLessOrMoreThanTwenty();
+    if (typeof bottle.bottleSplash === "function") {
+        bottle.bottleSplash();
+    }
+}
+
+/** Helper function to check if the endboss has zero energy.
+ *  If so, it triggers the endboss death animation.
+ */
+hitEndbossZero(){
     if (this.endbossOfEnemies.energy <= 0 && !this.endbossOfEnemies.isDead) {
         this.animateEndbossDeath();
         return;
     }
+}
+
+/**
+ * Helper function to check if the endboss has less or more than twenty energy.
+ * If so, it triggers the endboss hurt animation or starts the endboss attack mode.
+ */
+hitEndbossLessOrMoreThanTwenty(){
     if (this.endbossOfEnemies.energy <= 20 && !this.endbossOfEnemies.isDead) {
         this.animateEndbossHurt();
     } else if (this.endbossOfEnemies.energy > 20 && !this.endbossOfEnemies.isDead) {
         this.startEndbossAttackMode();
-    }
-    if (typeof bottle.bottleSplash === "function") {
-        bottle.bottleSplash();
     }
 }
 
@@ -445,7 +424,6 @@ throwBottle() {
     if (this.isGameEnding === true) return;
     this.isGameEnding = true;
     this.stopAllAnimations();
-
     setTimeout(() => {
       showGameOverScreen(deathCandidate);
     }, 500);
@@ -458,61 +436,10 @@ throwBottle() {
     this.character.stopAllIntervals();
     this.endbossOfEnemies.stopAllIntervals();
     this.level.enemies.forEach((enemy) => enemy.stopAllIntervals());
-
     keyboardEnabled = false;
     gamePaused = true;
-
     audioManager.setMuted(true);
-
     togglePlay("content", true);
   }
-
-/**
- * Handles Image-Arrays to draw them on the canvas
- * @param {} objects 
- */
-  addObjects(objects) {
-    objects.forEach((object) => {
-      this.addToMap(object);
-    });
-  }
-
-/**
- * Handles each image of an array to draw it on the canvas
- * @param {Object} Obj 
- */
-  addToMap(Obj) {
-    if (Obj.otherDirection) {
-      this.flipImage(Obj);
-    }
-
-    Obj.drawObject(this.ctx);
-    Obj.drawOffset(this.ctx);
-
-    if (Obj.otherDirection) {
-      this.flipImageBack(Obj);
-    }
-  }
-
-/**
- * If otherDirection ist true flipImage works for Pepe and bottle throw
- * @param {Object} Obj 
- */
-  flipImage(Obj) {
-    this.ctx.save();
-    this.ctx.translate(Obj.width, 0);
-    this.ctx.scale(-1, 1);
-    Obj.x = Obj.x * -1;
-  }
-
-/**
- * If Pepe turn back the function reset the direction.
- * @param {} Obj 
- */
-  flipImageBack(Obj) {
-    Obj.x = Obj.x * -1;
-    this.ctx.restore();
-  }
-
 
 }

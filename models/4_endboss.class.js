@@ -62,6 +62,12 @@ class Endboss extends MovableObject {
     { src: "./img/4_enemie_boss_chicken/5_dead/G27.png", lastFrame: true },
   ];
 
+  /**
+   * Defines the properties of the Endboss class, including its position, speed, and dimensions.
+   * Loads the images for walking, alert, attack, hurt, and dead states.
+   * Initializes the endboss with a specific position and sets up animations. 
+   * @param {Object} world 
+   */
   constructor(world) {
     super().loadImage(Endboss.IMAGES_ALERT[0]);
     this.loadImages(Endboss.IMAGES_ALERT);
@@ -82,6 +88,9 @@ class Endboss extends MovableObject {
     this.x = 3800;
   }
 
+  /**
+   * Animates the endboss' walk.
+   */
   animateWalk() {
     clearInterval(this.animateAttackInterval);
     clearInterval(this.animateAlertInterval);
@@ -97,17 +106,22 @@ class Endboss extends MovableObject {
     }, 6000 / 25);
   }
 
-  animateAlert() {
-    clearInterval(this.animateAttackInterval);
-    clearInterval(this.animateWalkInterval);
-     if (gamePaused) return;
-    this.animateAlertInterval = setInterval(() => {
-      this.speed = 0;
-      this.moveLeft(this.speed);
-      this.playAnimation(Endboss.IMAGES_ALERT);
-    }, 1000);
-  }
 
+  // animateAlert() {
+  //   clearInterval(this.animateAttackInterval);
+  //   clearInterval(this.animateWalkInterval);
+  //    if (gamePaused) return;
+  //   this.animateAlertInterval = setInterval(() => {
+  //     this.speed = 0;
+  //     this.moveLeft(this.speed);
+  //     this.playAnimation(Endboss.IMAGES_ALERT);
+  //   }, 1000);
+  // }
+
+  /**
+   * Starts the attack animation for the endboss.
+   * @returns Prepares the endboss for an attack by stopping its walk animations,
+   */
   animateAttack() {
     clearInterval(this.animateWalkInterval);
     clearInterval(this.animateAlertInterval);
@@ -123,6 +137,11 @@ class Endboss extends MovableObject {
     }, 3000 / 25);
   }
 
+  /**
+   * Handles the death animation of the endboss.
+   * Stops the background music and plays the death animation.
+   * If the endboss is dead, it clears the death animation interval and triggers the game over state.
+   */
   animateDeath() {
     this.audio.controlAudio("endbossBackground", { play: false, pause: true });
     if (!this.deathHandled) {
@@ -130,7 +149,7 @@ class Endboss extends MovableObject {
       this.isDead = true;
       this.currentImage = 0;
       gamePaused = true;
-      this.disableKeyboard();
+      keyboardEnabled = false;;
       this.animateDeathInterval = setInterval(() => {
         this.playAnimation(Endboss.IMAGES_DEAD);
         if (this.moduloCurrentImage(Endboss.IMAGES_DEAD) === Endboss.IMAGES_DEAD.length - 1) {
@@ -141,11 +160,23 @@ class Endboss extends MovableObject {
     }
   }
 
+  /**
+   * Helper function to calculate the current image index based on the modulo operation.
+   * This is used to loop through the images in the animation.
+   * @returns The current image index based on the modulo operation.
+   * @param {Array} images - The array of images to loop through.
+   */
   moduloCurrentImage(images) {
     let i = this.currentImage % images.length;
     return i;
   }
 
+  /**
+   * Indictes whether the endboss is attacking or not.
+   * This function plays the attack sound if the status is true, and stops it if false.
+   * @param {Boolean} status 
+   * @returns 
+   */
   isAttacking(status) {
     if (status === true) {
       this.audio.playAudio("endboss_attack", { play: true });
@@ -160,6 +191,9 @@ class Endboss extends MovableObject {
     }
   }
 
+  /**
+   * Checks if there is a reason to change to the attack state.
+   */
   startAttackMode() {
     this.status = true;
     this.isAttacking(this.status);
@@ -167,12 +201,17 @@ class Endboss extends MovableObject {
     this.animateAttack();
   }
 
-  isAlert() {
-    return (
-      this.currentImage < Endboss.IMAGES_ALERT.length && this.currentImage > 0
-    );
-  }
+  // isAlert() {
+  //   return (
+  //     this.currentImage < Endboss.IMAGES_ALERT.length && this.currentImage > 0
+  //   );
+  // }
 
+  /**
+   * In case of loosing to much energy by beeing hit by bottles, the endboss plays the hurt animation.
+   * It stops the attack and walk animations, and plays the hurt animation.
+   * If the endboss is dead, it stops the hurt animation.
+   */
   animateHurt() {
     clearInterval(this.animateAttackInterval);
     clearInterval(this.animateWalkInterval);
