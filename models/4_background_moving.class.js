@@ -1,5 +1,5 @@
 class movingBackground extends MovableObject{
-    x = 0;
+    x = 10;
     y = 0;
     height = 488;
     width = 1600;
@@ -54,7 +54,6 @@ class movingBackground extends MovableObject{
             this.y = pos.y;
             this.height = pos.height;
             this.width = pos.width;
-            // this.factor = factor;
         }
     }
      

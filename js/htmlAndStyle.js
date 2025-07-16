@@ -389,7 +389,7 @@ function includeReplayButton(gameOverScreen, status) {
   replay.id = "retry";
   replay.classList.add("replayButton", status === "lose" ? "lose" : "win");
   replay.addEventListener("click", () => {
-    location.reload();
+    reStart();
   });
   replayPosition.appendChild(replay);   
   gameOverScreen.appendChild(replayPosition);

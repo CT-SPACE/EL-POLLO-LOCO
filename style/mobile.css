@@ -104,7 +104,7 @@
       bottom: 8px;
     }
   }
-    @media (max-height: 600px) and (min-width: 200px) {
+    @media (max-height: 600px) {
       section,
       .allScreens,
       .darkLayer {
@@ -264,7 +264,8 @@
       }
       #sound,
       #play,
-      #restart {
+     #gohome {
+        height:39px;
         padding: 5px 25px 5px 5px;
         border: 1px solid gray;
         box-shadow: 2px 2px 2px 0 #00000080;
@@ -284,7 +285,7 @@
         .control{
                   top: 10px;
         }
-        #sound, #play, #restart {
+        #sound, #play, #gohome {
           margin-bottom: 2px;
         }
 

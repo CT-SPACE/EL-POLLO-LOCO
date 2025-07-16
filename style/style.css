@@ -673,7 +673,7 @@ p {
 
 .replayButton {
   overflow: hidden;
-  background-image: url("../img/buttons/replay.svg");
+  background-image: url("../img/buttons/retry.svg");
   position: relative;
   background-size: 70px;
   background-repeat: no-repeat;
@@ -726,12 +726,13 @@ p {
 
 #sound,
 #play,
-#restart {
+#gohome {
   display: flex;
   padding: 5px 5px 5px 25px;
   box-sizing: border-box;
   z-index: 9;
   width: 60px;
+  height:36px;
   border-radius: 0 10px 10px 0;
   background-color: lightgoldenrodyellow;
   margin-bottom: 10px;
@@ -741,7 +742,7 @@ p {
 
 #sound:hover,
 #play:hover,
-#restart:hover {
+#gohome:hover {
   margin-right: -8px;
   transition: margin-left 0.2s ease-in-out;
 }
@@ -762,7 +763,7 @@ p {
 } */
 
 #play.disabled,
-#restart.disabled {
+#gohome.disabled {
   background-color: lightgrey;
   cursor: unset;
   opacity: 0.5;
@@ -771,7 +772,7 @@ p {
 }
 
 #play.disabled:hover,
-#restart.disabled:hover {
+#gohome.disabled:hover {
   margin-right: 0;
   transition: none;
 }
@@ -792,8 +793,8 @@ p {
   background-image: url("../img/buttons/play.svg");
 }
 
-.goRestart {
-  background-image: url("../img/buttons/retry.svg");
+.goHome {
+  background-image: url("../img/buttons/gohome.svg");
 }
 
 .table {

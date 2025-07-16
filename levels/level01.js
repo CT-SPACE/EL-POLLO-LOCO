@@ -49,11 +49,11 @@ async function initLevel() {
             new MiniChicken(world),
       
   
-            new Endboss(world)
+            // new Endboss(world)
         ],
 
      
-    CollectableObject.createCoins(50, 80, 0.2),
+    CollectableObject.createCoins(40, 80, 0.3),
     CollectableObject.createBottles(15, 80)
 
 )

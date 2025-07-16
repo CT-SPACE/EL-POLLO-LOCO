@@ -9,7 +9,7 @@ class CollectableObject extends DrawableObject {
   currentImage = 0;
   world;
   level;
-  count = 50;
+  count = 40;
   bottlesCount = 15;
   rows = 2;
   distanceX = 100;
@@ -76,13 +76,14 @@ static createCoins(count, distanceX, Row2Probability) {
     for (let i = 0; i < coinsPerRow; i++) {
       let index = row * coinsPerRow + i;
       if (index >= count) break;
-      let x = i * distanceX + 110;
+      let gapOffset = Math.floor(i / 8) * (distanceX * 2);
+      
+      let x = i * distanceX + 110 + gapOffset;
       let y = Math.random() < Row2Probability ? yRow2 : yRow1;
       coins.push(new CollectableObject("coin", count, x, y, 100, 100, distanceX, Row2Probability));
     }
   return coins;
 }
-
 /**
  * Creates bottles and spread them across the game world.
  * @param {Number} bottlesCount 

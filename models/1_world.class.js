@@ -1,4 +1,6 @@
 class World {
+
+ audioManager;
   ctx;
   canvas;
   level = Level01;
@@ -38,13 +40,14 @@ class World {
    */
   constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
-  
+    
     this.cameraX = 0;
     this.level = level;
- 
     this.canvas = canvas;
     this.endboss.world = this;
     this.EndBossVisible = false;
+    this.endbossOfEnemies = new Endboss(this);
+    this.level.enemies.push(this.endbossOfEnemies);
     this.endbossOfEnemies.EndBossClose = false;
     this.isGameEnding = false;
     this.throwableObjects = [];
@@ -163,20 +166,30 @@ class World {
    */
   checkThrowObjects() {
     let startThrow = Date.now();
+    noBottles = false;
 
     setInterval(() => {
       let now = Date.now();
       let delta = now - startThrow;
       if (keyboard.THROW && this.collectedBottles === 0) {
-        audioManager.loadAudio("noBottlesLeft", "./audio/bottle_no.mp3");
-        audioManager.playEffect("noBottlesLeft", { volume: 0.5 });
-        keyboard.THROW = false;
+        this.noBottlesTrue();
       }
       if (keyboard.THROW && this.collectedBottles > 0 && delta > 1000 && this.canThrow) {
         this.throwBottle();
       }
     }, 50);
     throwDuration = 0;
+  }
+
+  /**
+   * Helper Function in case no bottles ar left in Pepe's pockets.
+   * It will play a sound and set the noBottles variable to true.
+   */
+  noBottlesTrue(){
+            noBottles = true;
+        audioManager.loadAudio("noBottlesLeft", "./audio/bottle_no.mp3");
+        audioManager.playEffect("noBottlesLeft", { volume: 0.5 });
+        keyboard.THROW = false;
   }
 
 /**
@@ -211,14 +224,10 @@ throwBottle() {
         if (this.character.isColliding(enemy) && this.character.speedY < 0 && !enemy.isDead) {
           if (enemy.type === "minichicken") {
             this.jumpOnMiniChicken(enemy);
-          } else {
-            this.jumpOnStandardChicken(enemy);
-          }
+          } else { this.jumpOnStandardChicken(enemy);  }
         }
-         this.collidesEnemiesOnEnergyLevel(enemy);
-      });
+         this.collidesEnemiesOnEnergyLevel(enemy); });
     }, 400);
-
     this.checkCollisionsCoins(this.character);
     this.checkCollisionsBottles();
   }
@@ -227,13 +236,29 @@ throwBottle() {
    * Gives Pepe more speed when jumping on a minichicken
    * @param {Object} enemy 
    */
-  jumpOnMiniChicken(enemy) {
+     jumpOnMiniChicken(enemy) {
     enemy.animateBounce();
     clearInterval(enemy.animateWalkInterval);
     this.character.speedY = 40;
     this.character.speed = 30;
+
+
   }
 
+
+//   jumpOnMiniChicken(enemy) {
+//     enemy.animateBounce();
+//     clearInterval(enemy.animateWalkInterval);
+//     this.character.speedY = 40;
+//     this.character.speed = 30;
+//     if (this.character.animateJumpInterval) {
+//     clearInterval(this.character.animateJumpInterval);
+//   }
+
+//   this.character.jumpPhase = 'air';
+//   // this.character.currentImage = 0;
+//   this.character.playAnimation(Pepe.IMAGES_JUMPING_AIR);
+// }
   /**
    * The brown standard chicken can be killed by jumping on them.
    * @param {Object} enemy 
@@ -342,76 +367,12 @@ throwBottle() {
  * @returns 
  */
   handleEndbossHit(bottle) {
-    this.reduceEndbossEnergy(10);
-    this.updateEndbossStatusBar();
-    this.hitEndbossZero();
-    this.hitEndbossLessOrMoreThanTwenty();
+    this.endbossOfEnemies.reduceEndbossEnergy(10);
+    this.endbossOfEnemies.updateEndbossStatusBar();
+    this.endbossOfEnemies.hitEndbossZero();
+    this.endbossOfEnemies.hitEndbossLessOrMoreThanTwenty();
     if (typeof bottle.bottleSplash === "function") {
         bottle.bottleSplash();
-    }
-}
-
-/** Helper function to check if the endboss has zero energy.
- *  If so, it triggers the endboss death animation.
- */
-hitEndbossZero(){
-    if (this.endbossOfEnemies.energy <= 0 && !this.endbossOfEnemies.isDead) {
-        this.animateEndbossDeath();
-        return;
-    }
-}
-
-/**
- * Helper function to check if the endboss has less or more than twenty energy.
- * If so, it triggers the endboss hurt animation or starts the endboss attack mode.
- */
-hitEndbossLessOrMoreThanTwenty(){
-    if (this.endbossOfEnemies.energy <= 20 && !this.endbossOfEnemies.isDead) {
-        this.animateEndbossHurt();
-    } else if (this.endbossOfEnemies.energy > 20 && !this.endbossOfEnemies.isDead) {
-        this.startEndbossAttackMode();
-    }
-}
-
-/**
- * Helper function for calculation of endboss energy
- * @param {number} amount 
- */
-  reduceEndbossEnergy(amount) {
-    this.endbossOfEnemies.energy = Math.max(0, this.endbossOfEnemies.energy - amount);
-}
-/**
- * Helper function for update values to the statusbar
- */
-  updateEndbossStatusBar() {
-    if (typeof this.statusBarEndboss?.setPercentage === "function") {
-        this.statusBarEndboss.setPercentage(this.endbossOfEnemies.energy);
-    }
-}
-/**
- * Helper function for Endboss Death animation
- */
-  animateEndbossDeath() {
-    if (typeof this.endbossOfEnemies.animateDeath === "function") {
-        this.endbossOfEnemies.animateDeath();
-    }
-}
-
-/**
- * Helper function for endboss hurt animation.
- */
-  animateEndbossHurt() {
-    if (typeof this.endbossOfEnemies.animateHurt === "function") {
-        this.endbossOfEnemies.animateHurt();
-    }
-}
-
-/**
- * Helper function to start the endboss attack mode
- */
-  startEndbossAttackMode() {
-    if (typeof this.endbossOfEnemies.startAttackMode === "function") {
-        this.endbossOfEnemies.startAttackMode();
     }
 }
 

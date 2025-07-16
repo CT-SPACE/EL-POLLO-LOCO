@@ -15,23 +15,36 @@ class MovableObject extends DrawableObject {
 
   lastHit = 0;
 
-  /**
+/**
    * Returns true if the object is above ground, false otherwise.
    * @returns 
    */
+// applyGravity() {
+//   if (this.gravityInterval) return;
+  
+//   this.gravityInterval = setInterval(() => {
+//     if (this.isAboveGround() || this.speedY > 0) {
+//   this.y -= this.speedY;
+//   this.speedY -= this.acceleration;
+//       } else {
+//   this.speedY = 0;
+//   clearInterval(this.gravityInterval);
+//   this.gravityInterval = null;
+// }
+//     }, 1000 / 25);
+//   }
+
   applyGravity() {
-    if (this.gravityInterval) return;
-    this.gravityInterval = setInterval(() => {
+    setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
       } else {
         this.speedY = 0;
-        clearInterval(this.gravityInterval);
-        this.gravityInterval = null;
-      }
+        }
     }, 1000 / 25);
   }
+
 
   /**
    * Determines whether the object is in a jump and therefore above the ground
@@ -118,12 +131,12 @@ class MovableObject extends DrawableObject {
   /**
    *Let Pepe jump.
    */
-  jump() {
-    if (!this.isAboveGround()) {
+jump() {
+    // if (!this.isAboveGround()) {
       this.speedY = 34;
-      this.applyGravity();
-    }
-  }
+  //     this.applyGravity();
+  // }
+}
 
   /**
    * Checks whether Pepe collides with the enemies and the damage is calculated according to the enemy type.
@@ -135,7 +148,7 @@ class MovableObject extends DrawableObject {
     let damage = 0.0001; 
 
     if (attacker instanceof Endboss) {
-      damage *= 150; 
+      damage *= 200; 
     }
     if (attacker instanceof MiniChicken) {
       damage *= 0.2;

@@ -104,6 +104,7 @@ async function preloadAudio() {
     audioManager.loadAudio("mini_run", "./audio/mini_chicken_run.mp3"),
     audioManager.loadAudio("pepe_wins", "./audio/winning_whoppi.mp3"),
     audioManager.loadAudio("pepe_loses", "./audio/failed_drum.mp3"),
+    audioManager.loadAudio("clock_ticking", "./audio/clock_ticking.mp3"),
   ]);
 }
 

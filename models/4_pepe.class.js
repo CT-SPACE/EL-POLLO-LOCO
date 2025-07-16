@@ -8,15 +8,15 @@ class Pepe extends MovableObject {
     "./img/2_character_pepe/2_walk/W-26.png",
   ];
   static IMAGES_JUMPING = [
-    "./img/2_character_pepe/3_jump/J-31.png",
-    "./img/2_character_pepe/3_jump/J-32.png",
-    "./img/2_character_pepe/3_jump/J-33.png",
+    "./img/2_character_pepe/3_jump/J-31_.png",
+    "./img/2_character_pepe/3_jump/J-32_.png",
+    "./img/2_character_pepe/3_jump/J-33_.png",
     "./img/2_character_pepe/3_jump/J-34.png",
     "./img/2_character_pepe/3_jump/J-35.png",
     "./img/2_character_pepe/3_jump/J-36.png",
-    "./img/2_character_pepe/3_jump/J-37.png",
-    "./img/2_character_pepe/3_jump/J-38.png",
-    "./img/2_character_pepe/3_jump/J-39.png",
+    "./img/2_character_pepe/3_jump/J-37_.png",
+    "./img/2_character_pepe/3_jump/J-38_.png",
+    "./img/2_character_pepe/3_jump/J-39_.png",
   ];
   static IMAGES_DYING = [
     "./img/2_character_pepe/5_dead/D-51.png",
@@ -58,6 +58,26 @@ class Pepe extends MovableObject {
     "./img/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
+//   static IMAGES_JUMPING_PREP = [
+//   "./img/2_character_pepe/3_jump/J-31.png",
+//   "./img/2_character_pepe/3_jump/J-32.png",
+//   "./img/2_character_pepe/3_jump/J-33.png",
+
+// ];
+
+// static IMAGES_JUMPING_AIR = [
+//     "./img/2_character_pepe/3_jump/J-34.png",
+//   "./img/2_character_pepe/3_jump/J-35.png",
+//   "./img/2_character_pepe/3_jump/J-36.png",
+
+// ];
+
+// static IMAGES_JUMPING_LAND = [
+//     "./img/2_character_pepe/3_jump/J-37.png" ,
+//   "./img/2_character_pepe/3_jump/J-38.png",
+//   "./img/2_character_pepe/3_jump/J-39.png"
+// ];
+
   isPlayingHurtAudio = false;
 
   x = 0;
@@ -79,6 +99,8 @@ class Pepe extends MovableObject {
   speed = 20;
   speedY = 0;
   frameIndex = 0;
+  alreadyJumped = false;
+  jumpIntervalAlreadyRunning = false;
   offset = {
     left: 40,
     right: 40,
@@ -151,7 +173,10 @@ class Pepe extends MovableObject {
    */
   handleRightMovement() {
     this.stopSleepAnimation();
+
+     if (!this.isAboveGround()) {
     this.playAnimation(Pepe.IMAGES_WALKING);
+  }
     this.moveRight();
     if (!this.audio.audioPlaying["pepe_pollo"]) {
       this.audio.playAudio("pepe_pollo", { loop: false, volume: 0.4 });
@@ -164,7 +189,9 @@ class Pepe extends MovableObject {
   */
   handleLeftMovement() {
     this.stopSleepAnimation();
+      if (!this.isAboveGround()) {
     this.playAnimation(Pepe.IMAGES_WALKING);
+  }
     this.moveLeft(this.speed);
     this.otherDirection = true;
   }
@@ -204,7 +231,46 @@ class Pepe extends MovableObject {
       } else {
         this.stopSleepAnimation();
       }
-    }, 200);
+    }, 300);
+  }
+
+  // animateStates() {
+  //   this.isPlayingHurtAudio = false;
+  //   setInterval(() => {
+  //     if (this.isZeroHealthscore()) {
+  //       this.animateDeath();
+  //     } else if (this.isHurt()) {
+  //       this.lastKeyPressTime = Date.now();
+  //       this.animateHurt();
+  //     } else if (this.alreadyJumped && !this.jumpIntervalAlreadyRunning) {
+  //       this.jumpIntervalAlreadyRunning = true;
+  //       this.startJump();
+  //     } else if (Date.now() - this.lastKeyPressTime >= this.timeToSleep) {
+  //       this.isSleepingState = true;
+  //       this.animateSleep();
+  //     } else if (Date.now() - this.lastKeyPressTime >= this.timeToIdle) {
+  //       this.playAnimation(Pepe.IMAGES_IDLE);
+  //     } else {
+  //       this.stopSleepAnimation();
+  //     }
+  //   }, 200);
+  // }
+
+  /**
+   * Starts the jump animation with a defined Time Interval.
+   * It plays the jumping images in a loop and resets the jump state after a defined duration.
+   */
+   startJump(){
+    this.currentImage = 0;
+    let jumpInterval = setInterval(() =>{
+      this.playAnimation(Pepe.IMAGES_JUMPING);
+      console.log("JUMGING", Date.now(), this.moduloCurrentImage(Pepe.IMAGES_JUMPING));
+    }, 50);
+    setTimeout(() =>{
+      clearInterval(jumpInterval);
+      this.jumpIntervalAlreadyRunning = false;
+      this.alreadyJumped = false;
+    }, 1442);
   }
 
   /**

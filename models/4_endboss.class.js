@@ -4,7 +4,6 @@ class Endboss extends MovableObject {
   speed = 0;
   speedY = 0.5;
   world;
-  audioManager;
   character;
   EndBossClose = false;
   deathHandled = false;
@@ -81,7 +80,6 @@ class Endboss extends MovableObject {
     this.EndBossClose = false;
     this.isDead = false;
     this.status = false;
-    this.audio = audioManager;
 
     this.animateWalk();
     this.y = 12;
@@ -105,18 +103,6 @@ class Endboss extends MovableObject {
       }
     }, 6000 / 25);
   }
-
-
-  // animateAlert() {
-  //   clearInterval(this.animateAttackInterval);
-  //   clearInterval(this.animateWalkInterval);
-  //    if (gamePaused) return;
-  //   this.animateAlertInterval = setInterval(() => {
-  //     this.speed = 0;
-  //     this.moveLeft(this.speed);
-  //     this.playAnimation(Endboss.IMAGES_ALERT);
-  //   }, 1000);
-  // }
 
   /**
    * Starts the attack animation for the endboss.
@@ -143,7 +129,7 @@ class Endboss extends MovableObject {
    * If the endboss is dead, it clears the death animation interval and triggers the game over state.
    */
   animateDeath() {
-    this.audio.controlAudio("endbossBackground", { play: false, pause: true });
+    audioManager.controlAudio("endbossBackground", { play: false, pause: true });
     if (!this.deathHandled) {
       this.deathHandled = true;
       this.isDead = true;
@@ -179,10 +165,10 @@ class Endboss extends MovableObject {
    */
   isAttacking(status) {
     if (status === true) {
-      this.audio.playAudio("endboss_attack", { play: true });
+      audioManager.playAudio("endboss_attack", { play: true });
       return true;
     } else {
-      this.audio.controlAudio("endboss_attack", {
+      audioManager.controlAudio("endboss_attack", {
         play: false,
         pause: true,
         currentTime: 0,
@@ -200,12 +186,6 @@ class Endboss extends MovableObject {
     if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
     this.animateAttack();
   }
-
-  // isAlert() {
-  //   return (
-  //     this.currentImage < Endboss.IMAGES_ALERT.length && this.currentImage > 0
-  //   );
-  // }
 
   /**
    * In case of loosing to much energy by beeing hit by bottles, the endboss plays the hurt animation.
@@ -228,4 +208,72 @@ class Endboss extends MovableObject {
       hurtFrame = (hurtFrame + 1) % Endboss.IMAGES_HURT.length;
     }, 500);
   }
+
+
+
+/** Helper function to check if the endboss has zero energy.
+ *  If so, it triggers the endboss death animation.
+ */
+hitEndbossZero(){
+    if (this.energy <= 0 && !this.isDead) {
+        this.animateEndbossDeath();
+        return;
+    }
+}
+
+/**
+ * Helper function to check if the endboss has less or more than twenty energy.
+ * If so, it triggers the endboss hurt animation or starts the endboss attack mode.
+ */
+hitEndbossLessOrMoreThanTwenty(){
+    if (this.energy <= 20 && !this.isDead) {
+        this.animateEndbossHurt();
+    } else if (this.energy > 20 && !this.isDead) {
+        this.startEndbossAttackMode();
+    }
+}
+
+/**
+ * Helper function for calculation of endboss energy
+ * @param {number} amount 
+ */
+  reduceEndbossEnergy(amount) {
+    this.energy = Math.max(0, this.energy - amount);
+}
+/**
+ * Helper function for update values to the statusbar
+ */
+  updateEndbossStatusBar() {
+    if (typeof this.world.statusBarEndboss?.setPercentage === "function") {
+        this.world.statusBarEndboss.setPercentage(this.energy);
+    }
+}
+/**
+ * Helper function for Endboss Death animation
+ */
+  animateEndbossDeath() {
+    if (typeof this.animateDeath === "function") {
+        this.animateDeath();
+    }
+}
+
+/**
+ * Helper function for endboss hurt animation.
+ */
+  animateEndbossHurt() {
+    if (typeof this.animateHurt === "function") {
+        this.animateHurt();
+    }
+}
+
+/**
+ * Helper function to start the endboss attack mode
+ */
+  startEndbossAttackMode() {
+    if (typeof this.startAttackMode === "function") {
+        this.startAttackMode();
+    }
+}
+
+
 }

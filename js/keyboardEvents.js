@@ -1,3 +1,6 @@
+let throwCoolDown = 600;
+let lastThrowTime;
+let noBottles;
 
 /**
  * Both eventlistener are defining the Button on the keyboard that are used to control the game.
@@ -22,8 +25,18 @@ document.addEventListener("keydown", (e) => {
     keyboard.DOWN = true;
   }
   if (e.code == "KeyD") {
-    if (!throwKeyDownTime) {
-      throwKeyDownTime = Date.now();
+    const now = Date.now();
+    if (now - lastThrowTime < throwCoolDown) {
+      if(!noBottles){
+         audioManager.playAudio("clock_ticking", { play: true, volume: 0.3});
+      }
+     
+      throwKeyDownTime = null;
+    } else if (!throwKeyDownTime) { 
+        audioManager.controlAudio("clock_ticking", { play: false, pause: true, currentTime: 0 });
+      throwKeyDownTime = now; 
+      lastThrowTime = now;
+     
     }
   }
 });

@@ -220,7 +220,6 @@ function setSoundStatus(isOn) {
  */
 function getSoundStatus() {
   const value = localStorage.getItem("soundOn");
-  console.log("getSoundStatus", value);
   if (value === null) return true;
   return value === "true";
 }
@@ -315,7 +314,7 @@ function prepareStylesForPlayConditions() {
   document.getElementById("stayHeadline").classList.add("headline");
   document.getElementById("play").style.display = "";
   
-  let reload = document.getElementById("restart")
+  let reload = document.getElementById("gohome")
   reload.style.display = "";
   reload.addEventListener("click", () => {
   location.reload();
@@ -324,7 +323,7 @@ function prepareStylesForPlayConditions() {
 
 /**
  * Restarts the game directly and ready to play.
- * This function is called when the user clicks the "Restart" button. 
+ * This function is called when the user clicks the "Go Home" button. 
  */
 function reStart() {
 
