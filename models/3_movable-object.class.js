@@ -19,32 +19,18 @@ class MovableObject extends DrawableObject {
    * Returns true if the object is above ground, false otherwise.
    * @returns 
    */
-// applyGravity() {
-//   if (this.gravityInterval) return;
-  
-//   this.gravityInterval = setInterval(() => {
-//     if (this.isAboveGround() || this.speedY > 0) {
-//   this.y -= this.speedY;
-//   this.speedY -= this.acceleration;
-//       } else {
-//   this.speedY = 0;
-//   clearInterval(this.gravityInterval);
-//   this.gravityInterval = null;
-// }
-//     }, 1000 / 25);
-//   }
-
   applyGravity() {
     setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
-      } else {
+      } 
+      if (this.y >= Pepe.GROUND_Y) {
+        this.y = Pepe.GROUND_Y;
         this.speedY = 0;
         }
     }, 1000 / 25);
   }
-
 
   /**
    * Determines whether the object is in a jump and therefore above the ground
@@ -132,10 +118,7 @@ class MovableObject extends DrawableObject {
    *Let Pepe jump.
    */
 jump() {
-    // if (!this.isAboveGround()) {
       this.speedY = 34;
-  //     this.applyGravity();
-  // }
 }
 
   /**

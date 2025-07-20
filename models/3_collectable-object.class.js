@@ -38,6 +38,7 @@ class CollectableObject extends DrawableObject {
   constructor(kindof, count, x, y, height, width, distanceX, Row2Probability) {
     super();
     this.audio = audioManager;
+    this.world = world;
     this.kindof = kindof; 
     this.kindofCollectableObject(this.kindof);
     this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
@@ -136,6 +137,7 @@ static createCoins(count, distanceX, Row2Probability) {
     setInterval(() => {
       coins.forEach((coin, index) => {
         if (this.character.isColliding(coin)) {
+          this.world.highscoreManager.addCollectedCoin();
           coins.splice(index, 1);
         }
       });

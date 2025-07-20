@@ -103,7 +103,6 @@ body {
 }
 
 #startGame {
-  /* padding:1rem 2rem; */
   margin-top: 20px;
   display: none;
 }
@@ -285,11 +284,9 @@ h4 {
   display: flex;
   overflow: hidden;
   top: 0;
-  /* border: 3px solid white; */
   z-index: 10;
   position: absolute;
   border-radius: 20px;
-  /* box-shadow: 3px 3px 4px 0px black; */
   justify-content: center;
   box-sizing: border-box;
 }
@@ -306,9 +303,17 @@ h4 {
   position: absolute;
 }
 
+.starsBG{
+  background-image: url("../img/stars.png");
+  background-repeat:no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 .backdrop {
   background-color: #70231380;
   backdrop-filter: grayscale(100%) invert(100%);
+  -webkit-backdrop-filter:grayscale(100%) invert(100%);
 }
 
 .gameOver {
@@ -327,9 +332,10 @@ h4 {
 .gameOverText {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: end;
   align-items: center;
-  position: absolute;
+  position: relative;
+  height:100%;
 }
 
 .pepeGrave {
@@ -358,7 +364,6 @@ h4 {
   background-position-x: center;
   background-position-y: center;
   position: absolute;
-  /* bottom:40px; */
   background-size: 560px;
   transition: width 2s, height 2s, transform 2s;
   transform: rotate(360deg);
@@ -384,13 +389,11 @@ canvas {
   display: flex;
   align-items: end;
   justify-content: center;
-  /* transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); */
   transition: top 1s cubic-bezier(0.09, 0.99, 0.9, 0.36);
 }
 
 .menu.show {
-  bottom: -50px; /* Zielposition */
-  /* transition: top 1s cubic-bezier(.09,.99,.9,.36); */
+  bottom: -50px; 
 }
 
 #playControl {
@@ -400,9 +403,7 @@ canvas {
   bottom: -70px;
   left: calc((100vw - 800px) / (-2));
   display: flex;
-  /* align-items: end; */
   justify-content: center;
-  /* transition: top 1s cubic-bezier(0.09, 0.99, 0.9, 0.36); */
 }
 
 .playButtons {
@@ -421,7 +422,6 @@ canvas {
 }
 
 #playButtonsRight {
-  /* flex-direction: column; */
   position: fixed;
   right: 0px;
   bottom: 0px;
@@ -627,7 +627,6 @@ p {
   bottom: 0;
   z-index: 18;
   transition: bottom 0.5s ease-in;
-  /* padding: 80px 15vw 64px 22vw; */
 }
 #buttonContent.close {
   bottom: -100%;
@@ -656,7 +655,6 @@ p {
   align-items: end;
   position: absolute;
   top: 50px;
-  /* right: -140px; */
   width: 100%;
 }
 
@@ -664,11 +662,11 @@ p {
         display: none;
     }
 
-#retryPosition {
+.retryPosition {
   width: 100%;
   position: relative;
   display: flex;
-  justify-content: right;
+  flex-direction:row;
 }
 
 .replayButton {
@@ -681,9 +679,7 @@ p {
   background-color: white;
   padding: 5px;
   box-sizing: border-box;
-  /* margin: 0 5px; */
-  top: 160px;
-  /* right: -360px; */
+  margin-bottom: 20px;
   width: 80px;
   height: 80px;
   border-radius: 14px 0 0 14px;
@@ -694,7 +690,6 @@ p {
 .replayButton:hover {
   overflow: unset;
   cursor: pointer;
-  /* background-size: 70px; */
   box-shadow: 1px 1px 2px 0px black;
   width: 200px;
   right: 0px;
@@ -712,6 +707,7 @@ p {
   position: absolute;
   top: 10px;
   left: 85px;
+  margin-bottom: 0px;
 }
 
 .replayButton.win::before {
@@ -756,11 +752,6 @@ p {
   background-size: contain;
   background-repeat: no-repeat;
 }
-
-/* button:disabled{
-    cursor: not-allowed;
-    opacity: 0.5;
-} */
 
 #play.disabled,
 #gohome.disabled {
@@ -852,10 +843,44 @@ p {
   outline-offset: -1px;
 }
 
+.scoreContainer{
+  border: 2px solid darkred;
+  padding: 0;
+  color: white;
+  border-radius: 0 20px;
+}
+
+.score{
+ font-size: 1.1rem;
+    padding: 0 20px;
+}
+.score h4, .highscore h4{
+  margin:0;
+  font-size: 0.8rem;
+}
+
+.highscore{
+    font-weight: 700;
+    background-color: #fdf08f;
+    color: rgb(112, 10, 10);
+    border-radius: 0 20px 0px 20px;
+    font-size: 1.1rem;
+    padding: 0 20px;
+}
+
+
 small{
   line-height:1;
 }
 
+
+.justSpaceBetween{
+  justify-content:space-between;
+}
+
+.justRight{
+  justify-content:right;
+}
 .visibilityHidden {
   visibility: hidden;
 }

@@ -50,10 +50,11 @@ class ThrowableObject extends MovableObject {
    * Throws the object by applying a speed in the x and y directions.
    * It also starts the bottle rotation animation and applies gravity to the object.
    * The object will fall until it reaches the ground level (y = 450).
-   * If it reaches the ground, it will stop moving and trigger a splash effect.
+   * If it reaches the ground, it will stop moving and disappears. If it hits the Endboss its triggers a splash effect.
    */
   throw() {
     this.rotatingBottle();
+    
     this.throwInterval = setInterval(() => {
       this.x += this.speedX;
       this.y -= this.speedY;
@@ -66,6 +67,7 @@ class ThrowableObject extends MovableObject {
         this.stopBottleAnimation();
       }
     }, 1000 / 25);
+    this.world.highscoreManager.addBottleUsed();
   }
 
   /**

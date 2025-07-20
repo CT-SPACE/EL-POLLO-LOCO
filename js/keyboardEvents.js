@@ -1,5 +1,5 @@
 let throwCoolDown = 600;
-let lastThrowTime;
+let lastThrowTime = 0;
 let noBottles;
 
 /**
@@ -30,13 +30,10 @@ document.addEventListener("keydown", (e) => {
       if(!noBottles){
          audioManager.playAudio("clock_ticking", { play: true, volume: 0.3});
       }
-     
-      throwKeyDownTime = null;
     } else if (!throwKeyDownTime) { 
-        audioManager.controlAudio("clock_ticking", { play: false, pause: true, currentTime: 0 });
+       audioManager.controlAudio("clock_ticking", { play: false, pause: true, currentTime: 0 });
       throwKeyDownTime = now; 
-      lastThrowTime = now;
-     
+      lastThrowTime = now;  
     }
   }
 });

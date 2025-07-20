@@ -98,7 +98,7 @@ class Endboss extends MovableObject {
       this.playAnimation(Endboss.IMAGES_WALK);
       this.moveLeft(this.speed);
       if(this.EndBossClose){
-         this.x -= 15;
+         this.x -= 25;
          this.jump();
       }
     }, 6000 / 25);
@@ -120,7 +120,7 @@ class Endboss extends MovableObject {
       if (this.currentImage % Endboss.IMAGES_ATTACK.length === 5) {
         this.x -= jumpDistance;
       }
-    }, 3000 / 25);
+    }, 2000 / 25);
   }
 
   /**

@@ -44,9 +44,7 @@ function openContent(content, contentType, contentScreen) {
   let headline = document.getElementById("stayHeadline");
   gamePausedByUser = gamePaused;
   contentOpen = true;
-
   togglePlay("content", true);
-
   resetOutClasses();
   addStylesForOpenContent(contentType, contentScreen, headline);
   setTimeout(() => {
@@ -338,59 +336,4 @@ closeButton.addEventListener("click", () => {
 });
 
   }, 500);
-}
-
-/**
- * Makes the GameOverScreen visible and returns which Screen will be shown - Winning Pepe or Winning Endboss 
- * @param {string} somebodyIsDead 
- * @returns 
- */
-function showGameOverScreen(somebodyIsDead) {
-  let gameOverScreen = document.getElementById("gameOverScreen");
-  prepareGameOverScreen(gameOverScreen);
-  document.querySelectorAll(".control, .button").forEach((element) => {
-    element.classList.add("visibilityHidden");
-  });
-
-  if (somebodyIsDead === "Pepe") {
-    handleWinningEndboss(gameOverScreen);
-  } else if (somebodyIsDead === "Endboss") {
-    handleWinningPepe(gameOverScreen);
-  } else return;
-}
-
-/**
- * Handles the Classes for other Elements on the Screen during GameOver-Session
- * @param {HTMLElement} gameOverScreen 
- */
-function prepareGameOverScreen(gameOverScreen) {
-  let stayHeadline = document.getElementById("stayHeadline");
-  stayHeadline.classList.remove("headline");
-  gameOverScreen.classList.remove("displayNone");
-  gameOverScreen.classList.add("winningGameOverBG");
-  document.getElementById("playControl").style.display = "none";
-  let playScreen = document.getElementById("playScreen")
-  playScreen.style.border = "unset";
-  playScreen.style.boxShadow = "unset";
-  let canvas = document.getElementById("canvas");
-  canvas.classList.add("displayNone");
-}
-
-/**
- * Adds the ReplayButton to the GameOverScreen
- * @param {HTMLElement} gameOverScreen 
- * @param {boolean} status 
- */
-function includeReplayButton(gameOverScreen, status) {
-  let replayPosition = document.createElement("div");
-  replayPosition.id = "retryPosition";
-  localStorage.setItem("autostart", "1");
-  let replay = document.createElement("div");
-  replay.id = "retry";
-  replay.classList.add("replayButton", status === "lose" ? "lose" : "win");
-  replay.addEventListener("click", () => {
-    reStart();
-  });
-  replayPosition.appendChild(replay);   
-  gameOverScreen.appendChild(replayPosition);
 }

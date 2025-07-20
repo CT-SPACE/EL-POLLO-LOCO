@@ -1,5 +1,5 @@
 class staticBackground extends StaticObject {
-  x = 0;
+  x = -20;
   y = 0;
     height = 480 ;
     width = 5000 ;

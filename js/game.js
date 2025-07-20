@@ -2,7 +2,7 @@
  * Declaration of global variables and constants
  * This file is responsible for initializing the game, loading assets, and managing the game state.
  */
-let canvas, world, Level01, pepe_ambient, chicken_run, throwKeyDownTime, throwKeyUpTime, throwDuration, contentOpen, startScreen, newWidth, newHeight;
+let canvas, world, Level01, pepe_ambient, chicken_run, throwKeyDownTime, throwKeyUpTime, throwDuration, contentOpen, startScreen, newWidth, newHeight, deathCandidate, finalScore,savedHighscore;
 let keyboard = new Keyboard();
 let audioManager = new AudioManager();
 let audioPlaying = {};
@@ -301,8 +301,10 @@ if (audioManager.audioContext && audioManager.audioContext.state === "suspended"
 async function worldCanvas(){
     canvas = document.getElementById("canvas");
     canvas.focus();
-
     window.world = new World(canvas, Level01);
+      window.highscoreManager = window.world.highscoreManager;
+savedHighscore = window.highscoreManager.savedHighscore;
+
 }
 
 /**
@@ -331,64 +333,6 @@ function reStart() {
 location.reload();
 }
 
-/**
- * Creates the container for the Loosing Message and starts the replay-Button
- * @param {HTMLElement} gameOverScreen 
- */
-function handleWinningEndboss(gameOverScreen) {
-    if(getSoundStatus()){
-      audioManager.playAudio("pepe_loses", { play: true, volume: 0.3 });
-    }
-  gameOverScreen.innerHTML = "";
-  gameOverScreen.classList.add("backdrop");
-  includeReplayButton(gameOverScreen, "lose");
-
-  gameOverScreen.appendChild(gameOverText());
-  gameOverScreen.appendChild(pepeGrave());
-}
-
-/**
- * Helper function to create the GameOverText für handleWinningEndboss()
- * @description Creates the GameOverText and returns it as a div element. 
- * @returns gameOverText
- */
-function gameOverText(){
-  let gameOverText = document.createElement("div");
-  gameOverText.className = "gameOverText";
-  gameOverText.innerHTML = `<h3>¡Game Over!</h3>Oh no, Pepe perdió contra <br> este oponente devastador!`;
-  return gameOverText;
-}
-
-/**
- * Helper function to create the Pepe's Grave for handleWinningEndboss()
- * @description Creates a div element with the id "grave" and class "pepeGrave", which contains an image of Pepe's grave. 
- * @returns pepeGrave;
- */
-function pepeGrave(){
-  let pepeGrave = document.createElement("div");
-  pepeGrave.id = "grave";
-  pepeGrave.className = "pepeGrave";
-  pepeGrave.innerHTML = `<img src="./img/pepe_grab.svg" alt="Pepe's Grave">`;
-  return pepeGrave;
-}
-
-/**
- * Creates the container for the winning Message and starts the replay Button
- * @param {HTMLElement} gameOverScreen 
- */
-function handleWinningPepe(gameOverScreen) {
-  if(getSoundStatus()){
-  audioManager.playAudio("pepe_wins", { play: true, volume: 0.3 });
-  }
-  gameOverScreen.innerHTML += ` <div class="gameOverText"><h3>YOU WON!</h3> ¡Que Aproveches! </div>`;
-  let rueda = document.createElement("div");
-  rueda.classList.add("winningBG");
-  gameOverScreen.appendChild(rueda);
-  setTimeout(() => {
-    rueda.classList.add("big");
-    includeReplayButton(gameOverScreen, "win");
-  }, 10);
-}
 
 
 

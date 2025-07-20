@@ -54,10 +54,10 @@ class StatusBarChilli extends StaticObject {
  * @returns 
  */
     resolveImageChilli(chillicount){
-    if (chillicount >= 10) return 5;
-    if (chillicount >= 8) return 4;
-    if (chillicount >= 6) return 3;
-    if (chillicount >= 3) return 2;
+    if (chillicount >= 15) return 5;
+    if (chillicount >= 11) return 4;
+    if (chillicount >= 8) return 3;
+    if (chillicount >= 4) return 2;
     if (chillicount >= 1) return 1;
     return 0;
     
