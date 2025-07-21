@@ -1,4 +1,4 @@
-let throwCoolDown = 600;
+let throwCoolDown = 1000;
 let lastThrowTime = 0;
 let noBottles;
 

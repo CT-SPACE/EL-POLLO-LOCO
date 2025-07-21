@@ -126,18 +126,38 @@ function handleScoreContainer(gameOverScreen){
   scoreContainer.classList.add("scoreContainer");
   finalScore = window.highscoreManager.currentScore;
   if (finalScore > savedHighscore) {
-    scoreContainer.classList.add("newHighscore");
-          scoreContainer.innerHTML = `
-    <div class="highscore"><h4>NEW HighScore:</h4> ${finalScore}</div>
-    <div class="score"><h4>old Highscore:</h4> ${savedHighscore}</div>
-  `;
+  handleHigherFinalScore(scoreContainer, finalScore, savedHighscore);
   gameOverScreen.classList.add("starsBG");
   } else {
-      scoreContainer.innerHTML = `
-    <div class="score"><h4>Your Score:</h4> ${finalScore}</div>
-    <div class="highscore"><h4>Highscore:</h4> ${savedHighscore}</div>
-  `;
+     handleLowerFinalScore(scoreContainer, finalScore, savedHighscore);
   }
 retryContainer.insertBefore(scoreContainer, retryContainer.firstChild);
    window.highscoreManager.saveHighscore();
+}
+
+/**
+ * In Case of a higher final score, this function handles the display of the new highscore and the old highscore.
+ * @param {Object} scoreContainer 
+ * @param {HTMLElement} finalScore 
+ * @param {HTMLElement} savedHighscore 
+ */
+function handleHigherFinalScore(scoreContainer, finalScore, savedHighscore){
+    scoreContainer.classList.add("newHighscore");
+    scoreContainer.innerHTML = `
+    <div class="highscore"><h4>NEW HighScore:</h4> ${finalScore}</div>
+    <div class="score"><h4>old Highscore:</h4> ${savedHighscore}</div>
+  `;
+}
+
+/**
+ * In Case of a lower final score than Highscore, this function handles the display of the final score and the highscore.
+ * @param {Object} scoreContainer 
+ * @param {HTMLElement} finalScore 
+ * @param {HTMLElement} savedHighscore 
+ */
+function handleLowerFinalScore(scoreContainer, finalScore, savedHighscore){
+  scoreContainer.innerHTML = `
+    <div class="score"><h4>Your Score:</h4> ${finalScore}</div>
+    <div class="highscore"><h4>Highscore:</h4> ${savedHighscore}</div>
+  `;
 }
