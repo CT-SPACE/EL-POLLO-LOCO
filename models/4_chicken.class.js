@@ -80,8 +80,8 @@ class Chicken extends MovableObject {
     this.loadImage(this.img_death);
     this.y = 362;
     setTimeout(() => {
-      if (window.world && window.world.level && window.world.level.enemies) {
-        window.world.level.enemies.splice(window.world.level.enemies.indexOf(this), 1);
+      if (world.level.enemies) {
+        world.level.enemies.splice(world.level.enemies.indexOf(this), 1);
       }
     }, 1000);
   }

@@ -48,6 +48,8 @@ async function initLevel() {
             new MiniChicken(world),     
             new MiniChicken(world),
 
+            new Endboss(world)
+
         ],
 
      

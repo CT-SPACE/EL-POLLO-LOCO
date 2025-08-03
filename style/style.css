@@ -75,7 +75,7 @@ body {
   width: 100%;
   font-weight: 700;
   font-size: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.2rem;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -414,23 +414,30 @@ canvas {
   width: 80px;
 }
 
-#playButtonsLeft {
+#playButtonsLeft, #playButtonsRight {
+  display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    margin: 20px;
+    height: 140px;
+    width: 70px;
   position: fixed;
-
-  left: 0px;
   bottom: 0;
 }
 
+#playButtonsLeft {
+  left: 0px;
+}
+
 #playButtonsRight {
-  position: fixed;
   right: 0px;
-  bottom: 0px;
 }
 
 .sizeBTN {
   width: 60px;
   height: 60px;
-  margin: 20px;
+  /* margin: 20px; */
   border-radius: 15px;
   box-shadow: 2px 2px 4px 0 black;
     background-size:contain;
@@ -445,29 +452,25 @@ canvas {
   margin:0;
 }
 
+#rightTop, #rightBottom, #leftTop, #leftBottom {
+  background-size:contain;
+  background-repeat:no-repeat;
+}
+
 #rightTop{
   background-image: url("../img/buttons/button-left_white.svg");
-      background-size:contain;
-  background-repeat:no-repeat;
-
 }
 
 #rightBottom{
  background-image: url("../img/buttons/button-right_white.svg");
-     background-size:contain;
-  background-repeat:no-repeat;
 }
 
 #leftTop{
   background-image: url("../img/buttons/button-D_white.svg");
-      background-size:contain;
-  background-repeat:no-repeat;
 }
 
 #leftBottom{
   background-image: url("../img/buttons/button-up_white.svg");
-      background-size:contain;
-  background-repeat:no-repeat;
 }
 
 #rightTop:hover, #rightTop:active, #rightTop:focus{

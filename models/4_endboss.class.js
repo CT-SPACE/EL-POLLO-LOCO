@@ -5,8 +5,6 @@ class Endboss extends MovableObject {
   speedY = 0.5;
   world;
   character;
-  EndBossClose = false;
-  deathHandled = false;
   energy = 100;
   status = false;
   isDead = false;
@@ -15,7 +13,8 @@ class Endboss extends MovableObject {
   animationSpeed = 1000;
   animateWalkInterval;
   animateAttackInterval;
-  animateAlertInterval;
+
+
 
   offset = {
     left: 60,
@@ -74,34 +73,44 @@ class Endboss extends MovableObject {
     this.loadImages(Endboss.IMAGES_ATTACK);
     this.loadImages(Endboss.IMAGES_HURT);
     this.loadImages(Endboss.IMAGES_DEAD);
-
     this.type = "endboss";
+    this.resetEndboss(world);
+    this.animateWalk();
+
+  }
+
+  /**
+   * Resets the endboss properties to their initial state.
+   * Sets the endboss position, energy, and status.
+   * @param {*} world 
+   */
+  resetEndboss(world) {
+
+    this.speed = 0;
+    this.speedY = 0.5;
+    this.energy = 100;
     this.world = world;
-    this.EndBossClose = false;
     this.isDead = false;
     this.status = false;
-
-    this.animateWalk();
     this.y = 12;
     this.x = 3800;
+    
   }
 
   /**
    * Animates the endboss' walk.
    */
   animateWalk() {
-    clearInterval(this.animateAttackInterval);
-    clearInterval(this.animateAlertInterval);
-
     this.animateWalkInterval = setInterval(() => {
-      this.speed = 0.8;
+      this.speed = 0.5;
       this.playAnimation(Endboss.IMAGES_WALK);
       this.moveLeft(this.speed);
-      if(this.EndBossClose){
-         this.x -= 25;
-         this.jump();
+      if(EndBossClose){
+            console.log("endboss:", EndBossClose);
+         this.x -= 10;
+         
       }
-    }, 6000 / 25);
+    }, 5000 / 25);
   }
 
   /**
@@ -110,17 +119,16 @@ class Endboss extends MovableObject {
    */
   animateAttack() {
     clearInterval(this.animateWalkInterval);
-    clearInterval(this.animateAlertInterval);
     if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
      if (gamePaused) return;
     
     this.animateAttackInterval = setInterval(() => {
-     let jumpDistance = 40;
       this.playAnimation(Endboss.IMAGES_ATTACK);
       if (this.currentImage % Endboss.IMAGES_ATTACK.length === 5) {
-        this.x -= jumpDistance;
+        this.x -= 80;
+        this.jump();
       }
-    }, 2000 / 25);
+    }, 200);
   }
 
   /**
@@ -130,21 +138,24 @@ class Endboss extends MovableObject {
    */
   animateDeath() {
     audioManager.controlAudio("endbossBackground", { play: false, pause: true });
-    if (!this.deathHandled) {
-      this.deathHandled = true;
       this.isDead = true;
       this.currentImage = 0;
       gamePaused = true;
       keyboardEnabled = false;;
       this.animateDeathInterval = setInterval(() => {
-        this.playAnimation(Endboss.IMAGES_DEAD);
+this.intervalSettingForAnimateDeath();
+      },100);
+  }
+
+  intervalSettingForAnimateDeath() {
+            this.playAnimation(Endboss.IMAGES_DEAD);
         if (this.moduloCurrentImage(Endboss.IMAGES_DEAD) === Endboss.IMAGES_DEAD.length - 1) {
           clearInterval(this.animateDeathInterval);
           this.world.handleGameOver("Endboss");
         }
-      }, 100);
-    }
   }
+
+
 
   /**
    * Helper function to calculate the current image index based on the modulo operation.
@@ -195,21 +206,26 @@ class Endboss extends MovableObject {
   animateHurt() {
     clearInterval(this.animateAttackInterval);
     clearInterval(this.animateWalkInterval);
-    clearInterval(this.animateAlertInterval);
-
     if (this.animateHurtInterval) clearInterval(this.animateHurtInterval);
       let hurtFrame = 0;
       this.animateHurtInterval = setInterval(() => {
-        if (this.isDead) {
-          clearInterval(this.animateHurtInterval);
-          return;
-        }
+        this.x -= 60;
+      this.clearIfDead();
+      this.jump();     
       this.img = imgCache[Endboss.IMAGES_HURT[hurtFrame]];
       hurtFrame = (hurtFrame + 1) % Endboss.IMAGES_HURT.length;
     }, 500);
   }
 
-
+  /**
+   * Helper function to clear the hurt animation interval if the endboss is dead.
+   */
+clearIfDead(){
+        if (this.isDead) {
+          clearInterval(this.animateHurtInterval);
+          return;
+        } 
+}
 
 /** Helper function to check if the endboss has zero energy.
  *  If so, it triggers the endboss death animation.
@@ -275,5 +291,65 @@ hitEndbossLessOrMoreThanTwenty(){
     }
 }
 
+
+
+  /**
+   * Thunderstorm: Made by 50% Brightness and EndbossBackground-Thunder-Sound
+   */
+  handleEndbossCloseDarknessAndSound() {
+    world.ctx.filter = "brightness(50%)";
+    if (audioManager.buffers["endbossBackground"] && !audioManager.audioPlaying["endbossBackground"]) {
+      world.ctx.filter = "brightness(50%)";
+      audioManager.playAudio("endbossBackground", {
+        play: true,
+        loop: false,
+        volume: 0.8,
+      });
+    }
+  }
+
+    /**
+   * When Pepe can see the Endboss the Weather is changing a thunderstorm is on the way.
+   * @returns
+   */
+  handleEndbossCloseEffect() {
+    try {
+      let flash = false;
+      if (EndBossClose === true) {
+        if (Math.random() < 0.008) {
+          flash = true;
+        }
+      }
+      this.flashEffekts(flash);
+    } catch {
+      return;
+    }
+  }
+
+  flashEffekts(flash) {
+    if (flash) {
+      world.ctx.filter = "brightness(250%)";
+    } else if (this.status === true && !this.isDead) {
+      this.handleEndbossCloseDarknessAndSound();
+    } else if (this.isDead) {
+      this.handleEndbossIsDeadWhileClose();
+    } else {
+      flash = false;
+      world.ctx.filter = "none";
+    }
+  }
+
+  /**
+   * Reset the Thunderstorm, when the Endboss is died.
+   */
+  handleEndbossIsDeadWhileClose() {
+    flash = false;
+    world.ctx.filter = "none";
+    audioManager.controlAudio("endbossBackground", {
+      play: false,
+      pause: true,
+      currentTime: 0,
+    });
+  }
 
 }

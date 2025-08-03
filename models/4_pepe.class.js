@@ -59,7 +59,7 @@ class Pepe extends MovableObject {
 
   static GROUND_Y = 103;
 
-  isPlayingHurtAudio = false;
+  isPlayingHurtAudio;
 
   x = 0;
   y = 40;
@@ -67,21 +67,16 @@ class Pepe extends MovableObject {
   width = 160;
   world;
   audioManager;
-  lastKeyPressTime = Date.now();
-  isSleepingState = false;
-  isDead = false;
-  deathHandled = false;
-  animateWalkInterval;
   animateDeathInterval;
+  lastKeyPressTime = Date.now();
+  isSleeping = false;
+  isDead = false;
   timeToSleep = 15000;
   timeToIdle = 2000;
   keyboard;
   cameraX;
   speed = 20;
   speedY = 0;
-  frameIndex = 0;
-  alreadyJumped = false;
-  jumpIntervalAlreadyRunning = false;
   offset = {
     left: 40,
     right: 40,
@@ -118,7 +113,7 @@ class Pepe extends MovableObject {
    */
   animateWalk() {
     this.x = 100;
-    this.animateWalkInterval = setInterval(() => {
+    intervalsToStop(() => {
       if (this.energy <= 0) return;
       if (keyboard.RIGHT && this.x < this.world.level.level_endX) {
         this.handleRightMovement();
@@ -142,7 +137,7 @@ class Pepe extends MovableObject {
     this.lastKeyPressTime = lastKeyPressTime;
     document.addEventListener("keydown", () => {
       this.lastKeyPressTime = Date.now();
-      if (this.isSleepingState) {
+      if (this.isSleeping) {
         this.stopSleepAnimation();
       }
     });
@@ -178,12 +173,12 @@ class Pepe extends MovableObject {
   }
 
   /**
-   * Stopps the sleep animation and resets the isSleepingState to false.
+   * Stopps the sleep animation and resets the isSleeping to false.
    * It also stops the audio playback for the sleeping sound effect.
    * This function is called when the character is no longer in a sleeping state.
    */
   stopSleepAnimation() {
-    this.isSleepingState = false;
+    this.isSleeping = false;
     this.audio.controlAudio("pepe_snore", {
       play: false,
       pause: true,
@@ -195,8 +190,7 @@ class Pepe extends MovableObject {
    * This function handles all states of Pepe animation, like walking, jumping, sleeping, and dying.
    */
   animateStates() {
-    this.isPlayingHurtAudio = false;
-    setInterval(() => {
+    intervalsToStop(() => {
       if (this.isZeroHealthscore()) {
         this.animateDeath();
       } else if (this.isHurt()) {
@@ -205,7 +199,7 @@ class Pepe extends MovableObject {
       } else if (this.isAboveGround()) {
          this.playAnimation(Pepe.IMAGES_JUMPING);
       } else if (Date.now() - this.lastKeyPressTime >= this.timeToSleep) {
-        this.isSleepingState = true;
+        this.isSleeping = true;
         this.animateSleep();
       } else if (Date.now() - this.lastKeyPressTime >= this.timeToIdle) {
         this.playAnimation(Pepe.IMAGES_IDLE);
@@ -231,7 +225,7 @@ class Pepe extends MovableObject {
    * If the character is already in a sleeping state, it does nothing.
    */
   animateSleep() {
-    this.isSleepingState = true;
+    this.isSleeping = true;
     this.playAnimation(Pepe.IMAGES_SLEEPING);
     if (!this.audio.audioPlaying["pepe_snore"]) {
       this.audio.playAudio("pepe_snore", { loop: true, volume: 0.4 });
@@ -250,8 +244,7 @@ class Pepe extends MovableObject {
    * If Pepe is already dead, it does nothing.
    */
   animateDeath() {
-    if (!this.deathHandled) {
-      this.deathHandled = true;
+    if (!this.isDead) {
       this.isDead = true;
       this.currentImage = 0;
       gamePaused = true;
@@ -267,10 +260,7 @@ class Pepe extends MovableObject {
    */
   intervalSettingForAnimateDeath() {
     this.playAnimation(Pepe.IMAGES_DYING);
-    if (
-      this.moduloCurrentImage(Pepe.IMAGES_DYING) ===
-      Pepe.IMAGES_DYING.length - 1
-    ) {
+    if ( this.moduloCurrentImage(Pepe.IMAGES_DYING) ===  Pepe.IMAGES_DYING.length - 1  ) {
       clearInterval(this.animateDeathInterval);
       this.world.handleGameOver("Pepe");
     }
@@ -294,6 +284,7 @@ class Pepe extends MovableObject {
     this.playAnimation(Pepe.IMAGES_HURT);
 
     if (!this.isPlayingHurtAudio) {
+      this.isPlayingHurtAudio = true;
       this.audio.playAudio("pepe_hurt", {
         play: true,
         volume: 0.5,

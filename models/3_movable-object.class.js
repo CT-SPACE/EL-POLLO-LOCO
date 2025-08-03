@@ -115,7 +115,7 @@ class MovableObject extends DrawableObject {
   }
 
   /**
-   *Let Pepe jump.
+   *Let Pepe and Endboss jump.
    */
 jump() {
       this.speedY = 34;
@@ -131,7 +131,7 @@ jump() {
     let damage = 0.0001; 
 
     if (attacker instanceof Endboss) {
-      damage *= 200; 
+      damage *= 100; 
     }
     if (attacker instanceof MiniChicken) {
       damage *= 0.2;
@@ -175,6 +175,7 @@ jump() {
     clearInterval(this.animateJumpInterval);
     clearInterval(this.animateHurtInterval);
     clearInterval(this.animateSleepInterval);
+    clearInterval(this.animateDeathInterval)
     clearInterval(this.animateAttackInterval);
     clearInterval(this.animateWalkInterval);
     clearInterval(this.animateXInterval);

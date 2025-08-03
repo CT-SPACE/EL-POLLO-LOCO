@@ -4,6 +4,7 @@ class DrawableObject{
   height;
   width;
   world;
+  endbossOfEnemies;
   drawDebug = false;
   otherDirection = false;
   img;
@@ -44,10 +45,11 @@ class DrawableObject{
    * Draws the object on the canvas.
    */
   static draw(world) {
+    if (!world.canvas) return;
     const ctx = world.ctx;
     ctx.clearRect(0, 0, world.canvas.width, world.canvas.height);
     ctx.translate(world.cameraX, 0);
-    world.handleEndbossCloseEffect();
+    world.endbossOfEnemies.handleEndbossCloseEffect();
     world.throwableObjects = world.throwableObjects.filter(
       (bottle) => !bottle.toBeRemoved
     );
@@ -127,6 +129,7 @@ class DrawableObject{
  * @param {Object} obj 
  */
   static addToMap(obj, ctx) {
+      obj.otherDirection === undefined ? obj.otherDirection = false : obj.otherDirection;
     if (obj.otherDirection) {
       obj.flipImage(ctx);
     }

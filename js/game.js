@@ -1,46 +1,6 @@
-/**
- * Declaration of global variables and constants
- * This file is responsible for initializing the game, loading assets, and managing the game state.
- */
-let canvas, world, Level01, pepe_ambient, chicken_run, throwKeyDownTime, throwKeyUpTime, throwDuration, contentOpen, startScreen, newWidth, newHeight, deathCandidate, finalScore,savedHighscore;
 let keyboard = new Keyboard();
 let audioManager = new AudioManager();
-let audioPlaying = {};
-let keyboardEnabled = true;
-let EndBossClose = false;
-let gamePaused = true;
-let gamePausedByUser = false;
-let activeIndex = 0;
-let imgCache = {};
-let letters = Array.from(document.querySelectorAll("#loader span"));
-let aspectRatio = 800 / 480;
-let touchSetupDone = false;
 
-/**
- * Prepares the "turn your Device"-Screen
- * @returns {boolean} 
- */
-  function isPortrait() {
-    return window.innerHeight > window.innerWidth && window.innerWidth <= 960;
-  }
-
-/**
- * Eventlistener for device format detection
- */
-
-window.addEventListener('DOMContentLoaded', function() {
-window.addEventListener('resize', function() {
-      let turnDevice = document.getElementById("turnToLandscape");
-      let contentbox = document.getElementById("contentbox");
-      if (isPortrait()) {
-        turnDevice.classList.remove("displayNone");
-        contentbox.style.display = "none";
-    } else {
-        turnDevice.classList.add("displayNone");
-        contentbox.style.display = '';
-    }
-  }
-)})
 
 /**
  * Starts the Init-Function after the DOM is fully loaded.
@@ -49,6 +9,45 @@ document.addEventListener("DOMContentLoaded", async () => {
   await init();
 });
 
+
+
+
+/**
+ * Eventlistener for device format detection
+ */
+window.addEventListener("DOMContentLoaded", function () {
+  window.addEventListener("resize", function () {
+    let turnDevice = document.getElementById("turnToLandscape");
+    let contentbox = document.getElementById("contentbox");
+    handlePortraitMode(turnDevice, contentbox);
+  });
+});
+
+/**
+ * Handle the device orientation and display the "turn your device" message if in portrait mode.
+ * Hides the content box when in portrait mode.
+ * @param {Object} turnDevice 
+ * @param {Object} contentbox 
+ */
+function handlePortraitMode(turnDevice, contentbox){
+    if (isPortrait()) {
+      turnDevice.classList.remove("displayNone");
+      contentbox.style.display = "none";
+    } else {
+      turnDevice.classList.add("displayNone");
+      contentbox.style.display = "";
+    }
+}
+
+/**
+ * Prepares the "turn your Device"-Screen
+ * @returns {boolean}
+ */
+function isPortrait() {
+  return window.innerHeight > window.innerWidth && window.innerWidth <= 960;
+}
+
+
 /**
  * Initialises the game by loading assets and showing the start screen.
  */
@@ -56,13 +55,11 @@ async function init() {
   await loadGameAssets();
   restoreSoundStatus();
   document.getElementById("sound").style.display = "";
- if (localStorage.getItem("autostart") === "true") {
-
-  playConditions();
-}else {
-
-  showStartScreen();
-}
+  if (localStorage.getItem("autostart") === "true") {
+    playConditions();
+  } else {
+    showStartScreen();
+  }
 }
 
 /**
@@ -83,7 +80,6 @@ function showStartScreen() {
   startScreen = true;
   allAmbientSounds();
   hideLoaderAndShowPlayButton();
-
 }
 
 /**
@@ -118,9 +114,9 @@ function playAmbient() {
  * Helper function to get the duration of the ambient sound.
  */
 function audioDuration() {
-      return audioManager.buffers && audioManager.buffers["pepe_ambient"]
-      ? audioManager.buffers["pepe_ambient"].duration * 1000
-      : 10000;
+  return audioManager.buffers && audioManager.buffers["pepe_ambient"]
+    ? audioManager.buffers["pepe_ambient"].duration * 1000
+    : 10000;
 }
 
 /**
@@ -129,15 +125,31 @@ function audioDuration() {
 function applySoundStatus(isOn) {
   let soundIcon = document.getElementById("on-off");
   if (isOn) {
+    soundIsOn(soundIcon);
+  } else {
+    soundIsOff(soundIcon);
+  }
+}
+
+/**
+ * Helper function to set the sound status to "on" and update the UI accordingly.
+ * @param {Object} soundIcon 
+ */
+function soundIsOn(soundIcon){
     soundIcon.classList.remove("soundOFF");
     soundIcon.classList.add("soundON");
     audioManager.setMuted(false);
     allAmbientSounds();
-  } else {
-    soundIcon.classList.remove("soundON");
-    soundIcon.classList.add("soundOFF");
-    audioManager.setMuted(true);
-  }
+}
+
+/**
+ * Helper function to set the sound status to "off" and update the UI accordingly.
+ * @param {Object} soundIcon 
+ */
+function soundIsOff(soundIcon) {
+  soundIcon.classList.remove("soundON");
+  soundIcon.classList.add("soundOFF");
+  audioManager.setMuted(true);
 }
 
 /**
@@ -158,65 +170,16 @@ function restoreSoundStatus() {
 }
 
 /**
- * 
- * @param {*} toggleSource Defines the source of the toggle action, e.g., "content" or "play".
- * @param {*} value The value adds a condition to the toggle source to distinguish between play source with the value true or false
- */
-function togglePlay(toggleSource, value) {
-  let playDiv = document.getElementById("play");
-  let playIcon = document.getElementById("switch");
-  if (toggleSource === "content" && value === true) { 
-    controlPauseByContent(playDiv,playIcon);
-  } else if ((toggleSource === "play" || (toggleSource === "button" && playIcon.classList.contains("play"))) && value !== true ) {
-    controlPauseByClick(playDiv,playIcon);
-  } 
-  else {
-    controlPlay(playDiv, playIcon);
-  }
-}
-
-/**
- * Helper function for togglePlay() in case of open content, which pauses and deactivates the play button.
- */
-function controlPauseByContent(playDiv, playIcon){
-    playIcon.classList.remove("play");
-    playIcon.classList.add("pause");
-    playDiv.classList.add("disabled");
-    gamePaused = true;
-}
-
-/**
- * Helper function for togglePlay() in case of closed content and paused the game by Play-button
- */
-function controlPauseByClick(playDiv, playIcon) {
-    playIcon.classList.remove("play");
-    playIcon.classList.add("pause");
-    playDiv.classList.remove("disabled");
-    gamePaused = true;
-}
-
-/**
- * Helper function for togglePlay() in case of closing content and unpaused the game by Play-button
- */
-function controlPlay(playDiv, playIcon) {
-      playIcon.classList.remove("pause");
-    playIcon.classList.add("play");
-    playDiv.classList.remove("disabled");
-      if(startScreen) return;
-    gamePaused = false;
-}
-
-/**
- * 
- * @param {*} isOn Saves the sound status in the local storage.
+ * Saves the sound status in the local storage.
+ * @param {*} isOn 
  */
 function setSoundStatus(isOn) {
   localStorage.setItem("soundOn", isOn ? "true" : "false");
 }
 
 /**
- * 
- * @returns {boolean} Returns the sound status from local storage. If no value is set, it defaults to true.
+ * Returns the sound status from local storage. If no value is set, it defaults to true.
+ * @returns {boolean} 
  */
 function getSoundStatus() {
   const value = localStorage.getItem("soundOn");
@@ -225,11 +188,60 @@ function getSoundStatus() {
 }
 
 /**
+ * Sets and resets the status of the play button.
+ * It toggles the play/pause state and updates the UI accordingly.
+ * @param {*} toggleSource Defines the source of the toggle action, e.g., "content" or "play".
+ * @param {*} value The value adds a condition to the toggle source to distinguish between play source with the value true or false
+ */
+function togglePlay(toggleSource, value) {
+  let playDiv = document.getElementById("play");
+  let playIcon = document.getElementById("switch");
+  if (toggleSource === "content" && value === true) {
+    controlPauseByContent(playDiv, playIcon);
+  } else if ((toggleSource === "play" || (toggleSource === "button" && playIcon.classList.contains("play"))) && value !== true) {
+    controlPauseByClick(playDiv, playIcon);
+  } else {
+    controlPlay(playDiv, playIcon);
+  }
+}
+
+/**
+ * Helper function for togglePlay() in case of open content, which pauses and deactivates the play button.
+ */
+function controlPauseByContent(playDiv, playIcon) {
+  playIcon.classList.remove("play");
+  playIcon.classList.add("pause");
+  playDiv.classList.add("disabled");
+  gamePaused = true;
+}
+
+/**
+ * Helper function for togglePlay() in case of closed content and paused the game by Play-button
+ */
+function controlPauseByClick(playDiv, playIcon) {
+  playIcon.classList.remove("play");
+  playIcon.classList.add("pause");
+  playDiv.classList.remove("disabled");
+  gamePaused = true;
+}
+
+/**
+ * Helper function for togglePlay() in case of closing content and unpaused the game by Play-button
+ */
+function controlPlay(playDiv, playIcon) {
+  playIcon.classList.remove("pause");
+  playIcon.classList.add("play");
+  playDiv.classList.remove("disabled");
+  if (startScreen) return;
+  gamePaused = false;
+}
+
+
+/**
  * An Ambient Sound is a sound that plays during a time that does not stop by itself.
  */
 function allAmbientSounds() {
   playAmbient();
-
   if (audioPlaying["pepe_snore"]) {
     audioManager.controlAudio("pepe_snore", { play: true });
     audioPlaying["pepe_snore"] = false;
@@ -262,49 +274,54 @@ function hideLoaderAndShowPlayButton() {
  */
 function letsPlay() {
   let startGame = document.getElementById("startGame");
-  
   document.addEventListener("keydown", (e) => {
-  
     if (e.code == "Enter") {
-      if(contentOpen) return;
+      if (contentOpen) return;
       keyboard.ENTER = true;
       playConditions();
     }
   });
   startGame.addEventListener("click", () => {
-    if(contentOpen) return;
+    if (contentOpen) return;
     playConditions();
   });
 }
 
 /**
  * Prepares all conditions that are needed to start the game, e.g. activate the canvas, starts the world, initializes the level, activates the audio context, etc.
- * @param {string} origin 
+ * @param {string} origin
  */
 async function playConditions() {
   localStorage.removeItem("autostart");
   startScreen = false;
+  if (audioManager.audioContext && audioManager.audioContext.state === "suspended") {
+    audioManager.activateAudioContext();
+  }
   prepareStylesForPlayConditions();
-
-  document.getElementById("playButtonsLeft").style.display = "unset";
-  document.getElementById("playButtonsRight").style.display = "unset";
+  prepareButtonsForPlayConditions();
   await worldCanvas();
-    togglePlay("play", true);
-if (audioManager.audioContext && audioManager.audioContext.state === "suspended") {
-  audioManager.activateAudioContext();
+  togglePlay("play", true);
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("keyup", handleKeyUp);
 }
+
+/**
+ * Show the Play-Buttons for mobile Devices
+ */
+function prepareButtonsForPlayConditions() {
+  document.getElementById("playButtonsLeft").style.display = "flex";
+  document.getElementById("playButtonsRight").style.display = "flex";
 }
 
 /**
  * Start the initialization of the game world and Level.
  */
-async function worldCanvas(){
-    canvas = document.getElementById("canvas");
-    canvas.focus();
-    window.world = new World(canvas, Level01);
-      window.highscoreManager = window.world.highscoreManager;
-savedHighscore = window.highscoreManager.savedHighscore;
-
+async function worldCanvas() {
+  canvas = document.getElementById("canvas");
+  canvas.focus();
+  world = new World(canvas, Level01);
+  world.highscoreManager = new HighscoreManager(world);
+  savedHighscore = world.highscoreManager.savedHighscore;
 }
 
 /**
@@ -315,25 +332,10 @@ function prepareStylesForPlayConditions() {
   document.getElementById("subText").classList.add("displayNone");
   document.getElementById("stayHeadline").classList.add("headline");
   document.getElementById("play").style.display = "";
-  
-  let reload = document.getElementById("gohome")
+
+  let reload = document.getElementById("gohome");
   reload.style.display = "";
   reload.addEventListener("click", () => {
-  location.reload();
-});
+    location.reload();
+  });
 }
-
-/**
- * Restarts the game directly and ready to play.
- * This function is called when the user clicks the "Go Home" button. 
- */
-function reStart() {
-
-  localStorage.setItem("autostart", true);
-location.reload();
-}
-
-
-
-
-

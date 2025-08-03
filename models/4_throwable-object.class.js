@@ -23,6 +23,8 @@ class ThrowableObject extends MovableObject {
   offset;
   speedX;
   speedY;
+  rotationInterval;
+  throwInterval;
   splashed = false;
   toBeRemoved = false;
 

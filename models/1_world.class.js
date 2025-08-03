@@ -1,18 +1,16 @@
 class World {
   level = Level01;
-  audioManager;
   highscoreManager;
   keyboard;
   background_static = new staticBackground();
-  minichicken = new MiniChicken(this);
-  statusBarPepe = new StatusBarPepe();
-  statusBarCoin = new StatusBarCoin();
-  statusBarChilli = new StatusBarChilli();
-  statusBarEndboss = new StatusBarEndboss();
-  endboss = new Endboss(this);
-  throwableObjects = [new ThrowableObject()];
-  character = new Pepe();
-  chicken = new Chicken(this);
+  minichicken; 
+  statusBarPepe; 
+  statusBarCoin; 
+  statusBarChilli; 
+  statusBarEndboss; 
+  throwableObjects; 
+  character;
+  chicken; 
   bottles;
   cameraX;
   canThrow;
@@ -22,11 +20,7 @@ class World {
   countBottles = 15;
   ctx;
   enemies;
-  endbossOfEnemies = this.level.enemies.find(
-    (enemy) => enemy.type === "endboss"
-  );
   energy;
-  EndBossVisible;
   isGameEnding;
   level = Level01;
   offset;
@@ -38,25 +32,28 @@ class World {
    */
   constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
-    this.collectedCoins = this.statusBarCoin.coincount;
     this.cameraX = 0;
     this.level = level;
     this.canvas = canvas;
-    this.endboss.world = this;
-    this.EndBossVisible = false;
-    this.endbossOfEnemies = new Endboss(this);
+    this.minichicken = this.level.enemies.find((enemy) => enemy.type === "minichicken");
+    this.statusBarPepe = new StatusBarPepe();
+    this.statusBarCoin = new StatusBarCoin();
+    this.statusBarChilli = new StatusBarChilli();
+    this.statusBarEndboss = new StatusBarEndboss();
+    this.throwableObjects = [new ThrowableObject()];
+    this.character = new Pepe();
+    this.chicken = this.level.enemies.find((enemy) => enemy.type === "chicken");
     this.highscoreManager = new HighscoreManager(this);
-    this.level.enemies.push(this.endbossOfEnemies);
-    this.endbossOfEnemies.EndBossClose = false;
+     this.endbossOfEnemies = this.level.enemies.find((enemy) => enemy.type === "endboss");
     this.isGameEnding = false;
     this.throwableObjects = [];
     this.canThrow = true;
+    this.collectedCoins = this.statusBarCoin.coincount;
     DrawableObject.draw(this);
     DrawableObject.addObjectsForDraw(this);
+  
     this.setWorld();
-
     this.run();
-
     this.checkThrowObjects();
   }
 
@@ -68,11 +65,10 @@ class World {
     this.character.world = this;
     this.minichicken.world = this;
     this.endbossOfEnemies.world = this;
-    this.endboss.world = this;
     this.highscoreManager.world = this;
     this.statusBarCoin.world = this;
     this.statusBarPepe.world = this;
-        this.statusBarChilli.world = this;
+    this.statusBarChilli.world = this;
     this.statusBarEndboss.world = this;
   }
 
@@ -81,7 +77,7 @@ class World {
    * checks very 1/60 second the collision for all characters, enemies and objects.
    */
   run() {
-    setInterval(() => {
+    intervalsToStop(() => {
       this.checkCollisions();
       this.checkCollisionBottleWithEndboss();
       this.checkCollisionPepeWithEndboss();
@@ -94,80 +90,22 @@ class World {
    * @returns
    */
   handleEndboss() {
-    if (this.character.x > 3100 || this.EndBossVisible === true) {
-      this.EndBossVisible = true;
+    if (this.character.x > 3100 || EndBossVisible === true) {
+      EndBossVisible = true;
       DrawableObject.addToMap(this.statusBarEndboss, this.ctx);
     }
     if (this.isPepeNearEndboss() < 700) {
-      this.endbossOfEnemies.EndBossClose = true;
+      EndBossClose = true;
       DrawableObject.addToMap(this.statusBarEndboss, this.ctx);
-      this.EndBossVisible = true;
+      EndBossVisible = true;
       this.endbossOfEnemies.status = true;
     } else {
       this.endbossOfEnemies.status = false;
-      this.endbossOfEnemies.EndBossClose = false;
+      EndBossClose = false;
     }
     return;
   }
 
-  /**
-   * When Pepe can see the Endboss the Weather is changing a thunderstorm is on the way.
-   * @returns
-   */
-  handleEndbossCloseEffect() {
-    try {
-      let flash = false;
-      if (this.endbossOfEnemies.EndBossClose === true) {
-        if (Math.random() < 0.008) {
-          flash = true;
-        }
-      }
-        flashEffekts()
-    }   catch {
-      return;
-    }
-  }
-
-flashEffekts(){
-        if (flash) {
-        this.ctx.filter = "brightness(250%)";
-      } else if (this.endbossOfEnemies.status === true && !this.endbossOfEnemies.isDead) {
-        this.handleEndbossCloseDarknessAndSound();
-      } else if (this.endbossOfEnemies.isDead) {
-        this.handleEndbossIsDeadWhileClose();
-      } else {
-        flash = false;
-        this.ctx.filter = "none";
-}
-}
-
-  /**
-   * Reset the Thunderstorm, when the Endboss is died.
-   */
-  handleEndbossIsDeadWhileClose() {
-    flash = false;
-    this.ctx.filter = "none";
-    audioManager.controlAudio("endbossBackground", {
-      play: false,
-      pause: true,
-      currentTime: 0,
-    });
-  }
-
-  /**
-   * Thunderstorm: Made by 50% Brightness and EndbossBackground-Thunder-Sound
-   */
-  handleEndbossCloseDarknessAndSound() {
-    this.ctx.filter = "brightness(50%)";
-    if (audioManager.buffers["endbossBackground"] && !audioManager.audioPlaying["endbossBackground"]  ) {
-      this.ctx.filter = "brightness(50%)";
-      audioManager.playAudio("endbossBackground", {
-        play: true,
-        loop: false,
-        volume: 0.8,
-      });
-    }
-  }
 
   /**
    * Handled the Bottles that left in Pepe's pockets and can be thrown
@@ -175,13 +113,13 @@ flashEffekts(){
   checkThrowObjects() {
     let startThrow = Date.now();
     noBottles = false;
-    setInterval(() => {
+    intervalsToStop(() => {
       let now = Date.now();
       let delta = now - startThrow;
       if (keyboard.THROW && this.collectedBottles === 0) {
         this.noBottlesTrue();
       }
-      if ( keyboard.THROW && this.collectedBottles > 0 && delta > 1000 && this.canThrow) {
+      if (keyboard.THROW && this.collectedBottles > 0 && delta > 1000 && this.canThrow) {
         this.throwBottle();
       }
     }, 50);
@@ -206,7 +144,7 @@ flashEffekts(){
     let duration = Math.min(throwDuration || 0, 1000);
     let speed = 10 + (duration / 1000) * 20;
     let direction = this.character.otherDirection || false;
-    this. handleBottleByThrowing(speed,direction);
+    this.handleBottleByThrowing(speed, direction);
     this.collectedBottles--;
     this.statusBarChilli.setPercentage(this.collectedBottles);
     this.canThrow = false;
@@ -215,8 +153,14 @@ flashEffekts(){
     }, 400);
   }
 
-  handleBottleByThrowing(speed,direction){
-    let bottle = new ThrowableObject( this.character.x + 50,this.character.y + 150,this);
+  /**
+   * Helper function to handle the throwing of bottles.
+   * It creates a new ThrowableObject and sets its speed and direction based on the character's
+   * @param {Number} speed 
+   * @param {String} direction 
+   */
+  handleBottleByThrowing(speed, direction) {
+    let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 150, this);
     bottle.speedX = direction ? -speed : speed;
     bottle.speedY = speed;
     bottle.otherDirection = direction;
@@ -229,22 +173,37 @@ flashEffekts(){
    * Checks the Collision of Pepe with Enemies and collectable Objects like coins and bottles
    */
   checkCollisions() {
-    setInterval(() => {
-      this.level.enemies.forEach((enemy) => {
-        if (enemy.type === "endboss") return;
-        if (this.character.isColliding(enemy) && this.character.speedY < 0 && !enemy.isDead) {
-          if (enemy.type === "minichicken") {
-            this.jumpOnMiniChicken(enemy);
-          } else {
-            this.jumpOnStandardChicken(enemy);
-            this.highscoreManager.addSquashedChicken();        }
-        }
-        this.collidesEnemiesOnEnergyLevel(enemy);
-      });
+    intervalsToStop(() => {
+      this.checksCollisionForEachEnemy()
     }, 400);
     this.checkCollisionsCoins(this.character);
     this.checkCollisionsBottles();
   }
+
+/**
+ * Checks the collision for each enemy in the level.
+ * It handles the collision with the endboss and other enemies.
+ */
+  checksCollisionForEachEnemy(){
+     this.level.enemies.forEach((enemy) => {
+        if (enemy.type === "endboss") return;
+        if (this.character.isColliding(enemy) && this.character.speedY < 0 && !enemy.isDead) {
+           this.chickenForCheckCollisions(enemy);
+        }
+        this.collidesEnemiesOnEnergyLevel(enemy);
+      });
+  }
+  /**
+   * Seperate the handling of standard chicken and mini chicken
+   */
+  chickenForCheckCollisions(enemy){
+      if (enemy.type === "minichicken") {
+            this.jumpOnMiniChicken(enemy);
+      } else {
+            this.jumpOnStandardChicken(enemy);
+            this.highscoreManager.addSquashedChicken();
+          }
+  } 
 
   /**
    * Gives Pepe more speed when jumping on a minichicken
@@ -273,7 +232,7 @@ flashEffekts(){
    * @returns
    */
   collidesEnemiesOnEnergyLevel(enemy) {
-    if ( this.character.isColliding(enemy) && this.character.energy > 0 && !this.character.isAboveGround() && !enemy.isDead  ) {
+    if (this.character.isColliding(enemy) && this.character.energy > 0 && !this.character.isAboveGround() && !enemy.isDead) {
       this.character.hit(enemy);
       this.statusBarPepe.setPercentage(this.character.energy);
     }
@@ -286,7 +245,11 @@ flashEffekts(){
    * @returns
    */
   checkCollisionPepeWithEndboss() {
-    if ( this.endbossOfEnemies &&   this.character.isColliding(this.endbossOfEnemies) &&  this.character.energy > 0 &&  !this.character.isAboveGround()
+    if (
+      this.endbossOfEnemies &&
+      this.character.isColliding(this.endbossOfEnemies) &&
+      this.character.energy > 0 &&
+      !this.character.isAboveGround()
     ) {
       this.character.hit(this.endbossOfEnemies);
       this.statusBarPepe.setPercentage(this.character.energy);
@@ -300,10 +263,10 @@ flashEffekts(){
    * @returns
    */
   isPepeNearEndboss() {
-    const endbossX = this.endbossOfEnemies
-      ? this.endbossOfEnemies.x
-      : undefined;
+
+    const endbossX = this.endbossOfEnemies ? this.endbossOfEnemies.x : undefined;
     let distance = Math.abs(this.character.x - endbossX);
+
     return distance;
   }
 
@@ -315,16 +278,26 @@ flashEffekts(){
     const totalCoins = 40;
     this.level.coins = this.level.coins.filter((coin) => {
       if (this.character.isColliding(coin)) {
-        collected++;
-        this.highscoreManager.addCollectedCoin(collected);
-        audioManager.loadAudio("WorldCoinCollecting", "./audio/coin_success.mp3");
-        audioManager.playEffect("WorldCoinCollecting", { loop: false, volume: 0.2, currentTime: 0, });
-        return false;  }
+       collected = this.coinsCollisionByPepe(collected);
+      return false;
+      }
       return true;
     });
     if (collected > 0) {
       this.statusBarCoin.setPercentage(totalCoins - this.level.coins.length);
     }
+  }
+
+  /**
+   * increments the variable “collected” by on
+   * @returns 
+   */
+  coinsCollisionByPepe(collected){
+        collected++;
+        this.highscoreManager.addCollectedCoin(collected);
+        audioManager.loadAudio("WorldCoinCollecting", "./audio/coin_success.mp3");
+        audioManager.playEffect("WorldCoinCollecting", { loop: false, volume: 0.2, currentTime: 0 });
+        return false;
   }
 
   /**
@@ -336,9 +309,8 @@ flashEffekts(){
         this.collectedBottles++;
         this.level.bottles.splice(index, 1);
         this.statusBarChilli.setPercentage(this.collectedBottles);
-        audioManager.loadAudio("WorldBottleCollecting","./audio/bottle_collect.mp3");
-        audioManager.playAudio("WorldBottleCollecting", {loop: false,  volume: 0.2, currentTime: 0,
-        });
+        audioManager.loadAudio("WorldBottleCollecting", "./audio/bottle_collect.mp3");
+        audioManager.playAudio("WorldBottleCollecting", { loop: false, volume: 0.2, currentTime: 0 });
       }
     });
   }
@@ -364,11 +336,9 @@ flashEffekts(){
   handleEndbossHit(bottle) {
     this.endbossOfEnemies.reduceEndbossEnergy(10);
     this.endbossOfEnemies.updateEndbossStatusBar();
-    this.endbossOfEnemies.hitEndbossZero();
     this.endbossOfEnemies.hitEndbossLessOrMoreThanTwenty();
-    if (typeof bottle.bottleSplash === "function") {
+    this.endbossOfEnemies.hitEndbossZero();
       bottle.bottleSplash();
-    }
   }
 
   /**

@@ -5,7 +5,7 @@ let noBottles;
 /**
  * Both eventlistener are defining the Button on the keyboard that are used to control the game.
  */
-document.addEventListener("keydown", (e) => {
+function handleKeyDown(e) {
   if (gamePaused) return;
   if (!keyboardEnabled) return;
 
@@ -36,9 +36,9 @@ document.addEventListener("keydown", (e) => {
       lastThrowTime = now;  
     }
   }
-});
+}
 
-document.addEventListener("keyup", (e) => {
+function handleKeyUp(e) {
   if (e.code == "Enter") {
     keyboard.ENTER = false;
   }
@@ -66,7 +66,7 @@ document.addEventListener("keyup", (e) => {
       keyboard.THROW = true;
     }
   }
-});
+}
 
 
 /**
