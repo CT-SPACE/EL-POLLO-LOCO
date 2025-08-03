@@ -1,21 +1,40 @@
-
-
 /**
  * Creates the Content-panel that shows all information about the game: How to play, the story of Pepe and the legal information.
- * @param {string} content 
+ * @param {string} content
  * @returns  Double Click provokes closing of the open Content and stopps the function.
  */
 function createButtonContent(content) {
   let contentType = document.getElementById(content);
   let contentScreen = document.getElementById("buttonContent");
-  if (window.innerHeight < 600){
-   contentScreen = createButtonContentMobile(contentScreen) ;
+  contentScreenHandlerForMobile(contentScreen);
+  contentScreenHandlerForDesktop(contentScreen, contentType, content);
+}
+
+/**
+ * For Devices with a height smaller than 600px, the contentScreen is created in its own mobileContentscreen-Container.
+ * @param {HTMLElement} contentScreen 
+ */
+function contentScreenHandlerForMobile(contentScreen) {
+  if (window.innerHeight < 600) {
+    contentScreen = createButtonContentMobile(contentScreen);
   }
+}
+
+/**
+ * Handles the contentScreen for desktop devices and browser widths larger than 600px.
+ * It checks if the contentScreen is already open and toggles it accordingly.
+ * @param {HTMLElement} contentScreen 
+ * @param {HTMLElement} contentType 
+ * @param {String} content 
+ * @returns 
+ */
+function contentScreenHandlerForDesktop(contentScreen, contentType, content) {
   if (contentScreen.classList.contains("open") && contentScreen.dataset.active === content) {
-    closeContent(contentScreen);  return;
+    closeContent(contentScreen);
+    return;
   }
   if (contentScreen.classList.contains("open")) {
-    closeContent(contentScreen, () =>  openContent(content, contentType, contentScreen));
+    closeContent(contentScreen, () => openContent(content, contentType, contentScreen));
   } else {
     openContent(content, contentType, contentScreen);
   }
@@ -23,22 +42,22 @@ function createButtonContent(content) {
 
 /**
  * Helper function to create the content panel for mobile devices and browser widths smaller than 600px.
- * @param {HTMLElement} contentScreen 
+ * @param {HTMLElement} contentScreen
  * @description This function is called when the screen width is smaller than 600px. It creates a content panel for mobile devices.
  * @returns {void}
  */
 function createButtonContentMobile(contentScreen) {
-    contentScreen.classList.add("displayNone");
-    contentScreen = document.getElementById("buttonContentMobile");
-    contentScreen.innerHTML = "";
-      return contentScreen;
+  contentScreen.classList.add("displayNone");
+  contentScreen = document.getElementById("buttonContentMobile");
+  contentScreen.innerHTML = "";
+  return contentScreen;
 }
 
 /**
  * Opens the content panel and defines the behavior of the panel itself and other elements
- * @param {string} content 
- * @param {string} contentType 
- * @param {string} contentScreen 
+ * @param {string} content
+ * @param {string} contentType
+ * @param {string} contentScreen
  */
 function openContent(content, contentType, contentScreen) {
   let headline = document.getElementById("stayHeadline");
@@ -56,8 +75,8 @@ function openContent(content, contentType, contentScreen) {
 
 /**
  * The various information units are called up here
- * @param {string} content 
- * @param {HTMLElement} contentScreen 
+ * @param {string} content
+ * @param {HTMLElement} contentScreen
  */
 function switchContentForOpenContent(content, contentScreen) {
   contentScreen.classList.add("open");
@@ -77,9 +96,9 @@ function switchContentForOpenContent(content, contentScreen) {
 
 /**
  * Changes the style for elements on the screen like h1, the active Button and the contentscreen
- * @param {HTMLElement} contentType 
- * @param {HTMLElement} contentScreen 
- * @param {HTMLElement} headline 
+ * @param {HTMLElement} contentType
+ * @param {HTMLElement} contentScreen
+ * @param {HTMLElement} headline
  */
 function addStylesForOpenContent(contentType, contentScreen, headline) {
   contentType.classList.add("Out");
@@ -94,44 +113,42 @@ function addStylesForOpenContent(contentType, contentScreen, headline) {
 
 /**
  * Close the content panel
- * @param {HTMLElement} contentScreen 
- * @param {() => void} callback 
+ * @param {HTMLElement} contentScreen
+ * @param {() => void} callback
  */
 function closeContent(contentScreen, callback) {
   contentOpen = false;
   let headline = document.getElementById("stayHeadline");
   resetOutClasses();
-  if(!gamePausedByUser){
-      togglePlay("play", true);
-} else {
-  togglePlay("play", false);
-}
-contentScreenHandler(contentScreen, headline, callback) 
+  if (!gamePausedByUser) {
+    togglePlay("play", true);
+  } else {
+    togglePlay("play", false);
+  }
+  contentScreenHandler(contentScreen, headline, callback);
 }
 
 /**
  * Helper function for closeContent() to handle the closing of the content screen
- * @param {HTMLElement} contentScreen 
- * @param {HTMLElement} headline 
- * @param {() => void} callback 
+ * @param {HTMLElement} contentScreen
+ * @param {HTMLElement} headline
+ * @param {() => void} callback
  * @description This function is called when the content screen is closed. It removes the content screen and resets the styles.
  */
 function contentScreenHandler(contentScreen, headline, callback) {
-    contentScreen.classList.remove("open");
+  contentScreen.classList.remove("open");
   contentScreen.classList.add("close");
-
   contentScreen.addEventListener("transitionend", function handler() {
     contentScreen.removeEventListener("transitionend", handler);
     finishClosing(contentScreen, callback);
-  
-  });  
+  });
   headline.classList.remove("h1topPosition");
 }
 
 /**
  * Handles the reset of all Styles and hides the contentscreen
- * @param {HTMLElement} contentScreen 
- * @param {() => void} callback 
+ * @param {HTMLElement} contentScreen
+ * @param {() => void} callback
  */
 function finishClosing(contentScreen, callback) {
   document.getElementById("subText").style.display = "";
@@ -145,7 +162,7 @@ function finishClosing(contentScreen, callback) {
 
 /**
  * Handles the animation movement of the content panel by closing and opening it
- * @param {HTMLElement} contentScreen 
+ * @param {HTMLElement} contentScreen
  * @description This function is called when the content screen is opened. It adds the "open" class to the content screen and removes the "close" class.
  */
 function prepareAnimation(contentScreen) {
@@ -166,7 +183,6 @@ function removeOverlay() {
   let overlay = document.getElementById("overlayDiv");
   if (overlay) overlay.remove();
 }
-
 
 /**
  * Resets all Content Buttons
@@ -211,7 +227,7 @@ function getStoryHtml() {
 
 /**
  * Returns the Content for the legal notes panel
- * @returns 
+ * @returns
  */
 function getImpressumHtml() {
   return /*html*/ `
@@ -236,7 +252,7 @@ function getImpressumHtml() {
 
 /**
  * Returns the HTML for the HowToPlay-Sheet.
- * @returns 
+ * @returns
  */
 function getHowToHtml() {
   return /*html*/ ` 
@@ -304,7 +320,7 @@ function getHowToHtml() {
 
 /**
  * Creates the elements for the Overlay and returns "darkLayer"
- * @returns 
+ * @returns
  */
 function createOverlayDiv() {
   let overlayScreen = document.getElementById("overflowHidden");
@@ -321,19 +337,16 @@ function createOverlayDiv() {
 
 /**
  * Includes the close-Button to the information panel on the contentscreen
- * @param {HTMLElement} contentScreen 
+ * @param {HTMLElement} contentScreen
  */
 function includeCloseButton(contentScreen) {
   let closeButton = document.createElement("div");
   closeButton.id = "closeButton";
   contentScreen.appendChild(closeButton);
-
   setTimeout(() => {
     let closeButton = document.getElementById("closeButton");
-
-closeButton.addEventListener("click", () => {
-  closeContent(document.getElementById("closeButton")?.closest("#buttonContent, #buttonContentMobile"));
-});
-
-  }, 500);
+    closeButton.addEventListener("click", () => {
+      closeContent(document.getElementById("closeButton")?.closest("#buttonContent, #buttonContentMobile"));
+    });
+  }, 300);
 }

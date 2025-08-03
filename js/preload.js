@@ -1,4 +1,3 @@
-
 let IMAGES_FASTLOAD = [
   "./img/fondo_cactus.png",
   "./img/Desierto-portada_con_pepe.jpg",
@@ -6,7 +5,7 @@ let IMAGES_FASTLOAD = [
   "./img/5_background/layers/air.png",
   "./img/skelett_gallina.png",
   "./img/lightning.png",
-  "./img/2_character_pepe/1_idle/idle/I-1.png"
+  "./img/2_character_pepe/1_idle/idle/I-1.png",
 ];
 
 let imagePaths = [
@@ -40,46 +39,61 @@ let imagePaths = [
  * Gives the Loading Visual a nice effect by animating the letters of the text "LOADING ...".
  */
 function LoadingVisual() {
-  const loaderText = "LOADING ...";
-  const loaderContainer = document.getElementById("loader");
-
+  let loaderText = "LOADING ...";
+  let loaderContainer = document.getElementById("loader");
   loaderContainer.innerHTML = "";
+  animateLoadingText(loaderContainer, loaderText);
+}
+
+/**
+ * Helper function to animate the loading text.
+ * It creates a span for each character, sets its animation delay, and appends it to
+ */
+function animateLoadingText(loaderContainer, loaderText) {
   const chars = loaderText.split("");
   chars.forEach((char, index) => {
-    const span = document.createElement("span");
-    span.textContent = char;
-    span.style.animationDelay = `${index * 0.2}s`;
-    loaderContainer.appendChild(span);
-
-    setTimeout(() => {
-      span.style.opacity = 1;
-    }, index * 1000);
+    animateLoadingCharacters(char, index, loaderContainer);
   });
 }
 
+/**
+ * Detail function for animating each character in the loading text.
+ * It creates a span element for each character, sets its text content, and applies an animation delay based on its index.
+ * @param {String} char
+ * @param {Number} index
+ * @param {HTMLElement} loaderContainer
+ */
+function animateLoadingCharacters(char, index, loaderContainer) {
+  const span = document.createElement("span");
+  span.textContent = char;
+  span.style.animationDelay = `${index * 0.2}s`;
+  loaderContainer.appendChild(span);
+  setTimeout(() => {
+    span.style.opacity = 1;
+  }, index * 1000);
+}
 
 /**
- * 
+ *
  * @returns {Promise} A promise that resolves when all fast-loading images are preloaded.
  */
 async function fastPreload() {
   return Promise.all(
-    IMAGES_FASTLOAD.map((entry) =>
-      new Promise((resolve, reject) => {
-        const path = typeof entry === "string" ? entry : entry.src;
-
-        const IMG = new Image();
-        IMG.onload = () => {
-          imgCache[path] = IMG;   
-          resolve({ path, IMG });  
-        };
-        IMG.onerror = reject;
-        IMG.src = path;
-      })
+    IMAGES_FASTLOAD.map(
+      (entry) =>
+        new Promise((resolve, reject) => {
+          const path = typeof entry === "string" ? entry : entry.src;
+          const IMG = new Image();
+          IMG.onload = () => {
+            imgCache[path] = IMG;
+            resolve({ path, IMG });
+          };
+          IMG.onerror = reject;
+          IMG.src = path;
+        })
     )
   );
 }
-
 
 /**
  * Preloads all audio files used in the game.
@@ -92,7 +106,7 @@ async function preloadAudio() {
     audioManager.loadAudio("pepe_pollo", "./audio/pepe_pollo_funny.mp3"),
     audioManager.loadAudio("pepe_snore", "./audio/pepe_snore.mp3"),
     audioManager.loadAudio("chicken_splat", "./audio/chicken_splat.mp3"),
-  
+
     audioManager.loadAudio("mini_bounce", "./audio/mini_chicken_squeeze_1.mp3"),
     audioManager.loadAudio("endbossBackground", "./audio/endboss_thunder.mp3"),
     audioManager.loadAudio("endboss_attack", "./audio/endboss_attack.mp3"),
@@ -109,7 +123,7 @@ async function preloadAudio() {
 }
 
 /**
- * 
+ *
  * @returns #{Promise} A promise that resolves when all images are preloaded.
  */
 async function preloadImages() {
@@ -125,5 +139,8 @@ async function preloadImages() {
         };
         IMG.onerror = () => {
           reject(new Error(`Bild konnte nicht geladen werden: ${path}`));
-        };}); }));
+        };
+      });
+    })
+  );
 }

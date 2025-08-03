@@ -33,12 +33,11 @@ class StatusBarPepe extends StaticObject {
    * This function sets the percentage of the Pepe health and updates the image based on the current percentage.
    * It uses the resolveImagePercent function to determine which image to use based on the percentage.
    * The img property is updated with the corresponding image from the imgCache.
-   * @param {Number} percentage 
+   * @param {Number} percentage
    */
   setPercentage(percentage) {
     this.percentage = percentage;
-    let path =
-      StatusBarPepe.IMAGES_SALUD_PEPE[this.resolveImagePercent(percentage)];
+    let path = StatusBarPepe.IMAGES_SALUD_PEPE[this.resolveImagePercent(percentage)];
     this.img = imgCache[path];
   }
 
@@ -46,8 +45,8 @@ class StatusBarPepe extends StaticObject {
    * This function represents the logic to resolve which image to use based on the Pepe health percentage.
    * It returns an index based on the percentage, which corresponds to the images in the IMAGES_SALUD_PEPE array.
    * The images are displayed in a range from 0 to 5, depending on the Pepe health percentage.
-   * @param {Number} percentage 
-   * @returns 
+   * @param {Number} percentage
+   * @returns
    */
   resolveImagePercent(percentage) {
     if (percentage > 0.1 && percentage < 0.3) {

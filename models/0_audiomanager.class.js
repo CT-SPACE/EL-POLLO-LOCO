@@ -7,7 +7,6 @@ class AudioManager {
   startedAt = {};
   muted = false;
 
-
   /**
    * Constructor for the AudioManager class.
    * Initializes the audio context and sets up the audio buffers.
@@ -17,25 +16,23 @@ class AudioManager {
    * @throws {Error} If the AudioContext cannot be created.
    */
   constructor() {
-    this.audioContext = new (window.AudioContext ||  window.webkitAudioContext)();
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.buffers = {};
     this.playingSources = {};
     this.muted = !getSoundStatus();
   }
 
-/**
- * Loads all Audio-Files 
- * @param {string} name 
- * @param {string} url 
- * @returns 
- */
+  /**
+   * Loads all Audio-Files
+   * @param {string} name
+   * @param {string} url
+   * @returns
+   */
   async loadAudio(name, url) {
     try {
       let response = await fetch(url);
       if (!response.ok) {
-        throw new Error(
-          `Fehler beim Laden der Datei: ${url} (Status: ${response.status})`
-        );
+        throw new Error(`Fehler beim Laden der Datei: ${url} (Status: ${response.status})`);
       }
       let arrayBuffer = await response.arrayBuffer();
       this.buffers[name] = await this.audioContext.decodeAudioData(arrayBuffer);
@@ -46,7 +43,7 @@ class AudioManager {
 
   /**
    * Sets all running Audios down to mute
-   * @param {boolean} mute 
+   * @param {boolean} mute
    */
   setMuted(mute) {
     this.muted = mute;
@@ -57,52 +54,74 @@ class AudioManager {
     }
   }
 
-/**
- * Starts the needed audio 
- * @param {string} name 
- * @param {Objects} options 
- * @returns 
- */
-playAudio(name, options = {}) {
-  if (this.muted && name !== "pepe_loses" && name !== "pepe_wins") return;
-
-  if (name === "pepe_loses" || name === "pepe_wins") {
-    Object.keys(this.playingSources).forEach(n => this.controlAudio(n, { pause: true }));
+  /**
+   * Starts the needed audio
+   * @param {string} name
+   * @param {Objects} options
+   * @returns
+   */
+  playAudio(name, options = {}) {
+    if (this.muted && name !== "pepe_loses" && name !== "pepe_wins") return;
+    if (name === "pepe_loses" || name === "pepe_wins") {
+      Object.keys(this.playingSources).forEach((n) => this.controlAudio(n, { pause: true }));
+    }
+    if (!this.buffers[name] || this.audioPlaying[name]) return;
+    try {
+      this.startAudioPlayback(name, options);
+    } catch (error) {}
   }
 
-  if (!this.buffers[name] || this.audioPlaying[name]) return;
-  try {
-  this.startAudioPlayback(name, options);
-   } catch (error) {
+  /**
+   * Handles the actual audio playback logic for playAudio()
+   * @param {string} name
+   * @param {Object} options
+   */
+  // startAudioPlayback(name, options = {}) {
+  //   const offset = this.pausedAt[name] || 0;
+  //   const source = this.createSource(name, options);
+  //   const gainNode = this.createGainNode(options.volume);
+  //   source.connect(gainNode);
+  //   gainNode.connect(this.audioContext.destination);
 
-  }
+  //   source.start(0, offset);
+  //   this.playingSources[name] = { source, gainNode };
+  //   this.audioPlaying[name] = true;
+  //   this.startedAt[name] = this.audioContext.currentTime - offset;
+
+  //   source.onended = () => this.resetAudioState(name);
+  // }
+
+  startAudioPlayback(name, options = {}) {
+  const offset = this.getAudioOffset(name);
+  const source = this.createAndConnectSource(name, options);
+  this.startSourcePlayback(name, source, offset);
 }
 
-/**
- * Handles the actual audio playback logic for playAudio()
- * @param {string} name
- * @param {Object} options
- */
-startAudioPlayback(name, options = {}) {
-    const offset = this.pausedAt[name] || 0;
-    const source = this.createSource(name, options);
-    const gainNode = this.createGainNode(options.volume);
-    source.connect(gainNode);
-    gainNode.connect(this.audioContext.destination);
+getAudioOffset(name) {
+  return this.pausedAt[name] || 0;
+}
 
-    source.start(0, offset);
-    this.playingSources[name] = { source, gainNode };
-    this.audioPlaying[name] = true;
-    this.startedAt[name] = this.audioContext.currentTime - offset;
+createAndConnectSource(name, options = {}) {
+  const source = this.createSource(name, options);
+  const gainNode = this.createGainNode(options.volume);
+  source.connect(gainNode);
+  gainNode.connect(this.audioContext.destination);
+  this.playingSources[name] = { source, gainNode };
+  return source;
+}
 
-    source.onended = () => this.resetAudioState(name);
+startSourcePlayback(name, source, offset) {
+  source.start(0, offset);
+  this.audioPlaying[name] = true;
+  this.startedAt[name] = this.audioContext.currentTime - offset;
+  source.onended = () => this.resetAudioState(name);
 }
 
   /**
    * Helper function for playAudio()
-   * @param {string} name 
-   * @param {Object} options 
-   * @returns 
+   * @param {string} name
+   * @param {Object} options
+   * @returns
    */
   createSource(name, options) {
     const source = this.audioContext.createBufferSource();
@@ -113,19 +132,19 @@ startAudioPlayback(name, options = {}) {
 
   /**
    * Helper function for playAudio() to manage the volume
-   * @param {number} volume 
-   * @returns 
+   * @param {number} volume
+   * @returns
    */
   createGainNode(volume) {
     const gainNode = this.audioContext.createGain();
-    gainNode.gain.value = volume ?? 0.6;
+    gainNode.gain.value = volume ?? 0.3;
     return gainNode;
   }
 
-/**
- * Helper function for playAudio() to reset active audios.
- * @param {string} name 
- */
+  /**
+   * Helper function for playAudio() to reset active audios.
+   * @param {string} name
+   */
   resetAudioState(name) {
     this.audioPlaying[name] = false;
     this.pausedAt[name] = 0;
@@ -134,9 +153,9 @@ startAudioPlayback(name, options = {}) {
 
   /**
    * Function to change settings of playing audios e
-   * @param {string} name 
-   * @param {Object} options 
-   * @returns 
+   * @param {string} name
+   * @param {Object} options
+   * @returns
    */
   controlAudio(name, options = {}) {
     let audio = this.playingSources[name];
@@ -158,8 +177,8 @@ startAudioPlayback(name, options = {}) {
 
   /**
    * Helper function for controlAudio() to manage volume
-   * @param {string} audio 
-   * @param {number} volume 
+   * @param {string} audio
+   * @param {number} volume
    */
   setAudioVolume(audio, volume) {
     audio.gainNode.gain.value = volume;
@@ -167,8 +186,8 @@ startAudioPlayback(name, options = {}) {
 
   /**
    * Helper function for controlAudio to manage pause
-   * @param {string} name 
-   * @param {string} audio 
+   * @param {string} name
+   * @param {string} audio
    */
   pauseAudio(name, audio) {
     if (this.audioPlaying[name]) {
@@ -182,8 +201,8 @@ startAudioPlayback(name, options = {}) {
 
   /**
    * Helper function for controlAudio to start playing the audio again
-   * @param {string} name 
-   * @param {Object} options 
+   * @param {string} name
+   * @param {Object} options
    */
   resumeAudio(name, options) {
     if (this.pausedAt[name]) {
@@ -193,8 +212,8 @@ startAudioPlayback(name, options = {}) {
 
   /**
    * Helper function for controlAudio to stop the audio
-   * @param {*} name 
-   * @param {*} audio 
+   * @param {*} name
+   * @param {*} audio
    */
   stopAudio(name, audio) {
     audio.source.stop();
@@ -215,25 +234,29 @@ startAudioPlayback(name, options = {}) {
     }
   }
 
-/**
- * For Short Sounds to start
- * @param {string} name 
- * @param {Object} options 
- * @returns 
- */
+  /**
+   * For Short Sounds to start
+   * @param {string} name
+   * @param {Object} options
+   * @returns
+   */
   playEffect(name, options = {}) {
     if (this.muted) return;
     if (!this.buffers[name]) return;
     try {
-      let source = this.audioContext.createBufferSource();
-      source.buffer = this.buffers[name];
-      const gainNode = this.audioContext.createGain();
-      gainNode.gain.value = options.volume ?? 0.6;
-      source.connect(gainNode);
-      gainNode.connect(this.audioContext.destination);
-      source.start(0);
+      this.gainNodeSetting(name, (options = {}));
     } catch (error) {
       return;
     }
+  }
+
+  gainNodeSetting(name, options = {}) {
+    let source = this.audioContext.createBufferSource();
+    source.buffer = this.buffers[name];
+    const gainNode = this.audioContext.createGain();
+    gainNode.gain.value = options.volume ?? 0.2;
+    source.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
+    source.start(0);
   }
 }

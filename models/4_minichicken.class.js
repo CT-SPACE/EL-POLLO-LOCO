@@ -49,7 +49,7 @@ class MiniChicken extends MovableObject {
     this.chickId = Math.random().toString(36).substring(7);
     this.soundName = `mini_run_${this.chickId}`;
     this.x += 300 + Math.random() * 1600;
-    this.speed = 3.2 + Math.random() * 1.0; 
+    this.speed = 3.2 + Math.random() * 1.0;
     this.animationSpeed = 50 + Math.random() * 100;
     this.type = "minichicken";
     this.visible_width = 800;
@@ -82,10 +82,10 @@ class MiniChicken extends MovableObject {
    */
   animateWalk() {
     this.animateWalkInterval = setInterval(() => {
-      this.playAnimation(MiniChicken.IMAGES_WALKING); 
+      this.playAnimation(MiniChicken.IMAGES_WALKING);
     }, this.animationSpeed);
   }
-  
+
   /**
    * In case of Pepe jumping on a mini chicken, this function handles the bounce effect.
    * It plays the bounce animation, stops the walking animation, and resets the speed after a delay.
@@ -100,39 +100,38 @@ class MiniChicken extends MovableObject {
     clearInterval(this.animateWalkInterval);
     this.bounceEffect();
     setTimeout(() => {
-        this.clearBounceEffect(defaultSpeed)
+      this.clearBounceEffect(defaultSpeed);
     }, 3000);
   }
 
-/**
- * Handles the bounce effect by playing the bounce animation and sound.
- * It also stops the audio playback for the mini chicken.
- */
-bounceEffect(){
-      this.audio.playEffect("mini_bounce", { volume: 0.3, loop: false });
+  /**
+   * Handles the bounce effect by playing the bounce animation and sound.
+   * It also stops the audio playback for the mini chicken.
+   */
+  bounceEffect() {
+    this.audio.playEffect("mini_bounce", { volume: 0.3, loop: false });
     this.audio.controlAudio(this.soundName, { play: false, pause: true });
 
     this.animateBounceMiniInterval = setInterval(() => {
       this.playAnimation(MiniChicken.IMAGES_HIT);
     }, 300);
-}
+  }
 
-/**
- * Clears the bounce effect by stopping the bounce animation, resetting the speed, and playing the walking animation again.
- * It also resumes the audio playback for the mini chicken.
- * @param {Number} defaultSpeed 
- */
-clearBounceEffect(defaultSpeed){
-     clearInterval(this.animateBounceMiniInterval);
-      this.animateBounceMiniInterval = null;
-      this.animateBounceActive = false;
-      this.speed = defaultSpeed;
-      this.audio.controlAudio(this.soundName, {
-        play: true,
-        pause: false,
-        loop: true,
-      });
-      this.animateWalk();
-}
-
+  /**
+   * Clears the bounce effect by stopping the bounce animation, resetting the speed, and playing the walking animation again.
+   * It also resumes the audio playback for the mini chicken.
+   * @param {Number} defaultSpeed
+   */
+  clearBounceEffect(defaultSpeed) {
+    clearInterval(this.animateBounceMiniInterval);
+    this.animateBounceMiniInterval = null;
+    this.animateBounceActive = false;
+    this.speed = defaultSpeed;
+    this.audio.controlAudio(this.soundName, {
+      play: true,
+      pause: false,
+      loop: true,
+    });
+    this.animateWalk();
+  }
 }

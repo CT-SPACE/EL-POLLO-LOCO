@@ -109,7 +109,7 @@ class Pepe extends MovableObject {
   }
 
   /**
-   * 
+   *
    */
   animateWalk() {
     this.x = 100;
@@ -130,8 +130,8 @@ class Pepe extends MovableObject {
 
   /**
    * Handles the jump action for the Pepe character.
-   * It sets the speedY to a negative value to simulate jumping and plays the jump animation. 
-   * @param {Number} lastKeyPressTime 
+   * It sets the speedY to a negative value to simulate jumping and plays the jump animation.
+   * @param {Number} lastKeyPressTime
    */
   listenForKeyPress(lastKeyPressTime) {
     this.lastKeyPressTime = lastKeyPressTime;
@@ -150,9 +150,9 @@ class Pepe extends MovableObject {
   handleRightMovement() {
     this.stopSleepAnimation();
 
-     if (!this.isAboveGround()) {
-    this.playAnimation(Pepe.IMAGES_WALKING);
-  }
+    if (!this.isAboveGround()) {
+      this.playAnimation(Pepe.IMAGES_WALKING);
+    }
     this.moveRight();
     if (!this.audio.audioPlaying["pepe_pollo"]) {
       this.audio.playAudio("pepe_pollo", { loop: false, volume: 0.4 });
@@ -161,13 +161,13 @@ class Pepe extends MovableObject {
 
   /**
    * In case of left movement, this function stopps the sleep animation, start the walking animation, and moves the character to the left.
-  * It sets the otherDirection to true to flip the character's direction.
-  */
+   * It sets the otherDirection to true to flip the character's direction.
+   */
   handleLeftMovement() {
     this.stopSleepAnimation();
-      if (!this.isAboveGround()) {
-    this.playAnimation(Pepe.IMAGES_WALKING);
-  }
+    if (!this.isAboveGround()) {
+      this.playAnimation(Pepe.IMAGES_WALKING);
+    }
     this.moveLeft(this.speed);
     this.otherDirection = true;
   }
@@ -197,7 +197,7 @@ class Pepe extends MovableObject {
         this.lastKeyPressTime = Date.now();
         this.animateHurt();
       } else if (this.isAboveGround()) {
-         this.playAnimation(Pepe.IMAGES_JUMPING);
+        this.playAnimation(Pepe.IMAGES_JUMPING);
       } else if (Date.now() - this.lastKeyPressTime >= this.timeToSleep) {
         this.isSleeping = true;
         this.animateSleep();
@@ -209,15 +209,14 @@ class Pepe extends MovableObject {
     }, 280);
   }
 
-
   /**
    * Starts the jump animation with a defined Time Interval.
    * It plays the jumping images in a loop and resets the jump state after a defined duration.
    */
-   animateJump(){
+  animateJump() {
     this.jump();
-      this.playAnimation(Pepe.IMAGES_JUMPING);
-   }
+    this.playAnimation(Pepe.IMAGES_JUMPING);
+  }
 
   /**
    * Starts the sleeping animation by playing the sleeping images in a loop.
@@ -260,7 +259,7 @@ class Pepe extends MovableObject {
    */
   intervalSettingForAnimateDeath() {
     this.playAnimation(Pepe.IMAGES_DYING);
-    if ( this.moduloCurrentImage(Pepe.IMAGES_DYING) ===  Pepe.IMAGES_DYING.length - 1  ) {
+    if (this.moduloCurrentImage(Pepe.IMAGES_DYING) === Pepe.IMAGES_DYING.length - 1) {
       clearInterval(this.animateDeathInterval);
       this.world.handleGameOver("Pepe");
     }
@@ -268,8 +267,8 @@ class Pepe extends MovableObject {
 
   /**
    * Helper function to calculate the current image index based on the modulo operation.
-   * @param {Array} images 
-   * @returns 
+   * @param {Array} images
+   * @returns
    */
   moduloCurrentImage(images) {
     let i = this.currentImage % images.length;
