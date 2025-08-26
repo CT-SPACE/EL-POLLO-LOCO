@@ -19,6 +19,7 @@ let canvas,
   finalScore,
   savedHighscore;
 
+let ambientSoundTimer = null;
 let audioPlaying = {};
 let allIntervals = [];
 let keyboardEnabled = true;
@@ -27,8 +28,8 @@ let EndBossVisible = false;
 let gamePaused = true;
 let gamePausedByUser = false;
 let imgCache = {};
+let lastThrowTime = 0;
 let letters = Array.from(document.querySelectorAll("#loader span"));
 let aspectRatio = 800 / 480;
 let touchSetupDone = false;
 let throwCoolDown = 1000;
-let lastThrowTime = 0;

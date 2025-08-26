@@ -48,10 +48,11 @@ function resetGame(){
  */
 function killOldWorld() {
     Level01 = null;
+    audioManager.stopAllSounds();
+
   if(world){
     allIntervals.forEach(clearInterval);
     allIntervals = [];
-    audioManager.stopAllSounds();
     world.stopAllAnimations();
     world.throwableObjects = [];
     world.enemies = [];

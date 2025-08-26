@@ -100,13 +100,27 @@ function resumeGameSounds() {
 /**
  * Starts the Ambient Sound of the Game
  */
+// function playAmbient() {
+//   audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3");
+//   audioManager.playAudio("pepe_ambient", { play: true, volume: 0.1 });
+//   // let duration = audioDuration();
+
+//     setTimeout(playAmbient, audioDuration());
+// }
 function playAmbient() {
+  // Alten Timer löschen, falls vorhanden
+  if (ambientSoundTimer !== null) {
+    clearTimeout(ambientSoundTimer);
+    ambientSoundTimer = null;
+  }
+  
   audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3");
   audioManager.playAudio("pepe_ambient", { play: true, volume: 0.1 });
-  // let duration = audioDuration();
-
-    setTimeout(playAmbient, audioDuration());
+  
+  // Neuen Timer setzen und ID speichern
+  ambientSoundTimer = setTimeout(playAmbient, 20000);
 }
+
 
 /**
  * Helper function to get the duration of the ambient sound.
@@ -349,6 +363,7 @@ function prepareStylesForPlayConditions() {
   document.getElementById("play").style.display = "";
 
   let reload = document.getElementById("gohome");
+    reload.removeEventListener("click", initReStart);
   reload.style.display = "";
   reload.addEventListener("click", initReStart);
 }

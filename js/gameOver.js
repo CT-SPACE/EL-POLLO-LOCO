@@ -71,13 +71,11 @@ function replayButtonPosition(gameOverScreen, status) {
  * @param {String} status
  */
 function changeCTAForReplayButton(replayPosition, status) {
+  let oldReplay = document.getElementById("retry");
+  if (oldReplay) oldReplay.remove();
   let replay = document.createElement("div");
   replay.id = "retry";
   replay.classList.add("replayButton", status === "lose" ? "lose" : "win");
-  // replay.addEventListener("click", () => {
-  //   killOldWorld();
-  //   reStart();
-  // });
   replay.addEventListener("click", initReStart);
   replayPosition.appendChild(replay);
   
