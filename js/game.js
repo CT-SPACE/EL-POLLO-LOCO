@@ -79,7 +79,7 @@ async function loadGameAssets() {
 function showStartScreen() {
   startScreen = true;
   allAmbientSounds();
-  hideLoaderAndShowPlayButton();
+  hideLoader();
 }
 
 /**
@@ -103,11 +103,9 @@ function resumeGameSounds() {
 function playAmbient() {
   audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3");
   audioManager.playAudio("pepe_ambient", { play: true, volume: 0.1 });
+  // let duration = audioDuration();
 
-  let duration = audioDuration();
-  setTimeout(() => {
-    setTimeout(playAmbient, 10000);
-  }, duration);
+    setTimeout(playAmbient, audioDuration());
 }
 
 /**
@@ -252,12 +250,21 @@ function allAmbientSounds() {
 }
 
 /**
- * When the Start Game Button is shown, the Loader will be hidden
+ *  Loader will be hidden and its called for showPlayButton()
  */
-function hideLoaderAndShowPlayButton() {
+function hideLoader() {
   const loaderContainer = document.getElementById("loader");
   loaderContainer.innerHTML = "";
   keyboardEnabled = true;
+  showPlayButton(loaderContainer);
+  letsPlay();
+}
+
+/**
+ * Creates the Play-Button and appends it to the loader container.
+ * @param {HTMLElement} loaderContainer 
+ */
+function showPlayButton(loaderContainer){
   let startGame = document.createElement("div");
   startGame.id = "startGame";
   startGame.className = "startGame";
@@ -265,8 +272,6 @@ function hideLoaderAndShowPlayButton() {
   loaderContainer.appendChild(startGame);
   let subText = document.getElementById("subText");
   subText.classList.remove("displayNone");
-
-  letsPlay();
 }
 
 /**
@@ -274,17 +279,21 @@ function hideLoaderAndShowPlayButton() {
  */
 function letsPlay() {
   let startGame = document.getElementById("startGame");
-  document.addEventListener("keydown", (e) => {
-    if (e.code == "Enter") {
-      if (contentOpen) return;
-      keyboard.ENTER = true;
-      playConditions();
-    }
-  });
-  startGame.addEventListener("click", () => {
-    if (contentOpen) return;
+   document.addEventListener("keydown", handleEnterToStart, { once: true });
+  startGame.addEventListener("click", handleClickToStart, { once: true });
+
+}
+
+function handleEnterToStart(e) {
+  if (e.code == "Enter" && !contentOpen) {
+    keyboard.ENTER = true;
     playConditions();
-  });
+  }
+}
+
+function handleClickToStart() {
+  if (contentOpen) return;
+  playConditions();
 }
 
 /**
@@ -292,17 +301,23 @@ function letsPlay() {
  * @param {string} origin
  */
 async function playConditions() {
-  localStorage.removeItem("autostart");
+    localStorage.removeItem("autostart");
   startScreen = false;
-  if (audioManager.audioContext && audioManager.audioContext.state === "suspended") {
-    audioManager.activateAudioContext();
-  }
+  audioManager.audioContext?.state === "suspended" && audioManager.activateAudioContext();
   prepareStylesForPlayConditions();
   prepareButtonsForPlayConditions();
   await worldCanvas();
   togglePlay("play", true);
-  document.addEventListener("keydown", handleKeyDown);
+  listenForKeyPress();
   document.addEventListener("keyup", handleKeyUp);
+
+}
+
+function listenForKeyPress() {
+  document.addEventListener("keydown", (e) => {
+    world.character.setLastKeyPressTime(e);  
+    handleKeyDown(e);            
+  });
 }
 
 /**
@@ -335,7 +350,5 @@ function prepareStylesForPlayConditions() {
 
   let reload = document.getElementById("gohome");
   reload.style.display = "";
-  reload.addEventListener("click", () => {
-    location.reload();
-  });
+  reload.addEventListener("click", initReStart);
 }

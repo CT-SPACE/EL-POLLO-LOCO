@@ -71,25 +71,7 @@ class AudioManager {
     } catch (error) {}
   }
 
-  /**
-   * Handles the actual audio playback logic for playAudio()
-   * @param {string} name
-   * @param {Object} options
-   */
-  // startAudioPlayback(name, options = {}) {
-  //   const offset = this.pausedAt[name] || 0;
-  //   const source = this.createSource(name, options);
-  //   const gainNode = this.createGainNode(options.volume);
-  //   source.connect(gainNode);
-  //   gainNode.connect(this.audioContext.destination);
 
-  //   source.start(0, offset);
-  //   this.playingSources[name] = { source, gainNode };
-  //   this.audioPlaying[name] = true;
-  //   this.startedAt[name] = this.audioContext.currentTime - offset;
-
-  //   source.onended = () => this.resetAudioState(name);
-  // }
 
   startAudioPlayback(name, options = {}) {
   const offset = this.getAudioOffset(name);
@@ -150,6 +132,14 @@ startSourcePlayback(name, source, offset) {
     this.pausedAt[name] = 0;
     this.startedAt[name] = 0;
   }
+
+  stopAllSounds() {
+  // Alle aktiven Sounds durchgehen
+  Object.keys(this.playingSources).forEach(name => {
+    // Den aktuellen Sound stoppen
+    this.controlAudio(name, { stop: true });
+  });
+}
 
   /**
    * Function to change settings of playing audios e

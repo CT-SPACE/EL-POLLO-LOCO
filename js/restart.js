@@ -1,4 +1,14 @@
 /**
+ * Initializes the restart functionality for the game.
+ * This function sets up the event listener for the "Replay"-Button during the Game and on GameOver screen
+ */
+function initReStart(){
+    killOldWorld();
+    reStart();
+}
+
+
+/**
  * Restarts the game directly and ready to play.
  * This function is called when the user clicks the "Go Home" button.
  */
@@ -30,6 +40,8 @@ function resetGame(){
   touchSetupDone = false;
 }
 
+
+
 /**
  * Deletes the existing World-Class and Character instances.
  * 
@@ -38,6 +50,8 @@ function killOldWorld() {
     Level01 = null;
   if(world){
     allIntervals.forEach(clearInterval);
+    allIntervals = [];
+    audioManager.stopAllSounds();
     world.stopAllAnimations();
     world.throwableObjects = [];
     world.enemies = [];
@@ -52,8 +66,12 @@ function killOldWorld() {
     world.highscoreManager = null;
     world.canvas = null;
   };
-  document.removeEventListener("keydown", handleKeyDown);
+  // document.removeEventListener("keydown", handleKeyDown);
   document.removeEventListener("keyup", handleKeyUp);
+  document.removeEventListener("keydown", (e) => {
+    world.character.setLastKeyPressTime(e);  
+    handleKeyDown(e);            
+  });
     world = null;
 }
 
@@ -80,8 +98,8 @@ function resetButtons() {
   canvas.classList.remove("displayNone");
 }
 
-function intervalsToStop(code, time) {
-let interval = setInterval(code, time);
+function intervalsToStop(id, time) {
+let interval = setInterval(id, time);
 allIntervals.push (interval) ;
 }
 

@@ -18,12 +18,16 @@ class DrawableObject{
    * Loads a single image.
    * @param {Object} entry 
    */
-  loadImage(entry) {
-    const path = typeof entry === "string" ? entry : entry.src;
-
+loadImage(entry) {
+  const path = typeof entry === "string" ? entry : entry.src;
+  if (imgCache[path]) {
+    this.img = imgCache[path];
+  } else {
     this.img = new Image();
     this.img.src = path;
+    imgCache[path] = this.img;
   }
+}
 
   /**
    * Loads all images from an array.
@@ -56,6 +60,8 @@ class DrawableObject{
     DrawableObject.addObjectsForDraw(world);
     world.handleEndboss();
     requestAnimationFrame(() => DrawableObject.draw(world));
+    console.log("Enemies array length:", world.level.enemies.length);
+console.log("Endboss instances:", world.level.enemies.filter(e => e instanceof Endboss).length);
   }
 
 

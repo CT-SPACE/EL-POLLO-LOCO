@@ -51,7 +51,6 @@ class World {
     this.collectedCoins = this.statusBarCoin.coincount;
     DrawableObject.draw(this);
     DrawableObject.addObjectsForDraw(this);
-
     this.setWorld();
     this.run();
     this.checkThrowObjects();
@@ -61,7 +60,7 @@ class World {
    * Create the World with all needed Components.
    */
   setWorld() {
-    this.character.keyboard = keyboard;
+    // this.character.keyboard = keyboard;
     this.character.world = this;
     this.minichicken.world = this;
     this.endbossOfEnemies.world = this;
@@ -84,6 +83,7 @@ class World {
       this.highscoreManager.updateScore(this);
     }, 1000 / 60);
   }
+ 
 
   /**
    * Creates the Endboss on the Map with a distance of 3800.
@@ -113,6 +113,16 @@ class World {
     let startThrow = Date.now();
     noBottles = false;
     intervalsToStop(() => {
+      this.intervalForCheckThrowObjects(startThrow)
+    }, 50);
+    throwDuration = 0;
+  }
+
+  /**
+   * Interval function to check if Pepe can throw a bottle.
+   * @param {Date} startThrow 
+   */
+  intervalForCheckThrowObjects(startThrow){
       let now = Date.now();
       let delta = now - startThrow;
       if (keyboard.THROW && this.collectedBottles === 0) {
@@ -121,8 +131,6 @@ class World {
       if (keyboard.THROW && this.collectedBottles > 0 && delta > 1000 && this.canThrow) {
         this.throwBottle();
       }
-    }, 50);
-    throwDuration = 0;
   }
 
   /**
@@ -172,9 +180,8 @@ class World {
    * Checks the Collision of Pepe with Enemies and collectable Objects like coins and bottles
    */
   checkCollisions() {
-    intervalsToStop(() => {
-      this.checksCollisionForEachEnemy();
-    }, 400);
+    this.checksCollisionForEachEnemy(); // TEST
+    // intervalsToStop(this.checksCollisionForEachEnemy(), 400);
     this.checkCollisionsCoins(this.character);
     this.checkCollisionsBottles();
   }
@@ -185,8 +192,9 @@ class World {
    */
   checksCollisionForEachEnemy() {
     this.level.enemies.forEach((enemy) => {
+
       if (enemy.type === "endboss") return;
-      if (this.character.isColliding(enemy) && this.character.speedY < 0 && !enemy.isDead) {
+      if (this.character.isColliding(enemy) && this.character.isCollidingAboveEnemy(enemy) && this.character.speedY < 0 && !enemy.isDead) {
         this.chickenForCheckCollisions(enemy);
       }
       this.collidesEnemiesOnEnergyLevel(enemy);
@@ -247,8 +255,7 @@ class World {
     if (
       this.endbossOfEnemies &&
       this.character.isColliding(this.endbossOfEnemies) &&
-      this.character.energy > 0 &&
-      !this.character.isAboveGround()
+      this.character.energy > 0
     ) {
       this.character.hit(this.endbossOfEnemies);
       this.statusBarPepe.setPercentage(this.character.energy);
@@ -273,7 +280,6 @@ class World {
    */
   checkCollisionsCoins() {
     let collected = this.statusBarCoin.coincount || 0;
-    const totalCoins = 40;
     this.level.coins = this.level.coins.filter((coin) => {
       if (this.character.isColliding(coin)) {
         collected = this.coinsCollisionByPepe(collected);
@@ -282,7 +288,11 @@ class World {
       return true;
     });
     if (collected > 0) {
-      this.statusBarCoin.setPercentage(totalCoins - this.level.coins.length);
+
+        this.statusBarCoin.coincount = collected;  
+  // Aktualisiere die Anzeige
+  this.statusBarCoin.setPercentage(collected);
+    //  this.statusBarCoin.setPercentage(totalCoins - this.level.coins.length);
     }
   }
 
@@ -295,7 +305,7 @@ class World {
     this.highscoreManager.addCollectedCoin(collected);
     audioManager.loadAudio("WorldCoinCollecting", "./audio/coin_success.mp3");
     audioManager.playEffect("WorldCoinCollecting", { loop: false, volume: 0.1, currentTime: 0 });
-    return false;
+   return collected;
   }
 
   /**
@@ -361,7 +371,7 @@ class World {
     this.endbossOfEnemies.stopAllIntervals();
     this.level.enemies.forEach((enemy) => enemy.stopAllIntervals());
     keyboardEnabled = false;
-    gamePaused = true;
+   gamePaused = true;
     audioManager.setMuted(true);
     togglePlay("content", true);
   }

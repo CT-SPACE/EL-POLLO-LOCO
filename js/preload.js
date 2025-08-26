@@ -79,10 +79,9 @@ function animateLoadingCharacters(char, index, loaderContainer) {
  */
 async function fastPreload() {
   return Promise.all(
-    IMAGES_FASTLOAD.map(
-      (entry) =>
-        new Promise((resolve, reject) => {
-          const path = typeof entry === "string" ? entry : entry.src;
+    IMAGES_FASTLOAD.map((entry) => {
+        let path = typeof entry === "string" ? entry : entry.src;
+      return new Promise((resolve, reject) => {
           const IMG = new Image();
           IMG.onload = () => {
             imgCache[path] = IMG;
@@ -91,8 +90,7 @@ async function fastPreload() {
           IMG.onerror = reject;
           IMG.src = path;
         })
-    )
-  );
+ } ));
 }
 
 /**
@@ -129,7 +127,9 @@ async function preloadAudio() {
 async function preloadImages() {
   return Promise.all(
     imagePaths.map((entry) => {
+
       let path = typeof entry === "string" ? entry : entry.src;
+            if (imgCache[path]) return Promise.resolve();
       return new Promise((resolve, reject) => {
         let IMG = new Image();
         IMG.src = path;

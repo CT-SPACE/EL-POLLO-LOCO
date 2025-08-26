@@ -65,7 +65,7 @@ class MiniChicken extends MovableObject {
    */
   animateX() {
     let movingRight = false;
-    this.animateXInterval = setInterval(() => {
+    this.animateXInterval = intervalsToStop(() => {
       if (this.x <= 40 && !movingRight) {
         movingRight = true;
         this.otherDirection = true;

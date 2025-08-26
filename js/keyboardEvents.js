@@ -1,6 +1,4 @@
-let throwCoolDown = 1000;
-let lastThrowTime = 0;
-let noBottles;
+
 
 /**
  * Both eventlistener are defining the Button on the keyboard that are used to control the game.
@@ -20,9 +18,8 @@ function handleKeyDown(e) {
   }
   if (e.code == "ArrowUp") {
     keyboard.UP = true;
-  }
-  if (e.code == "ArrowDown") {
-    keyboard.DOWN = true;
+      console.log("UP key pressed, keyboard.UP =", keyboard.UP);
+
   }
   if (e.code == "KeyD") {
     const now = Date.now();
@@ -42,8 +39,9 @@ function handleKeyUp(e) {
   if (e.code == "Enter") {
     keyboard.ENTER = false;
   }
-  if (e.code == "Space") {
+  if (e.code == "Space" || e.code == "ArrowUp") {
     keyboard.SPACE = false;
+    keyboard.UP = false;
   }
   if (e.code == "ArrowRight") {
     keyboard.RIGHT = false;
@@ -52,12 +50,9 @@ function handleKeyUp(e) {
   if (e.code == "ArrowLeft") {
     keyboard.LEFT = false;
   }
-  if (e.code == "ArrowUp") {
-    keyboard.UP = false;
-  }
-  if (e.code == "ArrowDown") {
-    keyboard.DOWN = false;
-  }
+  // if (e.code == "ArrowUp") {
+  //   keyboard.UP = false;
+  // }
   if (e.code == "KeyD") {
     if (throwKeyDownTime) {
       throwKeyUpTime = Date.now();

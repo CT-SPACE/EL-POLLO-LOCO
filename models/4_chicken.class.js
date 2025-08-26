@@ -1,7 +1,7 @@
 class Chicken extends MovableObject {
   x = 400;
   y = 350;
-  speed = 0.15;
+  speedX = 0.15;
   height = 80;
   width = 80;
   world;
@@ -30,7 +30,7 @@ class Chicken extends MovableObject {
    * @param {Object} audioManager - The audio manager for handling sound effects.
    * @param {Number} x - The initial x-coordinate of the chicken.
    * @param {Number} y - The initial y-coordinate of the chicken.
-   * @param {Number} speed - The speed of the chicken.
+   * @param {Number} speedX - The speed of the chicken.
    */
   constructor(world) {
     super().loadImage("./img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
@@ -39,7 +39,7 @@ class Chicken extends MovableObject {
 
     this.audio = audioManager;
     this.x += 300 + Math.random() * 1600;
-    this.speed = 0.1 + Math.random() * 0.5;
+    this.speedX = 0.1 + Math.random() * 0.5;
     this.animationSpeed = Math.random() * 20 + 100;
     this.type = "chicken";
     this.animateX();
@@ -51,16 +51,15 @@ class Chicken extends MovableObject {
    * Animates the chicken's movement along the x-axis by moving it left at a defined speed.
    */
   animateX() {
-    this.animateXInterval = setInterval(() => {
-      this.moveLeft(this.speed);
-    }, 1000 / 60);
+    this.animateXInterval = setInterval(() => this.moveLeft(this.speedX), 1000 / 60);
   }
 
   /**
    * Animates the chicken's walk movement.
    */
   animateWalk() {
-    this.x += 1200;
+   this.x += 1600;
+
     this.animateWalkInterval = setInterval(() => {
       this.playAnimation(Chicken.IMAGES_WALKING);
     }, this.animationSpeed);

@@ -30,7 +30,7 @@ class Clouds extends MovableObject {
    * Animates the clouds by moving them to the left at a defined speed.
    */
   animateX() {
-    setInterval(() => {
+    intervalsToStop(() => {
       this.moveLeft(this.speed);
     }, 1000 / 25);
   }

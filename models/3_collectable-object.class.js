@@ -115,9 +115,8 @@ class CollectableObject extends DrawableObject {
    */
   checkForBottleCollisions(character, bottles) {
     this.bottles = bottles;
-
     this.character = character;
-    setInterval(() => {
+    intervalsToStop(() => {
       this.bottles.forEach((bottle, index) => {
         if (this.character.isColliding(bottle)) {
           this.bottles.splice(index, 1);
@@ -127,24 +126,30 @@ class CollectableObject extends DrawableObject {
   }
 
   /**
-   * Checks for collision between Pepe and coins.
+   * Sets the Interval to check for collision between Pepe and coins.
    * This function is used to remove coins from the game when Pepe collects them.
    * If a collision is detected, the coin is removed from the array.
    * @param {Object} character
    * @param {Array} coins
    */
   checkForCoinCollisions(character, coins) {
-    this.character = character;
-    setInterval(() => {
-      coins.forEach((coin, index) => {
-        if (this.character.isColliding(coin)) {
-          this.world.highscoreManager.addCollectedCoin();
-          coins.splice(index, 1);
-        }
-      });
-    }, 500);
+    intervalsToStop(this.intervalForCheckForCoinCollisions(character, coins), 500);
   }
 
+  /**
+   * Checks for collisions between Pepe and coins.
+   * @param {String} character
+   * @param {Number} coins
+   */
+  intervalForCheckForCoinCollisions(character, coins) {
+    this.character = character;
+    coins.forEach((coin, index) => {
+      if (this.character.isColliding(coin)) {
+        this.world.highscoreManager.addCollectedCoin();
+        coins.splice(index, 1);
+      }
+    });
+  }
   /**
    * Iterate through the images of the collectable object.
    * @param {String} images
@@ -166,11 +171,11 @@ class CollectableObject extends DrawableObject {
    */
   animateBasedOnKind() {
     if (this.kindof === "coin") {
-      setInterval(() => {
+      intervalsToStop(() => {
         this.animateThings(CollectableObject.COINS_BLINKING);
       }, 300);
     } else if (this.kindof === "bottle") {
-      setInterval(() => {
+      intervalsToStop(() => {
         this.animateThings(CollectableObject.BOTTLE_GROUND);
       }, 800);
     }

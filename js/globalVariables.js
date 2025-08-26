@@ -12,6 +12,7 @@ let canvas,
   throwDuration,
   contentOpen,
   startScreen,
+  noBottles,
   newWidth,
   newHeight,
   deathCandidate,
@@ -29,3 +30,5 @@ let imgCache = {};
 let letters = Array.from(document.querySelectorAll("#loader span"));
 let aspectRatio = 800 / 480;
 let touchSetupDone = false;
+let throwCoolDown = 1000;
+let lastThrowTime = 0;

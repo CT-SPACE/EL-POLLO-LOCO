@@ -110,15 +110,23 @@ class Endboss extends MovableObject {
    * Starts the attack animation for the endboss.
    * @returns Prepares the endboss for an attack by stopping its walk animations,
    */
-  animateAttack() {
+  startAttackMode() {
+    this.status = true;
+    this.isAttacking(this.status);
     clearInterval(this.animateWalkInterval);
-    if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
     if (gamePaused) return;
+    if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
+    this.animateAttack();
+  }
 
+  /**
+   * Sets the attack interval
+   */
+  animateAttack() {
     this.animateAttackInterval = setInterval(() => {
       this.playAnimation(Endboss.IMAGES_ATTACK);
       if (this.currentImage % Endboss.IMAGES_ATTACK.length === 5) {
-        this.x -= 80;
+        this.x -= 100;
         this.jump();
       }
     }, 200);
@@ -130,20 +138,24 @@ class Endboss extends MovableObject {
    * If the endboss is dead, it clears the death animation interval and triggers the game over state.
    */
   animateDeath() {
+      clearInterval(this.animateAttackInterval);
+   clearInterval(this.animateWalkInterval);
+  clearInterval(this.animateHurtInterval);
     audioManager.controlAudio("endbossBackground", { play: false, pause: true });
     this.isDead = true;
     this.currentImage = 0;
-    gamePaused = true;
     keyboardEnabled = false;
     this.animateDeathInterval = setInterval(() => {
       this.intervalSettingForAnimateDeath();
-    }, 100);
+    }, 200);
+
   }
 
   intervalSettingForAnimateDeath() {
     this.playAnimation(Endboss.IMAGES_DEAD);
     if (this.moduloCurrentImage(Endboss.IMAGES_DEAD) === Endboss.IMAGES_DEAD.length - 1) {
       clearInterval(this.animateDeathInterval);
+      gamePaused = true;
       this.world.handleGameOver("Endboss");
     }
   }
@@ -179,15 +191,7 @@ class Endboss extends MovableObject {
     }
   }
 
-  /**
-   * Checks if there is a reason to change to the attack state.
-   */
-  startAttackMode() {
-    this.status = true;
-    this.isAttacking(this.status);
-    if (this.animateAttackInterval) clearInterval(this.animateAttackInterval);
-    this.animateAttack();
-  }
+
 
   /**
    * In case of loosing to much energy by beeing hit by bottles, the endboss plays the hurt animation.
@@ -197,11 +201,11 @@ class Endboss extends MovableObject {
   animateHurt() {
     clearInterval(this.animateAttackInterval);
     clearInterval(this.animateWalkInterval);
-    if (this.animateHurtInterval) clearInterval(this.animateHurtInterval);
+   if (this.animateHurtInterval) clearInterval(this.animateHurtInterval);
     this.hurtFrame = 0;
     this.animateHurtInterval = setInterval(() => {
         this.intervalSettingForAnimateHurt();
-    }, 500);
+    }, 300);
   }
 
   /**
