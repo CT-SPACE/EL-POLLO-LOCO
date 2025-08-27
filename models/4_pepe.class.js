@@ -141,10 +141,8 @@ class Pepe extends MovableObject {
       }
       if ((keyboard.UP || keyboard.SPACE) && this.y === 103) {
 
-        console.log("animateWalk:vor UP or SPACE", keyboard.UP, keyboard.SPACE, this.y);
+        console.log("animateWalk: Sprung ausgelöst!", keyboard.UP, keyboard.SPACE, this.y);
         this.animateJump();
-        console.log("animateWalk:nach UP or SPACE", keyboard.UP, keyboard.SPACE, this.y);
-
       }
       this.world.cameraX = -this.x + 100;
     }, 1000 / 25);
@@ -274,6 +272,12 @@ class Pepe extends MovableObject {
 
 animateJump() {
   // if (this.isJumping) return;
+  if (this.isJumping) {
+    console.log("Sprung bereits aktiv");
+    return;
+  }
+    console.log("Sprung wird ausgeführt, y vor Sprung:", this.y);
+
   this.isJumping = true;
   this.currentImage = 0;
    this.jump(); // Nur einmal beim Sprungstart!
@@ -284,6 +288,7 @@ animateJump() {
     if (this.currentImage >= Pepe.IMAGES_JUMPING.length) {
       clearInterval(this.jumpInterval);
       this.isJumping = false;
+       console.log("Sprunganimation beendet");
       // this.y = Pepe.GROUND_Y;
       // this.speedY = 0;
     }
@@ -447,9 +452,12 @@ animateIsFalling(){
       this.isPlayingHurtAudio = true;
       this.audio.playAudio("pepe_hurt", {
         play: true,
-        volume: 0.5,
+        volume: 0.8,
         loop: false,
       });
+          setTimeout(() => {
+      this.isPlayingHurtAudio = false;
+    }, 600);
     }
   }
 }

@@ -21,8 +21,11 @@ class MovableObject extends DrawableObject {
    * @returns
    */
   applyGravity() {
-    if (this.gravityInterval) return;
-  this.gravityInterval = setInterval(() => {
+  if (this.gravityInterval) {
+    clearInterval(this.gravityInterval);
+    this.gravityInterval = null;
+  };
+    this.gravityInterval = setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
@@ -31,9 +34,7 @@ class MovableObject extends DrawableObject {
       if (this.y > Pepe.GROUND_Y) {
         this.y = Pepe.GROUND_Y;
         this.speedY = 0;
-        isJumping = false
-       clearInterval(this.gravityInterval);
-      this.gravityInterval = null;
+      this.isJumping = false;
       }
     }, 1000 / 25);
   }
@@ -86,21 +87,15 @@ isCollidingAboveEnemy(enemy) {
     enemy.offset = { left: 12, right: 12, top: 12, bottom: 12 };
   }
   
-  // Horizontale Überlappung (korrekt)
   const horizontalOverlap = 
     this.x + this.width - this.offset.right > enemy.x + enemy.offset.left && 
     this.x + this.offset.left < enemy.x + enemy.width - enemy.offset.right;
-  
-  // Vertikale Position (korrigiert)
   const enemyHeadZone = enemy.y + enemy.offset.top + (enemy.height * 0.3); // Obere 30% des Feindes
   const pepeBottom = this.y + this.height - this.offset.bottom;
   
   const isOnTop = 
     pepeBottom >= enemy.y + enemy.offset.top && // Pepe's Füße sind mindestens auf Kopfhöhe
     pepeBottom <= enemyHeadZone;                // Aber nicht tiefer als 30% der Feind-Höhe
-  
-  // Debug
-  console.log(`Horizontal: ${horizontalOverlap}, OnTop: ${isOnTop}, Falling: ${this.speedY < 0}`);
   
   return horizontalOverlap && isOnTop && this.speedY < 0;
 }
@@ -162,6 +157,8 @@ isCollidingAboveEnemy(enemy) {
    *Let Pepe and Endboss jump.
    */
   jump() {
+      console.log("jump() aufgerufen, speedY wird gesetzt");
+
     this.speedY = 34;
  
   }

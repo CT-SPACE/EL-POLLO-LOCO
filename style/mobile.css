@@ -203,11 +203,10 @@
       transform: scale(0.96);
     }
 
-    #closeButton {
-      position: relative;
-      /* top: 0; */
-      left: 80vh;
-    }
+        #closeButton {
+          top: 15vh;
+          left: calc(100vw / 2 + 40vh);
+        }
 
     #buttonContentMobile.open {
       position: relative;
@@ -223,11 +222,12 @@
     }
 
     #contentContainer {
-      position: relative;
-      width: 80vh;
-      height: 70vh;
-      align-self: center;
-      top: 20px;
+    position: absolute;
+    align-self: center;
+    justify-self: anchor-center;
+    top: 15%;
+    height: 80%;
+    width: 100vh;
     }
 
     .icon {

@@ -282,7 +282,7 @@ function getHowToHtml() {
           <div class="row">
             <div class="cell rightAlign"><img src="./img/buttons/button-D_white.svg" alt="Key D" class="key"></div>
             <div class="cell">Pepe throws bottle<br>
-              <small style="line-height:1">Long button press for<br>long throw range</small></div>
+              <small style="line-height:1">Long key press for<br>long throw range</small></div>
           </div>
         </div>
         <div class="table">

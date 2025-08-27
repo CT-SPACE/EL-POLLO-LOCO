@@ -60,8 +60,6 @@ loadImage(entry) {
     DrawableObject.addObjectsForDraw(world);
     world.handleEndboss();
     requestAnimationFrame(() => DrawableObject.draw(world));
-    console.log("Enemies array length:", world.level.enemies.length);
-console.log("Endboss instances:", world.level.enemies.filter(e => e instanceof Endboss).length);
   }
 
 
