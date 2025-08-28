@@ -16,6 +16,7 @@ class CollectableObject extends DrawableObject {
   distanceY = 10;
   minX = 280;
   maxX = 3600;
+  positions = [];
 
   static BOTTLE_GROUND = [
     "./img/6_salsa_bottle/1_salsa_bottle_on_ground.png",
@@ -35,94 +36,246 @@ class CollectableObject extends DrawableObject {
    * @param {Number} distanceX
    * @param {Number} Row2Probability
    */
+
+  /**
+   * Initializes all collectable Objects like coins and bottles.
+   */
   constructor(kindof, count, x, y, height, width, distanceX, Row2Probability) {
     super();
     this.audio = audioManager;
     this.world = world;
     this.kindof = kindof;
     this.kindofCollectableObject(this.kindof);
-    this.x = x < this.minX ? this.minX : x > this.maxX ? this.maxX : x;
-    this.y = y;
+    this.setPosition(x, y);
     this.height = height;
     this.width = width;
     this.animateBasedOnKind();
   }
 
   /**
-   * Seperates the logic for loading images based on the type of collectable object.
-   * @param {String} kindof
+   * Sets position within valid boundaries
+   */
+  setPosition(x, y) {
+    this.x = Math.min(Math.max(x, this.minX), this.maxX);
+    this.y = y;
+  }
+
+  /**
+   * Seperates the logic for loading images based on the type
    */
   kindofCollectableObject(kindof) {
     if (kindof === "coin") {
-      this.loadImages(CollectableObject.COINS_BLINKING);
-      this.img = imgCache[CollectableObject.COINS_BLINKING[0]];
-      this.offset = { left: 30, right: 30, top: 30, bottom: 30 };
+      this.coinsBlinking();
     } else if (kindof === "bottle") {
-      this.loadImages(CollectableObject.BOTTLE_GROUND);
-      this.img = imgCache[CollectableObject.BOTTLE_GROUND[0]];
-      this.offset = { left: 60, right: 5, top: 5, bottom: 5 };
+      this.bottleOnGround();
     }
   }
 
   /**
-   * Fills an Array with coins and spreads them across the game world.
-   * The coins are placed in two rows with a specified probability for the second row.
-   * @param {Number} count - Total number of coins to create.
-   * @param {Number} distanceX - Horizontal distance between coins.
-   * @param {Number} Row2Probability - Probability of placing a coin in the second row.
+   * Creates coins and distributes them in the game world
    */
   static createCoins(count, distanceX, Row2Probability) {
-    let coins = [],
-      yRow1 = 280,
-      yRow2 = 150,
-      coinsPerRow = Math.ceil(count);
-    for (let row = 0; row < 2; row++)
-      for (let i = 0; i < coinsPerRow; i++) {
-        let index = row * coinsPerRow + i;
-        if (index >= count) break;
-        let gapOffset = Math.floor(i / 8) * (distanceX * 2);
-
-        let x = i * distanceX + 110 + gapOffset;
-        let y = Math.random() < Row2Probability ? yRow2 : yRow1;
-        coins.push(new CollectableObject("coin", count, x, y, 100, 100, distanceX, Row2Probability));
-      }
+    let coins = [];
+    let positions = this.getOptimizedCoinPositions(count, Row2Probability);
+    positions.forEach((pos) => {
+      coins.push(this.createSingleCoin(pos.x, pos.y, distanceX));
+    });
     return coins;
   }
+
   /**
-   * Creates bottles and spread them across the game world.
-   * @param {Number} bottlesCount
-   * @param {Number} distanceX
-   * @returns bottles
+   * Gets optimized positions for better distribution
    */
-  static createBottles(bottlesCount, distanceX) {
-    let bottles = [];
-    this.height = 70;
-    this.width = 70;
-    let y = 380;
-    for (let i = 0; i < bottlesCount; i++) {
-      if (i >= bottlesCount) break;
-      let x = Math.random() * (3400 - 100) + 100;
-      bottles.push(new CollectableObject("bottle", bottlesCount, x, y, this.height, this.width, distanceX));
-    }
-    return bottles;
+  static getOptimizedCoinPositions(count, Row2Probability) {
+    let levelMinX = 110;
+    let levelMaxX = 3400;
+    let levelWidth = levelMaxX - levelMinX;
+    let segmentWidth = levelWidth / count;
+
+    return this.generateAllCoinPositions(count, segmentWidth, levelMinX, Row2Probability);
   }
 
   /**
-   * Checks for collision between Pepe and bottles.
-   * If a collision is detected, the bottle is removed from the array.
-   * @param {Object} character
-   * @param {Array} bottles
+   * Generates all coin positions across the level
+   */
+  static generateAllCoinPositions(count, segmentWidth, levelMinX, Row2Probability) {
+    let positions = [];
+    let yRow1 = 280;
+    let yRow2 = 150;
+    let coinsPerRow = Math.ceil(count / 2);
+
+    this.fillCoinPositionsArray(positions, count, coinsPerRow, segmentWidth, levelMinX, yRow1, yRow2, Row2Probability);
+    return positions;
+  }
+
+  /**
+   * Fills the positions array with coin coordinates
+   */
+  static fillCoinPositionsArray(positions, count, coinsPerRow, segmentWidth, levelMinX, yRow1, yRow2, Row2Probability) {
+    for (let row = 0; row < 2; row++) {
+      for (let i = 0; i < coinsPerRow; i++) {
+        if (positions.length >= count) break;
+        let globalIndex = row * coinsPerRow + i;
+        let position = this.getCoinPosition(globalIndex, segmentWidth, levelMinX, row, yRow1, yRow2, Row2Probability);
+        positions.push(position);
+      }
+    }
+  }
+
+  /**
+   * Gets position for a single coin
+   */
+  static getCoinPosition(index, segmentWidth, levelMinX, row, yRow1, yRow2, Row2Probability) {
+    let x = this.calculateCoinX(index, segmentWidth, levelMinX);
+    let y = this.calculateCoinY(row, yRow1, yRow2, Row2Probability);
+
+    return { x, y };
+  }
+
+  /**
+   * Calculates X position for a coin
+   */
+  static calculateCoinX(index, segmentWidth, levelMinX) {
+    let segmentStart = levelMinX + index * segmentWidth;
+    let randomOffset = Math.random() * (segmentWidth * 0.7);
+
+    return segmentStart + randomOffset;
+  }
+
+  /**
+   * Calculates Y position for a coin
+   */
+  static calculateCoinY(row, yRow1, yRow2, Row2Probability) {
+    if (row === 0) {
+      return yRow1;
+    }
+    return Math.random() < Row2Probability ? yRow2 : yRow1;
+  }
+
+  /**
+   * Checks for collision between Pepe and bottles
    */
   checkForBottleCollisions(character, bottles) {
     this.bottles = bottles;
     this.character = character;
     intervalsToStop(() => {
-      this.bottles.forEach((bottle, index) => {
-        if (this.character.isColliding(bottle)) {
-          this.bottles.splice(index, 1);
-        }
-      });
+      this.checkBottleCollisionsInterval();
     }, 500);
+  }
+
+  /**
+   * Interval function for bottle collision check
+   */
+  checkBottleCollisionsInterval() {
+    this.bottles.forEach((bottle, index) => {
+      if (this.character.isColliding(bottle)) {
+        this.bottles.splice(index, 1);
+      }
+    });
+  }
+
+  /**
+   * Animate collectible objects
+   */
+  animateThings(images) {
+    if (this.kindof !== "bottle" && this.kindof !== "coin") return;
+    this.images = images;
+    this.updateCurrentImage();
+  }
+
+  /**
+   * Updates the current image in animation sequence
+   */
+  updateCurrentImage() {
+    const i = this.currentImage % this.images.length;
+    const path = this.images[i];
+    if (imgCache[path]) {
+      this.img = imgCache[path];
+    }
+    this.currentImage++;
+  }
+
+  /**
+   * Sets up animations based on object type
+   */
+  animateBasedOnKind() {
+    if (this.kindof === "coin") {
+      this.setupCoinAnimation();
+    } else if (this.kindof === "bottle") {
+      this.setupBottleAnimation();
+    }
+  }
+
+  /**
+   * Sets up coin animation
+   */
+  setupCoinAnimation() {
+    intervalsToStop(() => {
+      this.animateThings(CollectableObject.COINS_BLINKING);
+    }, 300);
+  }
+
+  /**
+   * Sets up bottle animation
+   */
+  setupBottleAnimation() {
+    intervalsToStop(() => {
+      this.animateThings(CollectableObject.BOTTLE_GROUND);
+    }, 800);
+  }
+
+  /**
+   * Loads the images for the blinking coins and sets the offset for collision detection.
+   */
+  coinsBlinking() {
+    this.loadImages(CollectableObject.COINS_BLINKING);
+    this.img = imgCache[CollectableObject.COINS_BLINKING[0]];
+    this.offset = { left: 30, right: 30, top: 30, bottom: 30 };
+  }
+
+  /**
+   * Loads the images for the bottles on the ground and sets the offset for collision detection.
+   */
+  bottleOnGround() {
+    this.loadImages(CollectableObject.BOTTLE_GROUND);
+    this.img = imgCache[CollectableObject.BOTTLE_GROUND[0]];
+    this.offset = { left: 60, right: 5, top: 5, bottom: 5 };
+  }
+
+  /**
+   * Creates a single coin object
+   */
+  static createSingleCoin(x, y, distanceX) {
+    return new CollectableObject("coin", 1, x, y, 100, 100, distanceX);
+  }
+
+  /**
+   * Creates bottles distributed across the game world
+   */
+  static createBottles(bottlesCount, distanceX) {
+    const bottles = [];
+    const height = 70;
+    const width = 70;
+    const y = 380;
+    for (let i = 0; i < bottlesCount; i++) {
+      const x = this.getRandomBottlePosition();
+      bottles.push(this.createSingleBottle(x, y, height, width, distanceX));
+    }
+    return bottles;
+  }
+
+  /**
+   * Generates a random x-position for a bottle
+   */
+  static getRandomBottlePosition() {
+    return Math.random() * (3400 - 100) + 100;
+  }
+
+  /**
+   * Creates a single bottle object
+   */
+  static createSingleBottle(x, y, height, width, distanceX) {
+    return new CollectableObject("bottle", 1, x, y, height, width, distanceX);
   }
 
   /**
@@ -149,35 +302,5 @@ class CollectableObject extends DrawableObject {
         coins.splice(index, 1);
       }
     });
-  }
-  /**
-   * Iterate through the images of the collectable object.
-   * @param {String} images
-   */
-  animateThings(images) {
-    if (this.kindof === "bottle" || this.kindof === "coin") {
-      this.images = images;
-      let i = this.currentImage % this.images.length;
-      let path = this.images[i];
-      if (imgCache[path]) {
-        this.img = imgCache[path];
-      }
-      this.currentImage++;
-    }
-  }
-
-  /**
-   * Animates the collectable object based on its kind.
-   */
-  animateBasedOnKind() {
-    if (this.kindof === "coin") {
-      intervalsToStop(() => {
-        this.animateThings(CollectableObject.COINS_BLINKING);
-      }, 300);
-    } else if (this.kindof === "bottle") {
-      intervalsToStop(() => {
-        this.animateThings(CollectableObject.BOTTLE_GROUND);
-      }, 800);
-    }
   }
 }

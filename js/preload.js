@@ -7,18 +7,19 @@ let IMAGES_FASTLOAD = [
   "./img/lightning.png",
   "./img/2_character_pepe/1_idle/idle/I-1.png",
 ];
+let imgCache = window.imgCache || {};
 
 let imagePaths = [
   ...movingBackground.IMAGES_MOVING,
   ...ThrowableObject.IMAGES_BOTTLE_ONGROUND,
   ...Chicken.IMAGES_WALKING,
   ...MiniChicken.IMAGES_WALKING,
-  ...Pepe.IMAGES_WALKING,
-  ...Pepe.IMAGES_JUMPING,
-  ...Pepe.IMAGES_DYING,
-  ...Pepe.IMAGES_HURT,
-  ...Pepe.IMAGES_SLEEPING,
-  ...Pepe.IMAGES_IDLE,
+  ...PepeAssets.IMAGES_WALKING,
+  ...PepeAssets.IMAGES_JUMPING,
+  ...PepeAssets.IMAGES_DYING,
+  ...PepeAssets.IMAGES_HURT,
+  ...PepeAssets.IMAGES_SLEEPING,
+  ...PepeAssets.IMAGES_IDLE,
   ...StatusBarPepe.IMAGES_SALUD_PEPE,
   ...StatusBarCoin.IMAGES_COIN,
   ...StatusBarChilli.IMAGES_CHILLI,
@@ -26,7 +27,6 @@ let imagePaths = [
   ...ThrowableObject.IMAGES_BOTTLE_ROTATE,
   ...ThrowableObject.IMAGES_BOTTLE_SPLASH,
   ...MiniChicken.IMAGES_HIT,
-
   ...StatusBarEndboss.IMAGES_SALUD_ENDBOSS,
   ...Endboss.IMAGES_ALERT,
   ...Endboss.IMAGES_WALK,
@@ -74,23 +74,29 @@ function animateLoadingCharacters(char, index, loaderContainer) {
 }
 
 /**
- *
- * @returns {Promise} A promise that resolves when all fast-loading images are preloaded.
+ * Preloads fast-loading images for initial app display
+ * @returns {Promise} Promise that resolves when all fast-loading images are ready
  */
 async function fastPreload() {
-  return Promise.all(
-    IMAGES_FASTLOAD.map((entry) => {
-        let path = typeof entry === "string" ? entry : entry.src;
-      return new Promise((resolve, reject) => {
-          const IMG = new Image();
-          IMG.onload = () => {
-            imgCache[path] = IMG;
-            resolve({ path, IMG });
-          };
-          IMG.onerror = reject;
-          IMG.src = path;
-        })
- } ));
+  return Promise.all(IMAGES_FASTLOAD.map(loadImageToCache));
+}
+
+/**
+ * Loads a single image into the cache
+ * @param {string|Object} entry - Image path or object with src property
+ * @returns {Promise} Promise that resolves with the loaded image
+ */
+function loadImageToCache(entry) {
+  const path = typeof entry === "string" ? entry : entry.src;
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      imgCache[path] = img;
+      resolve({ path, img });
+    };
+    img.onerror = reject;
+    img.src = path;
+  });
 }
 
 /**
@@ -99,16 +105,13 @@ async function fastPreload() {
 async function preloadAudio() {
   await Promise.all([
     audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3"),
-
     audioManager.loadAudio("pepe_hurt", "./audio/pepe_grunts_2.mp3"),
     audioManager.loadAudio("pepe_pollo", "./audio/pepe_pollo_funny.mp3"),
     audioManager.loadAudio("pepe_snore", "./audio/pepe_snore.mp3"),
     audioManager.loadAudio("chicken_splat", "./audio/chicken_splat.mp3"),
-
     audioManager.loadAudio("mini_bounce", "./audio/mini_chicken_squeeze_1.mp3"),
     audioManager.loadAudio("endbossBackground", "./audio/endboss_thunder.mp3"),
     audioManager.loadAudio("endboss_attack", "./audio/endboss_attack.mp3"),
-
     audioManager.loadAudio("bottleCollecting", "./audio/bottle_collect.mp3"),
     audioManager.loadAudio("WorldBottleCollecting", "./audio/bottle_collect.mp3"),
     audioManager.loadAudio("coinCollecting", "./audio/coin_success.mp3"),
@@ -121,26 +124,30 @@ async function preloadAudio() {
 }
 
 /**
- *
- * @returns #{Promise} A promise that resolves when all images are preloaded.
+ * Preloads all game images
+ * @returns {Promise} Promise that resolves when all images are ready
  */
 async function preloadImages() {
-  return Promise.all(
-    imagePaths.map((entry) => {
+  return Promise.all(imagePaths.map(loadAllImages));
+}
 
-      let path = typeof entry === "string" ? entry : entry.src;
-            if (imgCache[path]) return Promise.resolve();
-      return new Promise((resolve, reject) => {
-        let IMG = new Image();
-        IMG.src = path;
-        IMG.onload = () => {
-          imgCache[path] = IMG;
-          resolve();
-        };
-        IMG.onerror = () => {
-          reject(new Error(`Bild konnte nicht geladen werden: ${path}`));
-        };
-      });
-    })
-  );
+/**
+ * Loads an image if it's not already cached
+ * @param {string|Object} entry - Image path or object with src property
+ * @returns {Promise} Promise that resolves when the image is loaded
+ */
+function loadAllImages(entry) {
+  const path = typeof entry === "string" ? entry : entry.src;
+  if (imgCache[path]) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const img = new Image();    
+    img.onload = () => {
+      imgCache[path] = img;
+      resolve();
+    };
+    img.onerror = () => {
+      reject(new Error(`Bild konnte nicht geladen werden: ${path}`));
+    };
+    img.src = path;
+  });
 }

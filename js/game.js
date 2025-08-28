@@ -1,16 +1,12 @@
 let keyboard = new Keyboard();
 let audioManager = new AudioManager();
 
-
 /**
  * Starts the Init-Function after the DOM is fully loaded.
  */
 document.addEventListener("DOMContentLoaded", async () => {
   await init();
 });
-
-
-
 
 /**
  * Eventlistener for device format detection
@@ -26,17 +22,17 @@ window.addEventListener("DOMContentLoaded", function () {
 /**
  * Handle the device orientation and display the "turn your device" message if in portrait mode.
  * Hides the content box when in portrait mode.
- * @param {Object} turnDevice 
- * @param {Object} contentbox 
+ * @param {Object} turnDevice
+ * @param {Object} contentbox
  */
-function handlePortraitMode(turnDevice, contentbox){
-    if (isPortrait()) {
-      turnDevice.classList.remove("displayNone");
-      contentbox.style.display = "none";
-    } else {
-      turnDevice.classList.add("displayNone");
-      contentbox.style.display = "";
-    }
+function handlePortraitMode(turnDevice, contentbox) {
+  if (isPortrait()) {
+    turnDevice.classList.remove("displayNone");
+    contentbox.style.display = "none";
+  } else {
+    turnDevice.classList.add("displayNone");
+    contentbox.style.display = "";
+  }
 }
 
 /**
@@ -46,7 +42,6 @@ function handlePortraitMode(turnDevice, contentbox){
 function isPortrait() {
   return window.innerHeight > window.innerWidth && window.innerWidth <= 960;
 }
-
 
 /**
  * Initialises the game by loading assets and showing the start screen.
@@ -96,31 +91,26 @@ function pauseGameSounds() {
 function resumeGameSounds() {
   audioManager.setMuted(false);
 }
+/**
+ * Plays the ambient sound in a loop with a delay of 20 seconds between each play.
+ * Uses a timer to schedule the next play after the current sound finishes.
+ */
+function playAmbient() {
+  clearSoundTimer();
+  audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3");
+  audioManager.playAudio("pepe_ambient", { play: true, volume: 0.1 });
+  ambientSoundTimer = setTimeout(playAmbient, 20000);
+}
 
 /**
- * Starts the Ambient Sound of the Game
+ * Clears the ambient sound timer to stop the loop.
  */
-// function playAmbient() {
-//   audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3");
-//   audioManager.playAudio("pepe_ambient", { play: true, volume: 0.1 });
-//   // let duration = audioDuration();
-
-//     setTimeout(playAmbient, audioDuration());
-// }
-function playAmbient() {
-  // Alten Timer löschen, falls vorhanden
+function clearSoundTimer() {
   if (ambientSoundTimer !== null) {
     clearTimeout(ambientSoundTimer);
     ambientSoundTimer = null;
   }
-  
-  audioManager.loadAudio("pepe_ambient", "./audio/pepe_ambient.mp3");
-  audioManager.playAudio("pepe_ambient", { play: true, volume: 0.1 });
-  
-  // Neuen Timer setzen und ID speichern
-  ambientSoundTimer = setTimeout(playAmbient, 20000);
 }
-
 
 /**
  * Helper function to get the duration of the ambient sound.
@@ -145,18 +135,18 @@ function applySoundStatus(isOn) {
 
 /**
  * Helper function to set the sound status to "on" and update the UI accordingly.
- * @param {Object} soundIcon 
+ * @param {Object} soundIcon
  */
-function soundIsOn(soundIcon){
-    soundIcon.classList.remove("soundOFF");
-    soundIcon.classList.add("soundON");
-    audioManager.setMuted(false);
-    allAmbientSounds();
+function soundIsOn(soundIcon) {
+  soundIcon.classList.remove("soundOFF");
+  soundIcon.classList.add("soundON");
+  audioManager.setMuted(false);
+  allAmbientSounds();
 }
 
 /**
  * Helper function to set the sound status to "off" and update the UI accordingly.
- * @param {Object} soundIcon 
+ * @param {Object} soundIcon
  */
 function soundIsOff(soundIcon) {
   soundIcon.classList.remove("soundON");
@@ -183,7 +173,7 @@ function restoreSoundStatus() {
 
 /**
  * Saves the sound status in the local storage.
- * @param {*} isOn 
+ * @param {*} isOn
  */
 function setSoundStatus(isOn) {
   localStorage.setItem("soundOn", isOn ? "true" : "false");
@@ -191,7 +181,7 @@ function setSoundStatus(isOn) {
 
 /**
  * Returns the sound status from local storage. If no value is set, it defaults to true.
- * @returns {boolean} 
+ * @returns {boolean}
  */
 function getSoundStatus() {
   const value = localStorage.getItem("soundOn");
@@ -208,23 +198,45 @@ function getSoundStatus() {
 function togglePlay(toggleSource, value) {
   let playDiv = document.getElementById("play");
   let playIcon = document.getElementById("switch");
+  let reloadDiv = document.getElementById("gohome");
+  controlContentStatus(playDiv, playIcon, reloadDiv, toggleSource, value);
+}
+
+/**
+ * Handles the different status of content and its impact to the control buttons e.g. open/close and play/pause by button or content
+ * @param {HTMLElement} playDiv
+ * @param {HTMLElement} playIcon
+ * @param {HTMLElement} reloadDiv
+ * @param {String} toggleSource
+ * @param {Boolean} value
+ */
+function controlContentStatus(playDiv, playIcon, reloadDiv, toggleSource, value) {
   if (toggleSource === "content" && value === true) {
-    controlPauseByContent(playDiv, playIcon);
+    controlPauseByContent(playDiv, playIcon, reloadDiv);
   } else if ((toggleSource === "play" || (toggleSource === "button" && playIcon.classList.contains("play"))) && value !== true) {
     controlPauseByClick(playDiv, playIcon);
   } else {
-    controlPlay(playDiv, playIcon);
+    controlPlay(playDiv, playIcon, reloadDiv);
   }
 }
 
 /**
  * Helper function for togglePlay() in case of open content, which pauses and deactivates the play button.
  */
-function controlPauseByContent(playDiv, playIcon) {
+function controlPauseByContent(playDiv, playIcon, reloadDiv) {
   playIcon.classList.remove("play");
   playIcon.classList.add("pause");
   playDiv.classList.add("disabled");
+  reloadDiv.classList.add("disabled");
   gamePaused = true;
+}
+
+function removeDisabledReloadDiv(reloadDiv) {
+  try {
+    reloadDiv.classList.remove("disabled");
+  } catch {
+    return;
+  }
 }
 
 /**
@@ -240,14 +252,14 @@ function controlPauseByClick(playDiv, playIcon) {
 /**
  * Helper function for togglePlay() in case of closing content and unpaused the game by Play-button
  */
-function controlPlay(playDiv, playIcon) {
+function controlPlay(playDiv, playIcon, reloadDiv) {
   playIcon.classList.remove("pause");
   playIcon.classList.add("play");
   playDiv.classList.remove("disabled");
+  removeDisabledReloadDiv(reloadDiv);
   if (startScreen) return;
   gamePaused = false;
 }
-
 
 /**
  * An Ambient Sound is a sound that plays during a time that does not stop by itself.
@@ -276,9 +288,9 @@ function hideLoader() {
 
 /**
  * Creates the Play-Button and appends it to the loader container.
- * @param {HTMLElement} loaderContainer 
+ * @param {HTMLElement} loaderContainer
  */
-function showPlayButton(loaderContainer){
+function showPlayButton(loaderContainer) {
   let startGame = document.createElement("div");
   startGame.id = "startGame";
   startGame.className = "startGame";
@@ -293,11 +305,13 @@ function showPlayButton(loaderContainer){
  */
 function letsPlay() {
   let startGame = document.getElementById("startGame");
-   document.addEventListener("keydown", handleEnterToStart, { once: true });
+  document.addEventListener("keydown", handleEnterToStart, { once: true });
   startGame.addEventListener("click", handleClickToStart, { once: true });
-
 }
 
+/**
+ * Starts game prozess in case of pressing the Enter-key and if Content is not open.
+ */
 function handleEnterToStart(e) {
   if (e.code == "Enter" && !contentOpen) {
     keyboard.ENTER = true;
@@ -305,6 +319,9 @@ function handleEnterToStart(e) {
   }
 }
 
+/**
+ * Starts game prozess in case of click the play button to start and if Content is not open.
+ */
 function handleClickToStart() {
   if (contentOpen) return;
   playConditions();
@@ -315,7 +332,7 @@ function handleClickToStart() {
  * @param {string} origin
  */
 async function playConditions() {
-    localStorage.removeItem("autostart");
+  localStorage.removeItem("autostart");
   startScreen = false;
   audioManager.audioContext?.state === "suspended" && audioManager.activateAudioContext();
   prepareStylesForPlayConditions();
@@ -324,13 +341,15 @@ async function playConditions() {
   togglePlay("play", true);
   listenForKeyPress();
   document.addEventListener("keyup", handleKeyUp);
-
 }
 
+/**
+ * Listens for key presses and updates the character's last key press time.
+ */
 function listenForKeyPress() {
   document.addEventListener("keydown", (e) => {
-    world.character.setLastKeyPressTime(e);  
-    handleKeyDown(e);            
+    world.character.setLastKeyPressTime(e);
+    handleKeyDown(e);
   });
 }
 
@@ -363,7 +382,7 @@ function prepareStylesForPlayConditions() {
   document.getElementById("play").style.display = "";
 
   let reload = document.getElementById("gohome");
-    reload.removeEventListener("click", initReStart);
+  reload.removeEventListener("click", initReStart);
   reload.style.display = "";
   reload.addEventListener("click", initReStart);
 }

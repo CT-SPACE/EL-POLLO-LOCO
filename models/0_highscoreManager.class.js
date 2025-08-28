@@ -55,7 +55,6 @@ class HighscoreManager {
    */
   calculateFinalScore() {
     this.calculateCurrentScore();
-
     return this.currentScore;
   }
 
@@ -64,7 +63,6 @@ class HighscoreManager {
    */
   calculateCurrentScore() {
     let score = 0;
-
     score += this.pepeHealthLoss * HighscoreManager.POINTS.PEPE_HEALTH_LOSS;
     score += this.chickenSquashed * HighscoreManager.POINTS.CHICKEN_SQUASH;
     score += this.collectedCoins * HighscoreManager.POINTS.COIN_COLLECT;
@@ -73,7 +71,6 @@ class HighscoreManager {
     }
     score += HighscoreManager.POINTS.GAME_COMPLETION;
     score += this.timeBonus * HighscoreManager.POINTS.TIME_BONUS;
-
     this.currentScore = Math.max(0, Math.floor(score));
   }
 
@@ -105,12 +102,6 @@ class HighscoreManager {
    * @param {Number} highscore - The highscore of the game.
    */
   checkHighscore() {
-    const stats = [
-      `Chicken zerquetscht: ${this.chickenSquashed}`,
-      `Münzen gesammelt: ${this.collectedCoins}`,
-      `Flaschen benutzt: ${this.bottlesUsed}`,
-      `Pepe-Schaden: ${this.pepeHealthLoss}%`,
-    ];
     finalScore = this.calculateFinalScore();
     savedHighscore = this.getHighscore();
   }

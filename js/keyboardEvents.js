@@ -1,5 +1,3 @@
-
-
 /**
  * Both eventlistener are defining the Button on the keyboard that are used to control the game.
  */
@@ -18,19 +16,17 @@ function handleKeyDown(e) {
   }
   if (e.code == "ArrowUp") {
     keyboard.UP = true;
-      console.log("UP key pressed, keyboard.UP =", keyboard.UP);
-
   }
   if (e.code == "KeyD") {
     const now = Date.now();
     if (now - lastThrowTime < throwCoolDown) {
-      if(!noBottles){
-         audioManager.playAudio("clock_ticking", { play: true, volume: 0.3});
+      if (!noBottles) {
+        audioManager.playAudio("clock_ticking", { play: true, volume: 0.3 });
       }
-    } else if (!throwKeyDownTime) { 
-       audioManager.controlAudio("clock_ticking", { play: false, pause: true, currentTime: 0 });
-      throwKeyDownTime = now; 
-      lastThrowTime = now;  
+    } else if (!throwKeyDownTime) {
+      audioManager.controlAudio("clock_ticking", { play: false, pause: true, currentTime: 0 });
+      throwKeyDownTime = now;
+      lastThrowTime = now;
     }
   }
 }
@@ -39,9 +35,8 @@ function handleKeyUp(e) {
   if (e.code == "Enter") {
     keyboard.ENTER = false;
   }
-  if (e.code == "Space" || e.code == "ArrowUp") {
+  if (e.code == "Space") {
     keyboard.SPACE = false;
-    keyboard.UP = false;
   }
   if (e.code == "ArrowRight") {
     keyboard.RIGHT = false;
@@ -50,9 +45,9 @@ function handleKeyUp(e) {
   if (e.code == "ArrowLeft") {
     keyboard.LEFT = false;
   }
-  // if (e.code == "ArrowUp") {
-  //   keyboard.UP = false;
-  // }
+  if (e.code == "ArrowUp") {
+    keyboard.UP = false;
+  }
   if (e.code == "KeyD") {
     if (throwKeyDownTime) {
       throwKeyUpTime = Date.now();
@@ -63,16 +58,17 @@ function handleKeyUp(e) {
   }
 }
 
-
 /**
  * Defines the Touch buttons for mobile Devices
- * @param {string} BTN 
- * @param {boolean} value 
- * @param {Event} event 
- * @returns 
+ * @param {string} BTN
+ * @param {boolean} value
+ * @param {Event} event
+ * @returns
  */
 function goControl(BTN, value, event) {
-   if (event && event.cancelable) { event.preventDefault();}
+  if (event && event.cancelable) {
+    event.preventDefault();
+  }
   if (gamePaused || !keyboardEnabled) return;
   switch (BTN) {
     case "RIGHT":
@@ -86,7 +82,9 @@ function goControl(BTN, value, event) {
       break;
     case "THROW":
       if (value) {
-        if (!throwKeyDownTime) {  throwKeyDownTime = Date.now();        }
+        if (!throwKeyDownTime) {
+          throwKeyDownTime = Date.now();
+        }
       } else {
         handleThrowKeyTime();
       }
@@ -97,11 +95,11 @@ function goControl(BTN, value, event) {
 /**
  * Helper function for goControl()
  */
-function handleThrowKeyTime(){
-          if (throwKeyDownTime) {
-          throwKeyUpTime = Date.now();
-          throwDuration = throwKeyUpTime - throwKeyDownTime;
-          throwKeyDownTime = null;
-          keyboard.THROW = true;
-        }
+function handleThrowKeyTime() {
+  if (throwKeyDownTime) {
+    throwKeyUpTime = Date.now();
+    throwDuration = throwKeyUpTime - throwKeyDownTime;
+    throwKeyDownTime = null;
+    keyboard.THROW = true;
+  }
 }

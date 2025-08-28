@@ -17,41 +17,47 @@ class MovableObject extends DrawableObject {
   lastHit = 0;
 
   /**
-   * Returns true if the object is above ground, false otherwise.
-   * @returns
+   * Applies gravity to the object, updating its vertical position and speed.
+   * Starts an interval that simulates gravity until the object is on the ground.
    */
   applyGravity() {
-  if (this.gravityInterval) {
-    clearInterval(this.gravityInterval);
-    this.gravityInterval = null;
-  };
+    this.clearGravityInterval();
     this.gravityInterval = setInterval(() => {
-      if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
-
-      if (this.y > Pepe.GROUND_Y) {
-        this.y = Pepe.GROUND_Y;
-        this.speedY = 0;
-      this.isJumping = false;
-      }
+      this.applyGravityPhysics();
+      this.checkGroundCollision();
     }, 1000 / 25);
   }
 
-  //   applyGravity() {
-  //   if (this.gravityInterval) return;
-  // this.gravityInterval = this.stopAllIntervals(() => {
-  //     if (this.y <= Pepe.GROUND_Y || this.speedY <= 0)  {
-  //       this.y -= this.speedY;
-  //       this.speedY -= this.acceleration;
-  //     }
-  //     if (this.y >= Pepe.GROUND_Y) {
-  //       this.y = Pepe.GROUND_Y;
-  //       this.speedY = 0;
-  //     }
-  //   }, 1000 / 25);
-  // }
+  /**
+   * Updates position and velocity based on gravity physics
+   */
+  applyGravityPhysics() {
+    if (this.isAboveGround() || this.speedY > 0) {
+      this.y -= this.speedY;
+      this.speedY -= this.acceleration;
+    }
+  }
+
+  /**
+   * Checks if the object has reached the ground and resets properties
+   */
+  checkGroundCollision() {
+    if (this.y > Pepe.GROUND_Y) {
+      this.y = Pepe.GROUND_Y;
+      this.speedY = 0;
+      this.isJumping = false;
+    }
+  }
+
+  /**
+   * Clears the gravity interval to stop the gravity effect.
+   */
+  clearGravityInterval() {
+    if (this.gravityInterval) {
+      clearInterval(this.gravityInterval);
+      this.gravityInterval = null;
+    }
+  }
 
   /**
    * Determines whether the object is in a jump and therefore above the ground
@@ -82,22 +88,69 @@ class MovableObject extends DrawableObject {
     );
   }
 
+/**
+ * Checks if this object is colliding with an enemy from above (main method)
+ * @param {Object} enemy - The enemy to check collision with
+ * @returns {boolean} - True if colliding from above
+ */
 isCollidingAboveEnemy(enemy) {
+  enemy = this.ensureEnemyOffset(enemy);
+  const horizontalOverlap = this.isHorizontallyOverlapping(enemy);
+  const enemyHeadZone = this.calculateEnemyHeadZone(enemy);
+  const isOnTop = this.isOnTopOfEnemy(enemy, enemyHeadZone);
+  return horizontalOverlap && isOnTop && this.isFalling();
+}
+
+/**
+ * Ensures the enemy has valid offset values
+ * @param {Object} enemy - The enemy to check
+ * @returns {Object} - Enemy with valid offset
+ */
+ensureEnemyOffset(enemy) {
   if (enemy.offset === undefined) {
     enemy.offset = { left: 12, right: 12, top: 12, bottom: 12 };
   }
-  
-  const horizontalOverlap = 
-    this.x + this.width - this.offset.right > enemy.x + enemy.offset.left && 
-    this.x + this.offset.left < enemy.x + enemy.width - enemy.offset.right;
-  const enemyHeadZone = enemy.y + enemy.offset.top + (enemy.height * 0.3); // Obere 30% des Feindes
+  return enemy;
+}
+
+/**
+ * Checks if this object horizontally overlaps with the enemy
+ * @param {Object} enemy - The enemy to check
+ * @returns {boolean} - True if horizontally overlapping
+ */
+isHorizontallyOverlapping(enemy) {
+  return (
+    this.x + this.width - this.offset.right > enemy.x + enemy.offset.left &&
+    this.x + this.offset.left < enemy.x + enemy.width - enemy.offset.right
+  );
+}
+
+/**
+ * Calculates the enemy's head zone (upper portion of body)
+ * @param {Object} enemy - The enemy
+ * @returns {number} - Y-coordinate of the bottom of head zone
+ */
+calculateEnemyHeadZone(enemy) {
+  return enemy.y + enemy.offset.top + enemy.height * 0.3;
+}
+
+/**
+ * Checks if this object is positioned on top of the enemy
+ * @param {Object} enemy - The enemy
+ * @param {number} enemyHeadZone - The bottom Y of enemy's head zone
+ * @returns {boolean} - True if on top
+ */
+isOnTopOfEnemy(enemy, enemyHeadZone) {
   const pepeBottom = this.y + this.height - this.offset.bottom;
-  
-  const isOnTop = 
-    pepeBottom >= enemy.y + enemy.offset.top && // Pepe's Füße sind mindestens auf Kopfhöhe
-    pepeBottom <= enemyHeadZone;                // Aber nicht tiefer als 30% der Feind-Höhe
-  
-  return horizontalOverlap && isOnTop && this.speedY < 0;
+  return (pepeBottom >= enemy.y + enemy.offset.top && pepeBottom <= enemyHeadZone);
+}
+
+/**
+ * Checks if the object is falling downward
+ * @returns {boolean} - True if falling
+ */
+isFalling() {
+  return this.speedY < 0;
 }
 
   /**
@@ -157,10 +210,7 @@ isCollidingAboveEnemy(enemy) {
    *Let Pepe and Endboss jump.
    */
   jump() {
-      console.log("jump() aufgerufen, speedY wird gesetzt");
-
     this.speedY = 34;
- 
   }
 
   /**
@@ -173,10 +223,10 @@ isCollidingAboveEnemy(enemy) {
     let damage = 0.001;
 
     if (attacker instanceof Endboss) {
-      damage *= 100;
+      damage *= 90;
     }
     if (attacker instanceof MiniChicken) {
-      damage *= 1;
+      damage *= 2;
     }
     this.reduceEnergy(damage);
   }
@@ -208,22 +258,6 @@ isCollidingAboveEnemy(enemy) {
     this.currentImage++;
   }
 
-// ifPepeJumps(i) {
-//   if (i <= 2 || i >= 6) {
-//     this.y = Pepe.GROUND_Y;
-//     this.speedY = 0;
-//   } else if ( i === 3 || i === 4 || i === 5) {
-//     this.speedY = 34
-//   }
-// }
-
-// arraysEqual(a, b) {
-//   return Array.isArray(a) &&
-//          Array.isArray(b) &&
-//          a.length === b.length &&
-//          a.every((val, index) => val === b[index]);
-// }
-
   /**
    * Stops all intervals that are running for the object.
    * This is used to stop the animation and other intervals when the game is paused or the object is removed.
@@ -238,7 +272,11 @@ isCollidingAboveEnemy(enemy) {
     clearInterval(this.animateWalkInterval);
     clearInterval(this.animateXInterval);
     clearInterval(this.gravityInterval);
+    clearInterval(Pepe.fallInterval);
     clearInterval(this.animateBounceMiniInterval);
     clearInterval(this.animateDeathInterval);
+    clearInterval(ThrowableObject.throwInterval);
+    clearInterval(ThrowableObject.splashInterval);
+    clearInterval(ThrowableObject.rotationInterval)
   }
 }

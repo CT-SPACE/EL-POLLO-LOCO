@@ -97,6 +97,7 @@ class Endboss extends MovableObject {
    */
   animateWalk() {
     this.animateWalkInterval = setInterval(() => {
+      if (gamePaused) return;
       this.speed = 0.5;
       this.playAnimation(Endboss.IMAGES_WALK);
       this.moveLeft(this.speed);
@@ -126,8 +127,10 @@ class Endboss extends MovableObject {
     this.animateAttackInterval = setInterval(() => {
       this.playAnimation(Endboss.IMAGES_ATTACK);
       if (this.currentImage % Endboss.IMAGES_ATTACK.length === 5) {
-        this.x -= 100;
+        this.x -= 150;
         this.jump();
+        this.speedY = 80;
+        this.isJumping = true;
       }
     }, 200);
   }
@@ -138,9 +141,9 @@ class Endboss extends MovableObject {
    * If the endboss is dead, it clears the death animation interval and triggers the game over state.
    */
   animateDeath() {
-      clearInterval(this.animateAttackInterval);
-   clearInterval(this.animateWalkInterval);
-  clearInterval(this.animateHurtInterval);
+    clearInterval(this.animateAttackInterval);
+    clearInterval(this.animateWalkInterval);
+    clearInterval(this.animateHurtInterval);
     audioManager.controlAudio("endbossBackground", { play: false, pause: true });
     this.isDead = true;
     this.currentImage = 0;
@@ -148,7 +151,6 @@ class Endboss extends MovableObject {
     this.animateDeathInterval = setInterval(() => {
       this.intervalSettingForAnimateDeath();
     }, 200);
-
   }
 
   intervalSettingForAnimateDeath() {
@@ -191,8 +193,6 @@ class Endboss extends MovableObject {
     }
   }
 
-
-
   /**
    * In case of loosing to much energy by beeing hit by bottles, the endboss plays the hurt animation.
    * It stops the attack and walk animations, and plays the hurt animation.
@@ -201,10 +201,10 @@ class Endboss extends MovableObject {
   animateHurt() {
     clearInterval(this.animateAttackInterval);
     clearInterval(this.animateWalkInterval);
-   if (this.animateHurtInterval) clearInterval(this.animateHurtInterval);
+    if (this.animateHurtInterval) clearInterval(this.animateHurtInterval);
     this.hurtFrame = 0;
     this.animateHurtInterval = setInterval(() => {
-        this.intervalSettingForAnimateHurt();
+      this.intervalSettingForAnimateHurt();
     }, 300);
   }
 

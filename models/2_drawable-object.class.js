@@ -1,4 +1,4 @@
-class DrawableObject{
+class DrawableObject {
   x;
   y;
   height;
@@ -13,25 +13,24 @@ class DrawableObject{
   itemCounter = 0;
   factor = 1;
 
-
   /**
    * Loads a single image.
-   * @param {Object} entry 
+   * @param {Object} entry
    */
-loadImage(entry) {
-  const path = typeof entry === "string" ? entry : entry.src;
-  if (imgCache[path]) {
-    this.img = imgCache[path];
-  } else {
-    this.img = new Image();
-    this.img.src = path;
-    imgCache[path] = this.img;
+  loadImage(entry) {
+    const path = typeof entry === "string" ? entry : entry.src;
+    if (imgCache[path]) {
+      this.img = imgCache[path];
+    } else {
+      this.img = new Image();
+      this.img.src = path;
+      imgCache[path] = this.img;
+    }
   }
-}
 
   /**
    * Loads all images from an array.
-   * @param {Array} arr 
+   * @param {Array} arr
    */
   loadImages(arr) {
     arr.forEach((entry) => {
@@ -54,18 +53,15 @@ loadImage(entry) {
     ctx.clearRect(0, 0, world.canvas.width, world.canvas.height);
     ctx.translate(world.cameraX, 0);
     world.endbossOfEnemies.handleEndbossCloseEffect();
-    world.throwableObjects = world.throwableObjects.filter(
-      (bottle) => !bottle.toBeRemoved
-    );
+    world.throwableObjects = world.throwableObjects.filter((bottle) => !bottle.toBeRemoved);
     DrawableObject.addObjectsForDraw(world);
     world.handleEndboss();
     requestAnimationFrame(() => DrawableObject.draw(world));
   }
 
-
-/**
- * Helper function to place the Objects on the canvas.
- */
+  /**
+   * Helper function to place the Objects on the canvas.
+   */
   static addObjectsForDraw(world) {
     const ctx = world.ctx;
     DrawableObject.addToMap(world.background_static, ctx);
@@ -79,7 +75,6 @@ loadImage(entry) {
     DrawableObject.addToMap(world.character, ctx);
 
     ctx.translate(-world.cameraX, 0);
-
     DrawableObject.addToMap(world.statusBarPepe, ctx);
     DrawableObject.addToMap(world.statusBarCoin, ctx);
     DrawableObject.addToMap(world.statusBarChilli, ctx);
@@ -87,7 +82,7 @@ loadImage(entry) {
 
   /**
    * Draws the object on the canvas.
-   * @param {CanvasRenderingContext2D} ctx 
+   * @param {CanvasRenderingContext2D} ctx
    */
   drawObject(ctx) {
     if (!this.img) return;
@@ -100,40 +95,54 @@ loadImage(entry) {
 
   /**
    * In case of debugging (drawDebug is true) draws a rectangle around the object.
-   * @param {CanvasRenderingContext2D} ctx 
+   * @param {CanvasRenderingContext2D} ctx
    */
   drawOffset(ctx) {
     if (this.drawDebug) {
-      if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject || this instanceof Endboss || this instanceof MiniChicken
-      ) {
+      if (this instanceof Pepe || this instanceof Chicken || this instanceof CollectableObject || this instanceof Endboss || this instanceof MiniChicken ) {
         ctx.beginPath();
         ctx.lineWidth = 0;
         ctx.strokeStyle = "orangered";
-        ctx.rect(this.x + (this.offset?.left || 0),this.y + (this.offset?.top || 0),
-          this.width - ((this.offset?.left || 0) + (this.offset?.right || 0)),
-          this.height - ((this.offset?.top || 0) + (this.offset?.bottom || 0))
+        ctx.rect(
+          offsetFormula().left,
+          offsetFormula().top,
+          offsetFormula().right,    
+          offsetFormula().bottom
         );
         ctx.stroke();
       }
     }
   }
 
-/**
- * Handles Image-Arrays to draw them on the canvas
- * @param {} objects 
- */
+  /**
+   * Defines the offset for collision detection.
+   * @returns {Object} offset values for left, top, right and bottom
+   */
+  offsetFormula(){
+    return {
+      left: this.x + (this.offset?.left || 0),
+      top: this.y + (this.offset?.top || 0),
+      right: this.width - ((this.offset?.left || 0) + (this.offset?.right || 0)),
+      bottom: this.height - ((this.offset?.top || 0) + (this.offset?.bottom || 0))
+    };
+  }
+
+  /**
+   * Handles Image-Arrays to draw them on the canvas
+   * @param {} objects
+   */
   static addObjects(objects, ctx) {
     objects.forEach((object) => {
       DrawableObject.addToMap(object, ctx);
     });
   }
 
-/**
- * Handles each image of an array to draw it on the canvas
- * @param {Object} obj 
- */
+  /**
+   * Handles each image of an array to draw it on the canvas
+   * @param {Object} obj
+   */
   static addToMap(obj, ctx) {
-      obj.otherDirection === undefined ? obj.otherDirection = false : obj.otherDirection;
+    obj.otherDirection === undefined ? (obj.otherDirection = false) : obj.otherDirection;
     if (obj.otherDirection) {
       obj.flipImage(ctx);
     }
@@ -144,10 +153,10 @@ loadImage(entry) {
     }
   }
 
-/**
- * If otherDirection ist true flipImage works for Pepe and bottle throw
- * @param {Object} ctx 
- */
+  /**
+   * If otherDirection ist true flipImage works for Pepe and bottle throw
+   * @param {Object} ctx
+   */
   flipImage(ctx) {
     ctx.save();
     ctx.translate(this.width, 0);
@@ -155,13 +164,12 @@ loadImage(entry) {
     this.x = this.x * -1;
   }
 
-/**
- * If Pepe turn back the function reset the direction.
- * @param {} ctx 
- */
+  /**
+   * If Pepe turn back the function reset the direction.
+   * @param {} ctx
+   */
   flipImageBack(ctx) {
     this.x = this.x * -1;
     ctx.restore();
   }
-
 }

@@ -29,6 +29,12 @@ function showGameOverScreen(deathCandidate) {
   });
 }
 
+/**
+ * Decides which GameOverScreen will be shown - Winning Pepe or Winning Endboss
+ * @param {String} deathCandidate 
+ * @param {HTMLElement} gameOverScreen 
+ * @returns 
+ */
 function handleDeathCandidates(deathCandidate, gameOverScreen) {
   if (deathCandidate === "Pepe") {
     handleWinningEndboss(gameOverScreen);
@@ -78,7 +84,6 @@ function changeCTAForReplayButton(replayPosition, status) {
   replay.classList.add("replayButton", status === "lose" ? "lose" : "win");
   replay.addEventListener("click", initReStart);
   replayPosition.appendChild(replay);
-  
 }
 
 /**
@@ -147,7 +152,7 @@ function handleWinningPepe(gameOverScreen) {
 /**
  * Plays the winning sound for Pepe if the sound is enabled.
  */
-function soundStatusForHandleWinningPepe(){
+function soundStatusForHandleWinningPepe() {
   if (getSoundStatus()) {
     audioManager.playAudio("pepe_wins", { play: true, volume: 0.3 });
   }

@@ -71,33 +71,31 @@ class AudioManager {
     } catch (error) {}
   }
 
-
-
   startAudioPlayback(name, options = {}) {
-  const offset = this.getAudioOffset(name);
-  const source = this.createAndConnectSource(name, options);
-  this.startSourcePlayback(name, source, offset);
-}
+    const offset = this.getAudioOffset(name);
+    const source = this.createAndConnectSource(name, options);
+    this.startSourcePlayback(name, source, offset);
+  }
 
-getAudioOffset(name) {
-  return this.pausedAt[name] || 0;
-}
+  getAudioOffset(name) {
+    return this.pausedAt[name] || 0;
+  }
 
-createAndConnectSource(name, options = {}) {
-  const source = this.createSource(name, options);
-  const gainNode = this.createGainNode(options.volume);
-  source.connect(gainNode);
-  gainNode.connect(this.audioContext.destination);
-  this.playingSources[name] = { source, gainNode };
-  return source;
-}
+  createAndConnectSource(name, options = {}) {
+    const source = this.createSource(name, options);
+    const gainNode = this.createGainNode(options.volume);
+    source.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
+    this.playingSources[name] = { source, gainNode };
+    return source;
+  }
 
-startSourcePlayback(name, source, offset) {
-  source.start(0, offset);
-  this.audioPlaying[name] = true;
-  this.startedAt[name] = this.audioContext.currentTime - offset;
-  source.onended = () => this.resetAudioState(name);
-}
+  startSourcePlayback(name, source, offset) {
+    source.start(0, offset);
+    this.audioPlaying[name] = true;
+    this.startedAt[name] = this.audioContext.currentTime - offset;
+    source.onended = () => this.resetAudioState(name);
+  }
 
   /**
    * Helper function for playAudio()
@@ -133,13 +131,14 @@ startSourcePlayback(name, source, offset) {
     this.startedAt[name] = 0;
   }
 
+  /**
+   * Stops all currently playing sounds
+   */
   stopAllSounds() {
-  // Alle aktiven Sounds durchgehen
-  Object.keys(this.playingSources).forEach(name => {
-    // Den aktuellen Sound stoppen
-    this.controlAudio(name, { stop: true });
-  });
-}
+    Object.keys(this.playingSources).forEach((name) => {
+      this.controlAudio(name, { stop: true });
+    });
+  }
 
   /**
    * Function to change settings of playing audios e

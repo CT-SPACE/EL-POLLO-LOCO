@@ -39,7 +39,7 @@ class Chicken extends MovableObject {
 
     this.audio = audioManager;
     this.x += 300 + Math.random() * 1600;
-    this.speedX = 0.1 + Math.random() * 0.5;
+    this.speedX = 0.2 + Math.random() * 0.6;
     this.animationSpeed = Math.random() * 20 + 100;
     this.type = "chicken";
     this.animateX();

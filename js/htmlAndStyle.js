@@ -6,29 +6,30 @@
 function createButtonContent(content) {
   let contentType = document.getElementById(content);
   let contentScreen = document.getElementById("buttonContent");
-  contentScreenHandlerForMobile(contentScreen);
-  contentScreenHandlerForDesktop(contentScreen, contentType, content);
+  contentScreen = contentScreenHandlerForMobile(contentScreen);
+  contentScreenStatus(contentScreen, contentType, content);
 }
 
 /**
  * For Devices with a height smaller than 600px, the contentScreen is created in its own mobileContentscreen-Container.
- * @param {HTMLElement} contentScreen 
+ * @param {HTMLElement} contentScreen
  */
 function contentScreenHandlerForMobile(contentScreen) {
   if (window.innerHeight < 600) {
     contentScreen = createButtonContentMobile(contentScreen);
   }
+  return contentScreen;
 }
 
 /**
  * Handles the contentScreen for desktop devices and browser widths larger than 600px.
  * It checks if the contentScreen is already open and toggles it accordingly.
- * @param {HTMLElement} contentScreen 
- * @param {HTMLElement} contentType 
- * @param {String} content 
- * @returns 
+ * @param {HTMLElement} contentScreen
+ * @param {HTMLElement} contentType
+ * @param {String} content
+ * @returns
  */
-function contentScreenHandlerForDesktop(contentScreen, contentType, content) {
+function contentScreenStatus(contentScreen, contentType, content) {
   if (contentScreen.classList.contains("open") && contentScreen.dataset.active === content) {
     closeContent(contentScreen);
     return;
@@ -138,6 +139,7 @@ function closeContent(contentScreen, callback) {
 function contentScreenHandler(contentScreen, headline, callback) {
   contentScreen.classList.remove("open");
   contentScreen.classList.add("close");
+
   contentScreen.addEventListener("transitionend", function handler() {
     contentScreen.removeEventListener("transitionend", handler);
     finishClosing(contentScreen, callback);
@@ -216,10 +218,12 @@ function getStoryHtml() {
       Er braucht etwas Großes. <p></p>Dieses Mega-Huhn, von dem er träumt, kann man aber nicht so einfach wie die
       kleinen Hühner durch Draufhüpfen zermatschen - außerdem will er dieses Geflügel ja auch noch essen.
       Das Einzige, was wirkt, ist seine scharfe Soße, die leider in der mexikanischen Wüste verstreut ist.<p></p>Wichtig
-      ist, mit der Salsa die Augen des Mega-Huhns zu treffen, dann stirbt es gewürzt und servierfertig.<br>
+      ist, mit der Salsa das Mega-Huhn direkt zu treffen - dann stirbt es gewürzt und servierfertig.<br>
       Kannst du Pepe helfen?
       <p></p>
       Nebenbei findet Pepe noch jede Menge Münzen - wenn er nicht so hungrig wäre, würde er sich darüber freuen.<br>
+    <p></p>
+    <span style="float:right">◢</span>
     </div>
   </div>
     `;
@@ -245,6 +249,8 @@ function getImpressumHtml() {
         <p>
           E-Mail an: <a href="mailto:Christina@troitzsch.de">Christina Troitzsch</a>
         </p>
+           <p></p>
+    <span style="float:right">◢</span>
       </div>
     </div>
     `;
@@ -313,6 +319,8 @@ function getHowToHtml() {
               chickens.</div>
           </div>
         </div>
+           <p></p>
+    <span style="float:right">◢</span>
       </div>
     </div>
     `;

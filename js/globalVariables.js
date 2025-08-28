@@ -19,6 +19,7 @@ let canvas,
   finalScore,
   savedHighscore;
 
+
 let ambientSoundTimer = null;
 let audioPlaying = {};
 let allIntervals = [];
@@ -27,7 +28,7 @@ let EndBossClose = false;
 let EndBossVisible = false;
 let gamePaused = true;
 let gamePausedByUser = false;
-let imgCache = {};
+ window.imgCache = {};
 let lastThrowTime = 0;
 let letters = Array.from(document.querySelectorAll("#loader span"));
 let aspectRatio = 800 / 480;

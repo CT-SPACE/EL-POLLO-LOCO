@@ -2,36 +2,31 @@
  * Initializes the restart functionality for the game.
  * This function sets up the event listener for the "Replay"-Button during the Game and on GameOver screen
  */
-function initReStart(){
-    killOldWorld();
-    reStart();
+function initReStart() {
+  killOldWorld();
+  reStart();
 }
-
 
 /**
  * Restarts the game directly and ready to play.
  * This function is called when the user clicks the "Go Home" button.
  */
-async function reStart() {  
+async function reStart() {
   restart = true;
-
   await initLevel();
   await playConditions();
   resetGameOverScreen();
-  resetButtons() ;
-
+  resetButtons();
   restoreSoundStatus();
   resetGame();
   keyboard = new Keyboard();
-
 }
-
 
 /**
  * Resets the game parameters to their initial state.
  * This function is called when the game is restarted.
  */
-function resetGame(){
+function resetGame() {
   keyboardEnabled = true;
   EndBossClose = false;
   EndBossVisible = false;
@@ -40,17 +35,22 @@ function resetGame(){
   touchSetupDone = false;
 }
 
-
-
 /**
  * Deletes the existing World-Class and Character instances.
- * 
+ *
  */
 function killOldWorld() {
-    Level01 = null;
-    audioManager.stopAllSounds();
+  Level01 = null;
+  audioManager.stopAllSounds();
+  worldToNull();
+  removeKeyboardEvents();
+}
 
-  if(world){
+/**
+ * Sets the world variable to null and clears all intervals and references.
+ */
+function worldToNull() {
+  if (world) {
     allIntervals.forEach(clearInterval);
     allIntervals = [];
     world.stopAllAnimations();
@@ -66,14 +66,19 @@ function killOldWorld() {
     world.endbossOfEnemies = null;
     world.highscoreManager = null;
     world.canvas = null;
-  };
-  // document.removeEventListener("keydown", handleKeyDown);
+  }
+  world = null;
+}
+
+/**
+ * Removes keyboard event listeners to prevent multiple bindings.
+ */
+function removeKeyboardEvents() {
   document.removeEventListener("keyup", handleKeyUp);
   document.removeEventListener("keydown", (e) => {
-    world.character.setLastKeyPressTime(e);  
-    handleKeyDown(e);            
+    world.character.setLastKeyPressTime(e);
+    handleKeyDown(e);
   });
-    world = null;
 }
 
 /**
@@ -99,8 +104,12 @@ function resetButtons() {
   canvas.classList.remove("displayNone");
 }
 
+/**
+ * Sets an interval and stores its ID in the allIntervals array for later clearing.
+ * @param {String} id 
+ * @param {Date} time 
+ */
 function intervalsToStop(id, time) {
-let interval = setInterval(id, time);
-allIntervals.push (interval) ;
+  let interval = setInterval(id, time);
+  allIntervals.push(interval);
 }
-

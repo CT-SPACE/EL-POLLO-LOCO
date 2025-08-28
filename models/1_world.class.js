@@ -1,29 +1,15 @@
 class World {
-  level = Level01;
-  highscoreManager;
-  keyboard;
-  background_static = new staticBackground();
-  minichicken;
-  statusBarPepe;
-  statusBarCoin;
-  statusBarChilli;
-  statusBarEndboss;
-  throwableObjects;
-  character;
-  chicken;
-  bottles;
-  cameraX;
-  canThrow;
-  canvas;
-  collectedBottles = 0;
-  collectedCoins = 0;
-  countBottles = 15;
-  ctx;
-  enemies;
-  energy;
-  isGameEnding;
-  level = Level01;
-  offset;
+level = Level01; canvas; ctx; cameraX = 0; offset;
+
+character; highscoreManager; keyboard;
+
+statusBarPepe; statusBarCoin; statusBarChilli; statusBarEndboss;
+
+enemies; chicken; minichicken; background_static = new staticBackground();
+throwableObjects = []; bottles;
+
+collectedBottles = 0; collectedCoins = 0; countBottles = 15; 
+energy; canThrow = true; isGameEnding = false;
 
   /**
    * Initializes the World class components, sets up the game enviroment and gets the game ready to play.
@@ -60,7 +46,6 @@ class World {
    * Create the World with all needed Components.
    */
   setWorld() {
-    // this.character.keyboard = keyboard;
     this.character.world = this;
     this.minichicken.world = this;
     this.endbossOfEnemies.world = this;
@@ -83,27 +68,54 @@ class World {
       this.highscoreManager.updateScore(this);
     }, 1000 / 60);
   }
- 
 
   /**
-   * Creates the Endboss on the Map with a distance of 3800.
-   * @returns
+   * Main method for Endboss management
    */
   handleEndboss() {
+    this.checkEndbossVisibility();
+    this.updateEndbossProximityStatus();
+    return;
+  }
+
+  /**
+   * Checks if Endboss should be visible based on character position
+   */
+  checkEndbossVisibility() {
     if (this.character.x > 3100 || EndBossVisible === true) {
       EndBossVisible = true;
       DrawableObject.addToMap(this.statusBarEndboss, this.ctx);
     }
-    if (this.isPepeNearEndboss() < 700) {
-      EndBossClose = true;
-      DrawableObject.addToMap(this.statusBarEndboss, this.ctx);
-      EndBossVisible = true;
-      this.endbossOfEnemies.status = true;
+  }
+
+  /**
+   * Updates Endboss status based on proximity to Pepe
+   */
+  updateEndbossProximityStatus() {
+    const isNear = this.isPepeNearEndboss() < 700;
+    if (isNear) {
+      this.activateEndboss();
     } else {
-      this.endbossOfEnemies.status = false;
-      EndBossClose = false;
+      this.deactivateEndboss();
     }
-    return;
+  }
+
+  /**
+   * Activates Endboss when Pepe gets close
+   */
+  activateEndboss() {
+    EndBossClose = true;
+    DrawableObject.addToMap(this.statusBarEndboss, this.ctx);
+    EndBossVisible = true;
+    this.endbossOfEnemies.status = true;
+  }
+
+  /**
+   * Deactivates Endboss when Pepe is far away
+   */
+  deactivateEndboss() {
+    this.endbossOfEnemies.status = false;
+    EndBossClose = false;
   }
 
   /**
@@ -113,24 +125,24 @@ class World {
     let startThrow = Date.now();
     noBottles = false;
     intervalsToStop(() => {
-      this.intervalForCheckThrowObjects(startThrow)
+      this.intervalForCheckThrowObjects(startThrow);
     }, 50);
     throwDuration = 0;
   }
 
   /**
    * Interval function to check if Pepe can throw a bottle.
-   * @param {Date} startThrow 
+   * @param {Date} startThrow
    */
-  intervalForCheckThrowObjects(startThrow){
-      let now = Date.now();
-      let delta = now - startThrow;
-      if (keyboard.THROW && this.collectedBottles === 0) {
-        this.noBottlesTrue();
-      }
-      if (keyboard.THROW && this.collectedBottles > 0 && delta > 1000 && this.canThrow) {
-        this.throwBottle();
-      }
+  intervalForCheckThrowObjects(startThrow) {
+    let now = Date.now();
+    let delta = now - startThrow;
+    if (keyboard.THROW && this.collectedBottles === 0) {
+      this.noBottlesTrue();
+    }
+    if (keyboard.THROW && this.collectedBottles > 0 && delta > 1000 && this.canThrow) {
+      this.throwBottle();
+    }
   }
 
   /**
@@ -180,8 +192,7 @@ class World {
    * Checks the Collision of Pepe with Enemies and collectable Objects like coins and bottles
    */
   checkCollisions() {
-    this.checksCollisionForEachEnemy(); // TEST
-    // intervalsToStop(this.checksCollisionForEachEnemy(), 400);
+    this.checksCollisionForEachEnemy();
     this.checkCollisionsCoins(this.character);
     this.checkCollisionsBottles();
   }
@@ -192,9 +203,13 @@ class World {
    */
   checksCollisionForEachEnemy() {
     this.level.enemies.forEach((enemy) => {
-
       if (enemy.type === "endboss") return;
-      if (this.character.isColliding(enemy) && this.character.isCollidingAboveEnemy(enemy) && this.character.speedY < 0 && !enemy.isDead) {
+      if (
+        this.character.isColliding(enemy) &&
+        this.character.isCollidingAboveEnemy(enemy) &&
+        this.character.speedY < 0 &&
+        !enemy.isDead
+      ) {
         this.chickenForCheckCollisions(enemy);
       }
       this.collidesEnemiesOnEnergyLevel(enemy);
@@ -247,16 +262,13 @@ class World {
       return;
     }
   }
+
   /**
    * Handles the collision of pepe and the endboss.
    * @returns
    */
   checkCollisionPepeWithEndboss() {
-    if (
-      this.endbossOfEnemies &&
-      this.character.isColliding(this.endbossOfEnemies) &&
-      this.character.energy > 0
-    ) {
+    if (this.endbossOfEnemies && this.character.isColliding(this.endbossOfEnemies) && this.character.energy > 0) {
       this.character.hit(this.endbossOfEnemies);
       this.statusBarPepe.setPercentage(this.character.energy);
     }
@@ -264,6 +276,7 @@ class World {
       return;
     }
   }
+
   /**
    * Calculation of the Distance between Pepe and Enboss
    * @returns
@@ -271,7 +284,6 @@ class World {
   isPepeNearEndboss() {
     const endbossX = this.endbossOfEnemies ? this.endbossOfEnemies.x : undefined;
     let distance = Math.abs(this.character.x - endbossX);
-
     return distance;
   }
 
@@ -287,12 +299,17 @@ class World {
       }
       return true;
     });
-    if (collected > 0) {
+    this.updateCoinStatusBar(collected);
+  }
 
-        this.statusBarCoin.coincount = collected;  
-  // Aktualisiere die Anzeige
-  this.statusBarCoin.setPercentage(collected);
-    //  this.statusBarCoin.setPercentage(totalCoins - this.level.coins.length);
+  /**
+   * Updates the status bar when more than zero coins are collected
+   * @param {String} collected
+   */
+  updateCoinStatusBar(collected) {
+    if (collected > 0) {
+      this.statusBarCoin.coincount = collected;
+      this.statusBarCoin.setPercentage(collected);
     }
   }
 
@@ -305,7 +322,7 @@ class World {
     this.highscoreManager.addCollectedCoin(collected);
     audioManager.loadAudio("WorldCoinCollecting", "./audio/coin_success.mp3");
     audioManager.playEffect("WorldCoinCollecting", { loop: false, volume: 0.1, currentTime: 0 });
-   return collected;
+    return collected;
   }
 
   /**
@@ -371,7 +388,7 @@ class World {
     this.endbossOfEnemies.stopAllIntervals();
     this.level.enemies.forEach((enemy) => enemy.stopAllIntervals());
     keyboardEnabled = false;
-   gamePaused = true;
+    gamePaused = true;
     audioManager.setMuted(true);
     togglePlay("content", true);
   }
