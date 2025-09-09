@@ -9,9 +9,10 @@ speedX = 20; speedY = 0; cameraX;
 world; keyboard; audioManager;
 
 animateDeathInterval; jumpInterval; lastKeyPressTime;
-timeToSleep = 15000; timeToIdle = 800;
+timeToSleep = 15000; timeToIdle = 800; hurtAnimationDuration = 200;
 
-isSleeping = false; isDead = false;  isPlayingHurtAudio;
+isSleeping = false; isDead = false;  isPlayingHurtAudio; hurtAnimationActive = false;
+
 
 offset = { left: 40, right: 40, top: 130, bottom: 20 };
   
@@ -65,6 +66,7 @@ initializePosition() {
  * Handles keyboard movement (left/right)
  */
 handleMovement() {
+  if (this.hurtAnimationActive) return;
   if (keyboard.RIGHT && this.x < this.world.level.level_endX) {
     this.handleRightMovement();
   }
@@ -137,7 +139,10 @@ updateCamera() {
    * This ensures that the walking animation is only played when the character is on the ground and not in the middle of a jump.
    */
   movementIsNotAboveGround(){
-        if (!this.isAboveGround() && !this.isJumping)  this.playAnimation(PepeAssets.IMAGES_WALKING);
+     if (this.hurtAnimationActive) return;
+        if (!this.isAboveGround() && !this.isJumping) {
+          this.playAnimation(PepeAssets.IMAGES_WALKING);
+        }
   }
 
   /**
@@ -170,7 +175,7 @@ animateStates() {
  */
 determineCurrentState() {
   if (this.isZeroHealthscore()) return 'death';
-  if (this.isHurt()) return 'hurt';
+  if (this.isHurt() || this.hurtAnimationActive ) return 'hurt';
   if (this.isAboveGround()) return 'jumping';
   if (this.isInactiveUntilSleeping()) return 'sleeping';
   if (this.isInactiveUntilIdle()) return 'idle';
@@ -365,8 +370,14 @@ animateIsFalling(){
  * Plays the hurt animation and sound for Pepe
  */
 animateHurt() {
+    this.hurtAnimationActive = true;
+    this.speedX = 10;
   this.playAnimation(PepeAssets.IMAGES_HURT);
   this.playHurtSound();
+    setTimeout(() => {
+    this.hurtAnimationActive = false;
+    this.speedX = 20;
+  }, this.hurtAnimationDuration);
 }
 
 /**

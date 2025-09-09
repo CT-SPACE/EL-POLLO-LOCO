@@ -48,7 +48,7 @@ class StatusBarEndboss extends StaticObject {
    * @returns
    */
   resolveImageEndboss(percentage) {
-    if (percentage > 10 && percentage < 30) {
+    if (percentage > 0 && percentage < 30) {
       return 1;
     } else if (percentage >= 30 && percentage < 50) {
       return 2;

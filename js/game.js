@@ -113,15 +113,6 @@ function clearSoundTimer() {
 }
 
 /**
- * Helper function to get the duration of the ambient sound.
- */
-function audioDuration() {
-  return audioManager.buffers && audioManager.buffers["pepe_ambient"]
-    ? audioManager.buffers["pepe_ambient"].duration * 1000
-    : 10000;
-}
-
-/**
  * Reacts to the sound status stored in the localstorage and applies it to the corresponding buttons.
  */
 function applySoundStatus(isOn) {

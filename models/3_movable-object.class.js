@@ -191,6 +191,7 @@ isFalling() {
    * @returns
    */
   moveRight() {
+     if (this.hurtAnimationActive) return
     if (gamePaused) return;
     this.x += this.speedX;
     this.otherDirection = false;
@@ -202,6 +203,7 @@ isFalling() {
    * @returns
    */
   moveLeft(speedX) {
+     if (this.hurtAnimationActive) return;
     if (gamePaused) return;
     this.x -= speedX;
   }
@@ -220,13 +222,14 @@ isFalling() {
    */
   hit(attacker) {
     if (gamePaused) return;
-    let damage = 0.001;
+    this.hurtAnimationActive = true;
 
+    let damage = 0.001;
     if (attacker instanceof Endboss) {
       damage *= 90;
     }
     if (attacker instanceof MiniChicken) {
-      damage *= 2;
+      damage *= 1;
     }
     this.reduceEnergy(damage);
   }

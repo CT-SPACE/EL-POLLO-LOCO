@@ -49,7 +49,7 @@ class StatusBarPepe extends StaticObject {
    * @returns
    */
   resolveImagePercent(percentage) {
-    if (percentage > 0.1 && percentage < 0.3) {
+    if (percentage > 0 && percentage < 0.3) {
       return 1;
     } else if (percentage >= 0.3 && percentage < 0.5) {
       return 2;

@@ -32,6 +32,6 @@ class Clouds extends MovableObject {
   animateX() {
     intervalsToStop(() => {
       this.moveLeft(this.speed);
-    }, 1000 / 25);
+    }, 1000 / 60);
   }
 }

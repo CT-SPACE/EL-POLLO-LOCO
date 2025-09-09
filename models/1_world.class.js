@@ -69,6 +69,11 @@ energy; canThrow = true; isGameEnding = false;
     }, 1000 / 60);
   }
 
+  updateCamera(){
+    let targetX = this.character.x - 100;
+    this.cameraX += (targetX - this.cameraX) * 0.1;
+  }
+
   /**
    * Main method for Endboss management
    */
