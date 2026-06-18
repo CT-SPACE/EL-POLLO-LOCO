@@ -3,9 +3,7 @@
 
 A project that implements game logic and object-oriented programming.
 
- ___________________________________________________________________________
-|![Start page](el-pollo-loco_readme.jpg)                                    |
-|___________________________________________________________________________|
+![Start page](el-pollo-loco_readme.jpg)
 
 ## TechStack
 
