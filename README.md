@@ -12,10 +12,10 @@
 
 ## Structure
 
-* Level
-* HighscoreManager
-* Keyboard
-* DrawableObject
+|Level
+|HighscoreManager
+|Keyboard
+|DrawableObject
   ├─ CollectableObject
   ├─ CountableItem
   ├─ Bottle
