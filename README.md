@@ -7,5 +7,7 @@ A project that implements game logic and object-oriented programming.
 
 ## TechStack
 
-Vanilla Javascript
+* Vanilla Javascript
+* CSS
+
 [EOF]
