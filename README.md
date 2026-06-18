@@ -12,26 +12,36 @@
 
 ## Structure
 
-|Level
-|HighscoreManager
-|Keyboard
-|DrawableObject
-  ├─ CollectableObject
-  ├─ CountableItem
-  ├─ Bottle
-  ├─ Coin
-  ├─ MovableObject
-     │  ├─ movingBackground
-     │  ├─ Clouds
-     │  ├─ Chicken
-     │  ├─ MiniChicken
-     │  ├─ Endboss
-     │  ├─ Pepe
-     │  ├─ CollidableObject
-        └─ ThrowableObject
-  └─ StaticObject
-        ├─ staticBackground
-        ├─ StatusBarChilli
-        ├─ StatusBarCoin
-        ├─ StatusBarEndboss
-        └─ StatusBarPepe
+```text
+el-pollo-loco/
+├─ audio
+├─ fonts
+├─ img
+├─ js
+└─ models/
+    ├─ Level
+    ├─ Keyboard
+    ├─ HighscoreManager
+    ├─ AudioManager
+    └─ World/
+        └─ DrawableObject/
+              ├─ CollectableObject
+              ├─ CountableItem
+              ├─ Bottle
+              ├─ Coin
+              ├─ MovableObject/
+              │  ├─ movingBackground
+              │  ├─ Clouds
+              │  ├─ Chicken
+              │  ├─ MiniChicken
+              │  ├─ Endboss
+              │  ├─ Pepe
+              │  ├─ CollidableObject
+              │  └─ ThrowableObject
+              └─ StaticObject/
+                    ├─ staticBackground
+                    ├─ StatusBarChilli
+                    ├─ StatusBarCoin
+                    ├─ StatusBarEndboss
+                    └─ StatusBarPepe
+```
