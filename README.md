@@ -9,5 +9,3 @@ A project that implements game logic and object-oriented programming.
 
 * Vanilla Javascript
 * CSS
-
-[EOF]
